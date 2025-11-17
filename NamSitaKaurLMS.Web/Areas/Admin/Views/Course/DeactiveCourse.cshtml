@@ -1,0 +1,83 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Geçmiş Dersler";
+}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Geçmiş Dersler</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Adı</th>
+                        <th>Durumu</th>
+                        <th>Mekanı</th>
+                        <th>Başlangıç Tarihi</th>
+                        <th>Bitiş Tarihi</th>
+                        <th>Kontenjan</th>
+                        <th>Kalan Kontenjan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Kundalini Yoga Sabah Serisi</td>
+                        <td>
+                            <select>
+                            <option>Tamamlandı</option>
+                            <option>Devam Ediyor</option>
+                            <option>Planlandı</option>
+
+                            </select>
+                            
+                            Tamamlandı</td>
+                        <td>Online (Zoom)</td>
+                        <td>07.10.2025</td>
+                        <td>17.10.2025</td>
+                        <td>40</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>Yin Yoga Akşam Grubu</td>
+                        <td>Tamamlandı</td>
+                        <td>İstanbul – Stüdyo</td>
+                        <td>15.11.2025</td>
+                        <td>15.02.2026</td>
+                        <td>25</td>
+                        <td>7</td>
+                    </tr>
+                    <tr>
+                        <td>Tantrik Numeroloji Danışmanlık Eğitimi</td>
+                        <td>Tamamlandı</td>
+                        <td>Online (Zoom)</td>
+                        <td>05.10.2025</td>
+                        <td>21.12.2025</td>
+                        <td>60</td>
+                        <td>29</td>
+                    </tr>
+                    <tr>
+                        <td>Ses Terapisi & Meditasyon Atölyesi</td>
+                        <td>Tamamlandı</td>
+                        <td>İstanbul – Stüdyo</td>
+                        <td>20.10.2025</td>
+                        <td>20.10.2025</td>
+                        <td>30</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>Sadhana Sabah Meditasyon Programı</td>
+                        <td>Tamamlandı</td>
+                        <td>Online (Zoom)</td>
+                        <td>01.09.2025</td>
+                        <td>01.12.2025</td>
+                        <td>100</td>
+                        <td>42</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
