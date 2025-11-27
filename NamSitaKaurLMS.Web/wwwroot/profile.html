@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Space - Namsita Yoga LMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/components/buttons.css" />
+    <link rel="stylesheet" href="css/components/cards.css" />
+</head>
+<body class="bg-beige">
+    <div class="d-flex flex-column min-vh-100">
+
+        <!-- NAVBAR -->
+        <header class="border-bottom border-primary-soft bg-beige sticky-top">
+            <nav class="navbar navbar-expand-md navbar-light py-2">
+                <div class="container-lg">
+                    <a href="index.html" class="navbar-brand d-flex align-items-center">
+                        <div class="brand-icon d-flex align-items-center justify-content-center me-2">
+                            <span class="text-primary fs-5">ॐ</span>
+                        </div>
+                        <div class="d-flex flex-column lh-1">
+                            <span class="font-display fw-semibold small text-slate-900">Namsita Yoga LMS</span>
+                            <span class="xsmall text-slate-500">Find Your Inner Balance</span>
+                        </div>
+                    </a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="mainNavbar">
+                        <ul class="navbar-nav ms-auto align-items-md-center gap-md-3">
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-soft" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-soft" href="course-detail.html">Classes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-soft" href="profile.html">My Space</a>
+                            </li>
+                            <li class="nav-item d-none d-md-block">
+                                <a class="nav-link nav-link-soft" href="index.html#schedule">Schedule</a>
+                            </li>
+                            <li class="nav-item d-none d-md-block">
+                                <a class="nav-link nav-link-soft" href="index.html#testimonials">Stories</a>
+                            </li>
+                            <li class="nav-item ms-md-2 mt-2 mt-md-0">
+                                <a href="#" class="btn-ghost-sm">Sign In</a>
+                            </li>
+                            <li class="nav-item mt-2 mt-md-0">
+                                <a href="#" class="btn-primary-sm">Join Now</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- MAIN -->
+        <main class="flex-grow-1">
+            <section class="py-4">
+                <div class="container-lg">
+
+                    <!-- Header -->
+                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="profile-avatar bg-sage d-flex align-items-center justify-content-center fs-4">
+                                🧘
+                            </div>
+                            <div>
+                                <h1 class="font-display fs-5 fw-semibold text-slate-900 mb-1">
+                                    Hi, Elif
+                                </h1>
+                                <p class="xsmall text-slate-600 mb-0">
+                                    This is your personal practice space. Keep showing up — even small steps count.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn-ghost-sm">Edit Profile</button>
+                            <button class="btn-primary-sm">Continue Last Class</button>
+                        </div>
+                    </div>
+
+                    <!-- Grid -->
+                    <div class="row g-4">
+                        <!-- Left: Progress & Completed & Certificates -->
+                        <div class="col-md-8">
+                            <!-- Progress -->
+                            <div class="card border-0 rounded-4 shadow-soft bg-white mb-3">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h2 class="small fw-semibold text-slate-900 mb-0">Practice Overview</h2>
+                                        <span class="xsmall text-slate-500">Last 30 days</span>
+                                    </div>
+                                    <div class="progress yoga-progress mb-2">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width:60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between xsmall text-slate-500">
+                                        <span>18 / 30 days on the mat</span>
+                                        <span>420 min total</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Completed Courses -->
+                            <div class="card border-0 rounded-4 shadow-soft bg-white mb-3">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 class="small fw-semibold text-slate-900 mb-0">Completed Classes</h2>
+                                        <a href="course-detail.html" class="link-soft xsmall text-decoration-none">
+                                            Browse more →
+                                        </a>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="card-course">
+                                                <div class="card-course-thumb">
+                                                    <div class="card-course-badge">Beginner</div>
+                                                </div>
+                                                <div class="card-course-body">
+                                                    <h3 class="card-course-title">Gentle Morning Flow</h3>
+                                                    <p class="card-course-meta">25 min • Hatha</p>
+                                                    <div class="card-course-instructor">
+                                                        <div class="card-course-avatar"></div>
+                                                        <span>Namsita</span>
+                                                    </div>
+                                                    <button class="btn-ghost-sm mt-2 d-inline-flex">
+                                                        Replay
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card-course">
+                                                <div class="card-course-thumb">
+                                                    <div class="card-course-badge">All levels</div>
+                                                </div>
+                                                <div class="card-course-body">
+                                                    <h3 class="card-course-title">Evening Unwind & Stretch</h3>
+                                                    <p class="card-course-meta">30 min • Yin</p>
+                                                    <div class="card-course-instructor">
+                                                        <div class="card-course-avatar"></div>
+                                                        <span>Namsita</span>
+                                                    </div>
+                                                    <button class="btn-ghost-sm mt-2 d-inline-flex">
+                                                        Replay
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Certificates -->
+                            <div class="card border-0 rounded-4 shadow-soft bg-white mb-3">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 class="small fw-semibold text-slate-900 mb-0">Certificates</h2>
+                                    </div>
+                                    <div class="row g-3 xsmall">
+                                        <div class="col-md-6">
+                                            <div class="certificate-card">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span class="fw-semibold text-slate-900">Morning Ritual Basics</span>
+                                                    <span class="text-slate-500">2025-03-12</span>
+                                                </div>
+                                                <p class="text-slate-600 mb-0">
+                                                    Completed 4-week beginner-friendly morning series.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="certificate-card">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <span class="fw-semibold text-slate-900">Foundations of Breath</span>
+                                                    <span class="text-slate-500">2025-04-02</span>
+                                                </div>
+                                                <p class="text-slate-600 mb-0">
+                                                    Completed guided breathwork and meditation series.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Weekly Rhythm & Intention -->
+                        <div class="col-md-4">
+                            <div class="card border-0 rounded-4 shadow-soft bg-white mb-3">
+                                <div class="card-body p-4">
+                                    <h2 class="small fw-semibold text-slate-900 mb-3">Weekly Rhythm</h2>
+                                    <div class="row g-2 text-center xsmall">
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-primary-soft text-slate-900">
+                                                <div class="fw-semibold">Mon</div>
+                                                <div>30 min</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-soft-gray text-slate-500">
+                                                <div class="fw-semibold">Tue</div>
+                                                <div>Rest</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-primary-soft text-slate-900">
+                                                <div class="fw-semibold">Wed</div>
+                                                <div>20 min</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-soft-gray text-slate-500">
+                                                <div class="fw-semibold">Thu</div>
+                                                <div>Rest</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-primary-soft text-slate-900">
+                                                <div class="fw-semibold">Fri</div>
+                                                <div>25 min</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-soft-gray text-slate-500">
+                                                <div class="fw-semibold">Sat</div>
+                                                <div>15 min</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-soft-gray text-slate-500">
+                                                <div class="fw-semibold">Sun</div>
+                                                <div>Optional</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="weekly-pill bg-soft-gray text-slate-500">
+                                                <div class="fw-semibold">+</div>
+                                                <div>Custom</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card border-0 rounded-4 shadow-soft bg-white mb-3">
+                                <div class="card-body p-4 xsmall">
+                                    <h2 class="small fw-semibold text-slate-900 mb-2">Your Intention</h2>
+                                    <p class="text-slate-600 mb-0">
+                                        “To move gently and listen to my body, even on busy days.”
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="border-top border-primary-soft bg-soft-gray mt-4">
+            <div class="container-lg py-4 small">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <h4 class="fw-semibold text-slate-900 mb-2 small">About</h4>
+                        <p class="text-slate-600 xsmall mb-0">
+                            A calm digital space for your yoga journey, combining mindful movement with continuous learning.
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="fw-semibold text-slate-900 mb-2 small">Explore</h4>
+                        <ul class="list-unstyled xsmall text-slate-600 mb-0">
+                            <li><a href="#" class="text-decoration-none link-soft">Beginner Path</a></li>
+                            <li><a href="#" class="text-decoration-none link-soft">Meditation Series</a></li>
+                            <li><a href="#" class="text-decoration-none link-soft">Breathwork Labs</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 class="fw-semibold text-slate-900 mb-2 small">Stay in touch</h4>
+                        <form class="d-flex gap-2 xsmall">
+                            <input type="email" class="form-control form-control-sm rounded-pill bg-white-90 border-primary-soft"
+                                   placeholder="Email for gentle updates" />
+                            <button type="submit" class="btn-primary-sm px-3">Send</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="border-top border-primary-soft mt-3 pt-3 text-center xsmall text-slate-500">
+                    © 2025 Namsita Yoga LMS. All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/ui-interactions.js"></script>
+</body>
+</html>

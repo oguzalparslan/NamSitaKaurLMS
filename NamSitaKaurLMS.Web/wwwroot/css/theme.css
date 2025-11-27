@@ -1,0 +1,206 @@
+:root {
+    --color-primary: #9F86C0;
+    --color-primary-soft: #E8E5F3;
+    --color-beige: #F6F4F8; /* softer, less yellow */
+    --color-sage: #C9DABF;
+    --color-soft-gray: #F3F3F3;
+
+    --radius-xl: 1.25rem;
+    --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* Global */
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.bg-beige {
+    background-color: var(--color-beige) !important;
+}
+
+.bg-soft-gray {
+    background-color: var(--color-soft-gray) !important;
+}
+
+.bg-primary-soft {
+    background-color: var(--color-primary-soft) !important;
+}
+
+.bg-white-90 {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.border-primary-soft {
+    border-color: rgba(159, 134, 192, 0.35) !important;
+}
+
+.text-slate-900 {
+    color: #111827 !important;
+}
+.text-slate-700 {
+    color: #374151 !important;
+}
+.text-slate-600 {
+    color: #4b5563 !important;
+}
+.text-slate-500 {
+    color: #6b7280 !important;
+}
+.text-slate-300 {
+    color: #d1d5db !important;
+}
+
+.text-primary {
+    color: var(--color-primary) !important;
+}
+
+.font-display {
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.shadow-soft {
+    box-shadow: var(--shadow-soft);
+}
+
+.small {
+    font-size: 0.84rem;
+}
+
+.xsmall {
+    font-size: 0.72rem;
+}
+
+/* Brand icon */
+.brand-icon {
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 999px;
+    background-color: var(--color-primary-soft);
+}
+
+/* Avatars */
+.avatar-circle {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.border-beige {
+    border-color: var(--color-beige);
+}
+
+.instructor-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+}
+
+.profile-avatar {
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 999px;
+}
+
+/* Sections */
+.section-title {
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.section-subtitle {
+    font-size: 0.8rem;
+    color: #4b5563;
+    max-width: 28rem;
+}
+
+/* Links & nav */
+.nav-link-soft {
+    font-size: 0.8rem;
+    color: #4b5563 !important;
+}
+
+.nav-link-soft:hover {
+    color: var(--color-primary) !important;
+}
+
+.link-soft {
+    color: #4b5563;
+}
+
+.link-soft:hover {
+    color: var(--color-primary);
+}
+
+/* Hero badge */
+.dot-sage {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background-color: var(--color-sage);
+}
+
+/* Gradient background */
+.bg-gradient-yoga {
+    background: linear-gradient(135deg, rgba(201, 218, 191, 0.75), rgba(232, 229, 243, 0.9));
+}
+
+/* Progress */
+.yoga-progress {
+    height: 0.35rem;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+/* Schedule */
+.schedule-card {
+    border-radius: 1rem;
+    padding: 0.8rem 0.6rem;
+}
+
+/* Certificates */
+.certificate-card {
+    border-radius: 0.9rem;
+    border: 1px solid rgba(159, 134, 192, 0.4);
+    background-color: rgba(232, 229, 243, 0.4);
+    padding: 0.7rem 0.9rem;
+}
+
+/* Weekly pills */
+.weekly-pill {
+    border-radius: 0.9rem;
+    padding: 0.4rem 0.2rem;
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 0.7s ease-out forwards;
+    opacity: 0;
+}
+.animate-fade-in-delayed {
+    animation: fadeIn 0.9s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Utility for fake 1/7 columns on desktop */
+@media (min-width: 768px) {
+    .col-md-1-7 {
+        flex: 0 0 calc(100% / 7);
+        max-width: calc(100% / 7);
+    }
+}

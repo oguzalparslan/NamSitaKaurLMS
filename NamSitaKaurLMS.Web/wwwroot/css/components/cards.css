@@ -1,0 +1,60 @@
+.card-course {
+    border-radius: var(--radius-xl);
+    background-color: #fff;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-size: 0.8rem;
+    height: 100%;
+}
+
+.card-course-thumb {
+    background: linear-gradient(135deg, #C9DABF, #E8E5F3);
+    height: 120px;
+    position: relative;
+}
+
+.card-course-badge {
+    position: absolute;
+    left: 0.75rem;
+    top: 0.75rem;
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.7rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #4b5563;
+}
+
+.card-course-body {
+    padding: 0.7rem 0.9rem 0.9rem;
+}
+
+.card-course-title {
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 0.2rem;
+    font-size: 0.9rem;
+}
+
+.card-course-meta {
+    margin: 0;
+    font-size: 0.7rem;
+    color: #6b7280;
+}
+
+.card-course-instructor {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+    color: #4b5563;
+}
+
+.card-course-avatar {
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 999px;
+    background: #C9DABF;
+}

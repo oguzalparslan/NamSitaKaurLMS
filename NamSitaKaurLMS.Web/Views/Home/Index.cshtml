@@ -1,13 +1,300 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "_LayoutPublic";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- Hero Section -->
+<section class="bg-beige py-5 py-lg-6">
+    <div class="container-lg">
+        <div class="row align-items-center g-5">
+            <!-- Text -->
+            <div class="col-md-6">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white shadow-soft xsmall text-primary mb-3 animate-fade-in">
+                    <span class="dot-sage"></span>
+                    Yeni: 4 haftalık Mindful Sabah Programı
+                </div>
 
+                <h1 class="font-display fw-semibold text-slate-900 display-6 mb-3 animate-fade-in">
+                    İç Dengenİ Bul<br />
+                    <span class="text-primary">Öğrenerek Dönüş</span>
+                </h1>
 
-<a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-    Admin Panel
-</a>
+                <p class="small text-slate-600 mb-4 animate-fade-in">
+                    Rehberli derslere, yapılandırılmış programlara ve mindfulness araçlarına dilediğin zaman, dilediğin yerden eriş.
+                    Kendi ritmine uygun, sürdürülebilir bir yoga alışkanlığı oluştur.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mb-4 animate-fade-in">
+                    <a href="#" class="btn-primary-lg">Hemen Katıl</a>
+                    <a href="#" class="btn-ghost-lg">Dersleri Keşfet</a>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 animate-fade-in-delayed">
+                    <div class="d-flex">
+                        <div class="avatar-circle bg-sage me-n2 border-beige"></div>
+                        <div class="avatar-circle bg-primary-soft me-n2 border-beige"></div>
+                        <div class="avatar-circle bg-soft-gray border-beige"></div>
+                    </div>
+                    <p class="xsmall text-slate-500 mb-0">
+                        Yoga yolculuğunda <span class="fw-semibold text-primary">1.200+</span> öğrencinin güvendiği alan.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Illustration / Card -->
+            <div class="col-md-6">
+                <div class="card border-0 rounded-4 shadow-soft bg-white-90 p-4 animate-fade-in-delayed">
+                    <div class="ratio ratio-16x9 rounded-4 bg-gradient-yoga d-flex align-items-center justify-content-center mb-3">
+                        <span class="text-primary display-4">🧘‍♀️</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center xsmall mb-2">
+                        <div>
+                            <p class="text-slate-500 text-uppercase mb-0">Bugünkü Pratik</p>
+                            <p class="text-slate-900 fw-medium mb-0">Yumuşak Sabah Akışı</p>
+                        </div>
+                        <span class="badge rounded-pill bg-primary-soft text-slate-700 px-3 py-2">
+                            25 dk • Başlangıç
+                        </span>
+                    </div>
+
+                    <div class="progress yoga-progress mb-3">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 45%;" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                    <button class="btn-primary-full w-100">
+                        Pratiğe Devam Et
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses -->
+<section class="py-5">
+    <div class="container-lg">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h2 class="section-title mb-1">Öne Çıkan Programlar</h2>
+                <p class="section-subtitle mb-0">
+                    Pratiğinin farklı aşamalarını desteklemek için tasarlanmış yapılandırılmış seriler.
+                </p>
+            </div>
+            <a href="#" class="link-soft d-none d-md-inline-flex">
+                Tüm dersleri gör →
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card-course">
+                    <div class="card-course-thumb">
+                        <div class="card-course-badge">Başlangıç</div>
+                    </div>
+                    <div class="card-course-body">
+                        <h3 class="card-course-title">Yumuşak Sabah Akışı</h3>
+                        <p class="card-course-meta">25 dk • Hatha</p>
+                        <div class="card-course-instructor">
+                            <div class="card-course-avatar"></div>
+                            <span>Namsita</span>
+                        </div>
+                        <a href="#" class="btn-ghost-sm mt-2 d-inline-flex">
+                            Dersi Aç
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card-course">
+                    <div class="card-course-thumb">
+                        <div class="card-course-badge">Tüm seviyeler</div>
+                    </div>
+                    <div class="card-course-body">
+                        <h3 class="card-course-title">Akşam Rahatlama & Esneme</h3>
+                        <p class="card-course-meta">30 dk • Yin</p>
+                        <div class="card-course-instructor">
+                            <div class="card-course-avatar"></div>
+                            <span>Namsita</span>
+                        </div>
+                        <a href="#" class="btn-ghost-sm mt-2 d-inline-flex">
+                            Dersi Aç
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card-course">
+                    <div class="card-course-thumb">
+                        <div class="card-course-badge">Başlangıç</div>
+                    </div>
+                    <div class="card-course-body">
+                        <h3 class="card-course-title">Farkındalıklı Nefes & Sükûnet</h3>
+                        <p class="card-course-meta">20 dk • Meditasyon</p>
+                        <div class="card-course-instructor">
+                            <div class="card-course-avatar"></div>
+                            <span>Namsita</span>
+                        </div>
+                        <a href="#" class="btn-ghost-sm mt-2 d-inline-flex">
+                            Dersi Aç
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Instructors -->
+<section class="py-5 bg-soft-gray">
+    <div class="container-lg">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h2 class="section-title mb-1">Eğitmenlerinle Tanış</h2>
+                <p class="section-subtitle mb-0">
+                    Modern bilgiyle kadim bilgeliği birleştiren sertifikalı eğitmenler.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-3 small">
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-soft p-3 text-center bg-white">
+                    <div class="mx-auto mb-2 instructor-avatar bg-sage"></div>
+                    <p class="fw-semibold text-slate-900 mb-0">Namsita</p>
+                    <p class="xsmall text-slate-500 mb-0">Hatha & Mindful Flow</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-soft p-3 text-center bg-white">
+                    <div class="mx-auto mb-2 instructor-avatar bg-primary-soft"></div>
+                    <p class="fw-semibold text-slate-900 mb-0">Ayla</p>
+                    <p class="xsmall text-slate-500 mb-0">Yin & Restorative</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-soft p-3 text-center bg-white">
+                    <div class="mx-auto mb-2 instructor-avatar bg-soft-gray"></div>
+                    <p class="fw-semibold text-slate-900 mb-0">Eren</p>
+                    <p class="xsmall text-slate-500 mb-0">Meditasyon & Nefes</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 rounded-4 shadow-soft p-3 text-center bg-white">
+                    <div class="mx-auto mb-2 instructor-avatar bg-sage"></div>
+                    <p class="fw-semibold text-slate-900 mb-0">Lale</p>
+                    <p class="xsmall text-slate-500 mb-0">Yavaş Akış</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Weekly Schedule -->
+<section id="schedule" class="py-5">
+    <div class="container-lg">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h2 class="section-title mb-1">Haftalık Program</h2>
+                <p class="section-subtitle mb-0">
+                    Bedenine nazik gelen bir ritimle sürdürülebilir bir pratik oluştur.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-3 text-center xsmall">
+            <div class="col-6 col-md-1-7">
+                <div class="schedule-card bg-primary-soft">
+                    <div class="fw-semibold text-slate-900">Pzt</div>
+                    <div class="mt-1 text-slate-700">Sabah Akışı</div>
+                    <div class="mt-1 text-slate-500">25 dk</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-1-7">
+                <div class="schedule-card bg-soft-gray">
+                    <div class="fw-semibold text-slate-900">Sal</div>
+                    <div class="mt-1 text-slate-700">Nefes Çalışması</div>
+                    <div class="mt-1 text-slate-500">15 dk</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-1-7">
+                <div class="schedule-card bg-primary-soft">
+                    <div class="fw-semibold text-slate-900">Çar</div>
+                    <div class="mt-1 text-slate-700">Akşam Yin</div>
+                    <div class="mt-1 text-slate-500">30 dk</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-1-7">
+                <div class="schedule-card bg-soft-gray">
+                    <div class="fw-semibold text-slate-900">Per</div>
+                    <div class="mt-1 text-slate-700">Meditasyon</div>
+                    <div class="mt-1 text-slate-500">20 dk</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-1-7">
+                <div class="schedule-card bg-primary-soft">
+                    <div class="fw-semibold text-slate-900">Cum</div>
+                    <div class="mt-1 text-slate-700">Yavaş Akış</div>
+                    <div class="mt-1 text-slate-500">25 dk</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-1-7">
+                <div class="schedule-card bg-soft-gray">
+                    <div class="fw-semibold text-slate-900">Cmt</div>
+                    <div class="mt-1 text-slate-700">Derin Esneme</div>
+                    <div class="mt-1 text-slate-500">30 dk</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-1-7">
+                <div class="schedule-card bg-soft-gray">
+                    <div class="fw-semibold text-slate-900">Paz</div>
+                    <div class="mt-1 text-slate-700">Dinlenme / Entegrasyon</div>
+                    <div class="mt-1 text-slate-500">Opsiyonel</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-5 bg-soft-gray">
+    <div class="container-lg">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h2 class="section-title mb-1">Öğrenciler Ne Diyor?</h2>
+                <p class="section-subtitle mb-0">
+                    Yavaşlamayı ve yeniden bağ kurmayı seçenlerden gerçek hikâyeler.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-3 small" id="testimonialSlider">
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 shadow-soft p-3 bg-white h-100">
+                    <p class="text-slate-700 mb-2">
+                        “Bu dersler yumuşak bir günlük rutin kurmama yardım etti. Kendimi daha fazla köklenmiş ve daha az kaygılı hissediyorum.”
+                    </p>
+                    <p class="xsmall text-slate-500 mb-0">— Elif, 4 haftalık Sabah Programı</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 shadow-soft p-3 bg-white h-100">
+                    <p class="text-slate-700 mb-2">
+                        “Sakin atmosferi ve net yönlendirmeleri çok seviyorum. Uzun iş günlerinden sonra tam ihtiyacım olan şey.”
+                    </p>
+                    <p class="xsmall text-slate-500 mb-0">— Mert, Akşam Yin Serisi</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 rounded-4 shadow-soft p-3 bg-white h-100">
+                    <p class="text-slate-700 mb-2">
+                        “Kısa ama güçlü seanslar; yoğun programıma gerçekten uyuyor.”
+                    </p>
+                    <p class="xsmall text-slate-500 mb-0">— Ayşe, Nefes & Sükûnet Paketi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
