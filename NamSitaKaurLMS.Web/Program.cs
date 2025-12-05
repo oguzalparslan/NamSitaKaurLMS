@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using NamSitaKaurLMS.Application.Abstract;
+using NamSitaKaurLMS.Application.Concrete;
 using NamSitaKaurLMS.Core.Interfaces;
 using NamSitaKaurLMS.Infrastructure.Context;
 using NamSitaKaurLMS.Infrastructure.Repository;
@@ -13,6 +15,8 @@ builder.Services.AddDbContext<NamSitaKaurLMSContext>(options => options.UseSqlSe
 
 // Generic repository injection
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(ICourseRepository), typeof(CourseRepository)); 
+builder.Services.AddScoped(typeof(ICourseService), typeof(CourseService));
 // Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
