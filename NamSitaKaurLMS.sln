@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36705.20
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamSitaKaurLMS.Web", "NamSitaKaurLMS.Web\NamSitaKaurLMS.Web.csproj", "{AA16CEE8-DC4A-41AC-B9B4-D9555583A891}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamSitaKaurLMS.WebUI", "NamSitaKaurLMS.Web\NamSitaKaurLMS.WebUI.csproj", "{AA16CEE8-DC4A-41AC-B9B4-D9555583A891}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
