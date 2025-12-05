@@ -1,9 +1,20 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using NamSitaKaurLMS.Core.Interfaces;
+using NamSitaKaurLMS.Infrastructure.Context;
+using NamSitaKaurLMS.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<NamSitaKaurLMSContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
+
+// Generic repository injection
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+// Unit of Work
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

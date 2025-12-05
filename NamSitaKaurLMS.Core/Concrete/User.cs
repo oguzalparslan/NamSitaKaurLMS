@@ -3,7 +3,10 @@
 
 namespace NamSitaKaurLMS.Core.Concrete
 {
-    public class User //:IdentityUser
+    public class User : EntityBase
     {
+
+
+        public ICollection<CourseComment> CourseComments { get; set; }
     }
 }
