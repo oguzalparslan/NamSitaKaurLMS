@@ -1,9 +1,8 @@
-﻿using NamSitaKaurLMS.Core.Abstract;
-
-namespace NamSitaKaurLMS.Core.Concrete
+﻿namespace NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
 {
-    public class Course : EntityBase
+    public class CoursesViewModel
     {
+
         public string Title { get; set; }           // Kurs başlığı
         public string Slug { get; set; }            // URL dostu isim
         public string ThumbnailUrl { get; set; }     // Kapak görseli
@@ -14,17 +13,10 @@ namespace NamSitaKaurLMS.Core.Concrete
         public int DurationMinutes { get; set; }     // Toplam süre
         public string Language { get; set; }         // TR / EN gibi
         public bool IsPublished { get; set; }        //Kurs yayınlandı mı?
-        public int Status { get; set; }             // 0: Planlanan, 1: Devam Eden, 2: Tamamlandı
-        public DateTime StartDate { get; set; }     // Kurs başlangıç tarihi
-        public DateTime EndDate { get; set; }       // Kurs bitiş tarihi
+        public string Status { get; set; }             // 0: Planlanan, 1: Devam Eden, 2: Tamamlandı
+        public string StartDate { get; set; }     // Kurs başlangıç tarihi
+        public string EndDate { get; set; }       // Kurs bitiş tarihi
         public int Quota { get; set; }              // Maksimum öğrenci sayısı
-
-
-        public CourseEnvironment CourseEnvironments { get; set; }
-        public ICollection<CourseComment> Comments { get; set; }
-        public CourseDescription CourseDescription { get; set; }
-        public ICollection<UserCourse> UserCourses { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
-
+        public string Environment { get; set; }     // Ortam tipi (Online, Offline, Hybrid)
     }
 }

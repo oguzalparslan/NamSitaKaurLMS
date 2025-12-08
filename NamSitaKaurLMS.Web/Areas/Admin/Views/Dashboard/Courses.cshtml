@@ -1,0 +1,118 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model List<CoursesViewModel>
+
+<div id="popup"></div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Aktif Kurslar</h6>
+    </div>
+    <div class="card-body">
+        <div>
+            <a id="btnCreateCourse"
+               class="btn btn-outline-success">
+                Yeni Kurs Tanımla
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+                <thead>
+
+                    <tr>
+                        <th>Adı</th>
+                        <th>Durumu</th>
+                        <th>Mekanı</th>
+                        <th>Başlangıç Tarihi</th>
+                        <th>Bitiş Tarihi</th>
+                        <th>Kontenjan</th>
+                        <th>Kalan Kontenjan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model)
+                    {
+                        <tr>
+                            <th>@course.Title</th>
+                            <th>@course.Status</th>
+                            <th>@course.Environment</th>
+                            <th>@course.StartDate</th>
+                            <th>@course.EndDate</th>
+                            <th>@course.Quota</th>
+                            <th>@course.Quota</th>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+@section Scripts {
+    <script>
+
+        // -----------------------------
+        // Yeni Kurs Ekle Popup Açma
+        // -----------------------------
+        $('#btnCreateCourse').on('click', function () {
+
+            $.get('@Url.Action("CreateCourse", "Dashboard", new { area = "Admin" })',
+                function (html) {
+
+                    // Partial View modal HTML'i boş div içerisine bas
+                    $('#popup').html(html);
+
+                    // Modal instance oluştur ve göster
+                    var modal = new bootstrap.Modal(document.getElementById('createCourseModal'));
+                    modal.show();
+                });
+        });
+
+
+        // -----------------------------
+        // Form Submit — AJAX POST
+        // -----------------------------
+        $(document).on('submit', '#createCourseForm', function (e) {
+            e.preventDefault();
+
+            $.post($(this).attr('action'), $(this).serialize(), function (res) {
+
+                if (res.success) {
+                    // Başarılıysa sayfayı yenile
+                    location.reload();
+                }
+                else {
+                    // Validation hataları varsa modal içinde güncelle
+                    $('#popup').html(res);
+                }
+
+            });
+        });
+
+
+        // -----------------------------
+        // İptal Butonu Kontrolü
+        // -----------------------------
+               $(document).on('click', '#btnCancel', function () {
+
+            var result = confirm("Yaptığınız değişiklikler iptal edilecek. Onaylıyor musunuz?");
+
+            if (!result) {
+                // FALSE → modal açık kalsın
+                return;
+            }
+
+            // TRUE → formu temizle
+            if ($('#createCourseForm').length) {
+                $('#createCourseForm')[0].reset();
+            }
+
+            // Modalı kapat
+            var modalEl = document.getElementById('createCourseModal');
+            var modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+        });
+
+    </script>
+}

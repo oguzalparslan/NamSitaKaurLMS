@@ -1,14 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NamSitaKaurLMS.Core.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NamSitaKaurLMS.Infrastructure.Identity;
 
 namespace NamSitaKaurLMS.Infrastructure.Context
 {
-    public class NamSitaKaurLMSContext : DbContext
+    public class NamSitaKaurLMSContext : IdentityDbContext<AppUser>
     {
         public NamSitaKaurLMSContext(DbContextOptions options) : base(options)
         {

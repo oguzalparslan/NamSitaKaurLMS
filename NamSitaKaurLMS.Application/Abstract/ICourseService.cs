@@ -15,5 +15,6 @@ namespace NamSitaKaurLMS.Application.Abstract
         Task CreateAsync(Course course);
         Task UpdateAsync(Course course);
         Task DeleteAsync(int id);
+        Task AddAsync(Course course);
     }
 }

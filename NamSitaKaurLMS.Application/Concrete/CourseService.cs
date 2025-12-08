@@ -54,5 +54,11 @@ namespace NamSitaKaurLMS.Application.Concrete
             await unitOfWork.Repository<Course>().DeleteAsync(id);
             await unitOfWork.SaveAsync();
         }
+        
+        public async Task AddAsync(Course course)
+        {
+            await unitOfWork.Repository<Course>().AddAsync(course);
+            await unitOfWork.SaveAsync();
+        }
     }
 }

@@ -1,0 +1,39 @@
+﻿@using NamSitaKaurLMS.Core.Dtos
+@model CreateCourseDto
+
+<div class="modal fade" id="createCourseModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yeni Kurs Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form id="createCourseForm" asp-area="Admin"
+                  asp-controller="Dashboard"
+                  asp-action="CreateCourse"
+                  method="post">
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="form-label">Kurs Adı</label>
+                        <input asp-for="Title" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Kontenjan</label>
+                        <input asp-for="Quota" class="form-control" type="number" />
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
