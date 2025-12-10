@@ -19,7 +19,7 @@ namespace NamSitaKaurLMS.Infrastructure.Context
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<LessonContent> LessonContents { get; set; }
         public DbSet<SystemSetting> SystemSetting { get; set; }
-public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<UserCourse> UserCourses { get; set; }
         public DbSet<UserLessonProgress> UserLessonProgresses { get; set; }
 
