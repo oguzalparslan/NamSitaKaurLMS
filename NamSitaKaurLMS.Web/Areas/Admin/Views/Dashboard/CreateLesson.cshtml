@@ -1,0 +1,12 @@
+﻿@model IEnumerable<NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels.LessonViewModel>
+
+
+
+@foreach (var lesson in Model)
+{
+    <h3>Title @lesson.Title DurationMinutes @lesson.DurationMinutes IsPreview @lesson.IsPreview Order @lesson.Order  <a class="btn btn-success">İçerik Gir</a></h3>
+    <h3></h3>
+    <h3></h3>
+    <h3></h3>
+    <hr />
+}

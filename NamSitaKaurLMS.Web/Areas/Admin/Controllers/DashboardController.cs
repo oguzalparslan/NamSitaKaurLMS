@@ -95,6 +95,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             return PartialView("~/Areas/Admin/PartialViews/_UpdateCoursePopup.cshtml", vm);
         }
         #endregion
+        
         #region Post Actions
         [HttpPost]
         public IActionResult CreateCourse(CourseDto model)
@@ -168,6 +169,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             return Json(new { success = true });
         }
         #endregion
+
         #region Delete Action
         [HttpDelete]
         public async Task<IActionResult> DeleteCourse(int id)
@@ -179,10 +181,12 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         #endregion
 
         #region Lesson Operations
+
+        #region Get Actions
         [HttpGet]
         public async Task<IActionResult> CoursesForLesson()
         {
-            var courses = await courseService.GetAllAsync(x=> x.Status != 2);
+            var courses = await courseService.GetAllAsync(x => x.Status != 2);
 
             List<CoursesViewModel> coursesViewModel = courses.Select(c => new CoursesViewModel
             {
@@ -209,6 +213,46 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
             return View(coursesViewModel);
         }
+
+
+        public async Task<IActionResult> CreateLesson(int id)
+        {
+            var lessons = new List<LessonViewModel>()
+            {
+                new LessonViewModel
+                {
+                    CourseId = id,
+                    Order = 1,
+                    Title = "Giriş ve Tanışma",
+                    DurationMinutes = 15,
+                    IsPreview = true
+                },
+                new LessonViewModel
+                {
+                    CourseId = id,
+                    Order = 2,
+                    Title = "Temel Kavramlar",
+                    DurationMinutes = 30,
+                    IsPreview = false
+                },
+                new LessonViewModel
+                {
+                    CourseId = id,
+                    Order = 3,
+                    Title = "İleri Düzey Teknikler",
+                    DurationMinutes = 45,
+                    IsPreview = false
+                }
+            };
+
+            return View(lessons);
+        }
+        #endregion
+
+        #region Post Actions
+
+        #endregion
+
         #endregion
 
 
