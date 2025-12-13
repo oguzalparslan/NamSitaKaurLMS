@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NamSitaKaurLMS.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using NamSitaKaurLMS.Infrastructure.Context;
 namespace NamSitaKaurLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(NamSitaKaurLMSContext))]
-    partial class NamSitaKaurLMSContextModelSnapshot : ModelSnapshot
+    [Migration("20251213203956_changeValueFromThumbnailUrlForCourse")]
+    partial class changeValueFromThumbnailUrlForCourse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

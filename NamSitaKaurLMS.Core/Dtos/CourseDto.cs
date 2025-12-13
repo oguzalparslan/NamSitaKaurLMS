@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,14 +8,16 @@ using System.Threading.Tasks;
 
 namespace NamSitaKaurLMS.Core.Dtos
 {
-    public class CreateCourseDto
+    public class CourseDto
     {
+
+        public int? Id { get; set; }
         [Required]
         public string Title { get; set; }
 
         public string Slug { get; set; }
 
-        public string ThumbnailUrl { get; set; }
+        public string? ThumbnailUrl { get; set; }
 
         public string Level { get; set; }
 

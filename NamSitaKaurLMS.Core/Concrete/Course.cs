@@ -4,20 +4,20 @@ namespace NamSitaKaurLMS.Core.Concrete
 {
     public class Course : EntityBase
     {
-        public string Title { get; set; }           // Kurs başlığı
-        public string Slug { get; set; }            // URL dostu isim
-        public string ThumbnailUrl { get; set; }     // Kapak görseli
-        public string Level { get; set; }            // Beginner / Intermediate / Advanced
-        public string Category { get; set; }         // Yoga, Meditasyon, Pranayama…
-        public decimal Price { get; set; }           // Satış fiyatı
-        public bool IsFree { get; set; }             // Ücretsiz kurs mı?
-        public int DurationMinutes { get; set; }     // Toplam süre
-        public string Language { get; set; }         // TR / EN gibi
-        public bool IsPublished { get; set; }        //Kurs yayınlandı mı?
-        public int Status { get; set; }             // 0: Planlanan, 1: Devam Eden, 2: Tamamlandı
-        public DateTime StartDate { get; set; }     // Kurs başlangıç tarihi
-        public DateTime EndDate { get; set; }       // Kurs bitiş tarihi
-        public int Quota { get; set; }              // Maksimum öğrenci sayısı
+        public string Title { get; set; }           // Kurs başlığı-
+        public string Slug { get; set; }            // URL dostu isim-
+        public string? ThumbnailUrl { get; set; }     // Kapak görseli
+        public string Level { get; set; }            // Beginner / Intermediate / Advanced-
+        public string Category { get; set; }         // Yoga, Meditasyon, Pranayama…-
+        public decimal Price { get; set; }           // Satış fiyatı--
+        public bool IsFree { get; set; }             // Ücretsiz kurs mı?-
+        public int DurationMinutes { get; set; }     // Toplam süre-
+        public string Language { get; set; }         // TR / EN gibi-
+        public bool IsPublished { get; set; }        //Kurs yayınlandı mı?-
+        public int Status { get; set; }             // 0: Planlanan, 1: Devam Eden, 2: Tamamlandı-
+        public DateTime StartDate { get; set; }     // Kurs başlangıç tarihi-
+        public DateTime EndDate { get; set; }       // Kurs bitiş tarihi-
+        public int Quota { get; set; }              // Maksimum öğrenci sayısı-
 
 
         public CourseEnvironment CourseEnvironments { get; set; }

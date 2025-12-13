@@ -45,7 +45,7 @@ namespace NamSitaKaurLMS.Application.Concrete
 
         public async Task UpdateAsync(Course course)
         {
-            await unitOfWork.Repository<Course>().UpdateAsync(course);
+            courseRepository.UpdateCourseAsync(course);
             await unitOfWork.SaveAsync();
         }
 

@@ -12,5 +12,7 @@ namespace NamSitaKaurLMS.Core.Interfaces
         Task<Course> GetCourseWithLessonsAsync(int id);
         Task<IEnumerable<Course>> GetPublishedCoursesAsync();
         Task<IEnumerable<Course>> GetByCategoryAsync(string category);
+        Task UpdateCourseAsync(Course course);
+
     }
 }

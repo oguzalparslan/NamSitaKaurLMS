@@ -2,7 +2,7 @@
 {
     public class CoursesViewModel
     {
-
+        public int? Id { get; set; }
         public string Title { get; set; }           // Kurs başlığı
         public string Slug { get; set; }            // URL dostu isim
         public string ThumbnailUrl { get; set; }     // Kapak görseli

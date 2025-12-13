@@ -23,11 +23,19 @@ namespace NamSitaKaurLMS.Infrastructure.Repository
 
         public virtual async Task DeleteAsync(int id)
         {
-            var entity = await _dbSet.FindAsync(id);
-            if (entity == null)
-                throw new KeyNotFoundException($"{typeof(TEntity).Name} bulunamadı. Id: {id}");
+            try
+            {
+                var entity = await _dbSet.FindAsync(id);
+                if (entity == null)
+                    throw new KeyNotFoundException($"{typeof(TEntity).Name} bulunamadı. Id: {id}");
 
-            _dbSet.Remove(entity);
+                _dbSet.Remove(entity);
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e);
+            }
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync(bool tracking = false)

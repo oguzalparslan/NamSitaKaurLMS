@@ -36,5 +36,16 @@ namespace NamSitaKaurLMS.Infrastructure.Repository
             return publishedCourses;
 
         }
+
+        public Task UpdateCourseAsync (Course course)
+        {
+            var entityState = _context.Entry(course).State;
+
+            if (entityState == EntityState.Modified || entityState == EntityState.Detached)
+            {
+               _dbSet.Update(course);
+            }
+            return Task.CompletedTask;
+        }
     }
 }
