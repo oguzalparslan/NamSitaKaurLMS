@@ -1,0 +1,17 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model List<CoursesViewModel>
+
+@{
+    ViewData["Title"] = "Ders için Kurslar";
+}
+
+
+
+
+
+@foreach(var course in Model) {
+
+
+    <h1> @course.Title - @course.StartDate</h1>
+    
+}

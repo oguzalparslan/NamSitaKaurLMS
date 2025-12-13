@@ -5,6 +5,7 @@ using NamSitaKaurLMS.Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace NamSitaKaurLMS.Application.Concrete
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Course>> GetAllAsync()
+        public async Task<IEnumerable<Course>> GetAllAsync(Expression<Func<Course, bool>>? filter = null)
         {
             return await courseRepository.GetAllAsync();
         }

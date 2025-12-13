@@ -2,6 +2,7 @@
 using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Interfaces;
 using NamSitaKaurLMS.Infrastructure.Context;
+using System.Linq.Expressions;
 
 namespace NamSitaKaurLMS.Infrastructure.Repository
 {
@@ -46,6 +47,19 @@ namespace NamSitaKaurLMS.Infrastructure.Repository
                _dbSet.Update(course);
             }
             return Task.CompletedTask;
+        }
+
+
+        public async Task<IEnumerable<Course>> GetAllCoursesWithExpression (Expression<Func<Course, bool>>? filter = null)
+        {
+            IQueryable<Course> filteredCourses = _context.Courses.AsQueryable();
+
+            if (filter != null)
+                filteredCourses = filteredCourses.Where(filter);
+
+            var searchedCoursesList = await filteredCourses.ToListAsync();
+
+            return filteredCourses;
         }
     }
 }
