@@ -1,4 +1,5 @@
 ﻿using NamSitaKaurLMS.Application.Abstract;
+using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Dtos;
 using NamSitaKaurLMS.Core.Interfaces;
 using System;
@@ -34,6 +35,12 @@ namespace NamSitaKaurLMS.Application.Concrete
             }).ToList();
 
             return lessonDtoList;
+        }
+        public async Task AddLessonAsync(Lesson lesson)
+        {
+            await unitOfWork.Repository<Lesson>().AddAsync(lesson);
+            await unitOfWork.SaveAsync();
+
         }
     }
 }

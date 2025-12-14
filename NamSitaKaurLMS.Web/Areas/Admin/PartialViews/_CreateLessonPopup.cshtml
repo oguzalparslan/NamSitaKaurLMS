@@ -15,9 +15,11 @@
                   asp-area="Admin"
                   asp-controller="Dashboard"
                   asp-action="CreateLesson"
-                  method="post"
-                  enctype="multipart/form-data">
+                  method="post">
+
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="courseId" value="@Model.CourseId" />
+                <input type="hidden" name="CourseTitle" value="@Model.CourseTitle" />
                 <div class="modal-body">
                     <!-- Ders Adı -->
                     <div class="row mb-2 align-items-center">
@@ -40,18 +42,23 @@
                             <input asp-for="DurationMinutes" class="form-control" />
                         </div>
                     </div>
-                    <!-- Önizleme Mi-->
+                    <!-- Önizleme Mi -->
                     <div class="row mb-2 align-items-center">
                         <label asp-for="IsPreview" class="col-md-4 col-form-label">Önizleme Mi</label>
                         <div class="col-md-8">
-                            <input asp-for="IsPreview" class="form-control" type="checkbox" />
+                            <div class="form-check">
+                                <input asp-for="IsPreview" class="form-check-input" type="checkbox" />
+                                <label class="form-check-label" asp-for="IsPreview">Evet</label>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Kaydet</button>
-                    <button id="btnCancel" type="button" class="btn btn-secondary">İptal</button>
+                    <button id="btnCancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal" >İptal</button>
                 </div>
 
             </form>

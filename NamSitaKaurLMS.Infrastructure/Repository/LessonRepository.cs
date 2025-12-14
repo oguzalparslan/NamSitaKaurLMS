@@ -15,10 +15,14 @@ namespace NamSitaKaurLMS.Infrastructure.Repository
         {
         }
 
+        
+
         public Task<IEnumerable<Lesson>> GetAllByCourseAsync(int courseId)
         {
         var lessons = _context.Lessons.Where(l => l.CourseId == courseId).AsEnumerable();
             return Task.FromResult(lessons);
         }
+        
+
     }
 }

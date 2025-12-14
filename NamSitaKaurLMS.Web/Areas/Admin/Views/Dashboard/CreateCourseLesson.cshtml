@@ -11,7 +11,7 @@
    data-course-id="@Model.Course.Id">
     Yeni Ders Tanımla
 </a>
-<table class="table-bordered table-hover align-middle w-100">
+<table class="table table-bordered table-striped align-middle lesson-table">
     <thead>
         <tr>
             <td>Sıra</td>
@@ -29,19 +29,14 @@
 
             <tr>
 
-                <th>@lesson.Order</th>
+                <td>@lesson.Order</td>
                 <th>@lesson.Title</th>
                 <th>@lesson.DurationMinutes</th>
-                <th>
-                    @if (@lesson.IsPreview)
-                    {
-                        <span class="badge badge-danger w-100">Evet</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-primary w-100">Hayır</span>
-                    }
-                </th>
+                <td class="col-preview">
+                    <span class="badge bg-@(lesson.IsPreview ? "success" : "secondary") text-light">
+                        @(lesson.IsPreview ? "Evet" : "Hayır")
+                    </span>
+                </td>
 
                 <th>
                     <div class="btn-group">
@@ -70,7 +65,7 @@
             const courseId = btn.dataset.courseId;
             if (!courseId) return;
 
-            const baseUrl = '@Url.Action("CreateLesson", "Dashboard", new { area = "Admin" })';
+            const baseUrl = '@Url.Action("CreateLessonForm", "Dashboard", new { area = "Admin" })';
             const url = `${baseUrl}?courseId=${courseId}`;
 
             const res = await fetch(url, { credentials: "same-origin" });
@@ -82,9 +77,38 @@
             const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
             modal.show();
 
-            // İptal butonu (partial yeniden basıldığı için burada bağlamak mantıklı)
             modalEl.querySelector("#btnCancel")?.addEventListener("click", () => modal.hide());
           });
+        });
+
+          document.addEventListener("submit", async function (e) {
+          if (!e.target.matches("#createLessonForm")) return;
+
+          e.preventDefault();
+          const form = e.target;
+
+          const res = await fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+            credentials: "same-origin"
+          });
+
+          const contentType = res.headers.get("content-type") || "";
+
+          // Server validation hatası olursa partial HTML döndürürsün
+          if (!contentType.includes("application/json")) {
+            const html = await res.text();
+            document.getElementById("lessonPopup").innerHTML = html;
+            bootstrap.Modal.getOrCreateInstance(document.getElementById("createLessonModal")).show();
+            return;
+          }
+
+          // Başarılıysa JSON yakala ve yönlendir
+          const data = await res.json();
+          if (data.success) {
+            window.location.href = data.redirectUrl;
+          }
         });
     </script>
 }

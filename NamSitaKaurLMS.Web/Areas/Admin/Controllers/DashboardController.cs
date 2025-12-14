@@ -215,7 +215,6 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
             return View(coursesViewModel);
         }
-
         [HttpGet]
         public async Task<IActionResult> CreateCourseLesson(int id)
         {
@@ -230,25 +229,49 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                 lessonDtoList = lessonDtos,
                 Course = course
             };
-           
-
             return View(lessonViewModel);
         }
-
         [HttpGet]
-        public IActionResult CreateLesson([FromQuery] int id)
+        public IActionResult CreateLessonForm([FromQuery] int courseId)
         {
-            CreateLessonViewModel lessonDto = new()
+            CreateLessonViewModel createLessonViewModel = new()
             {
-                CourseId = id
+                CourseId = courseId
             };
 
-            return PartialView("~/Areas/Admin/PartialViews/_CreateLessonPopup.cshtml", lessonDto);
+            return PartialView("~/Areas/Admin/PartialViews/_CreateLessonPopup.cshtml", createLessonViewModel);
         }
         #endregion
 
         #region Post Actions
+        [HttpPost]
+        public async Task<IActionResult> CreateLesson(CreateLessonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView("~/Areas/Admin/PartialViews/_CreateLessonPopup.cshtml", model);
+            }
 
+            var lesson = new Lesson()
+            {
+                CourseId = model.CourseId,
+                Order = model.Order,
+                Title = model.Title,
+                DurationMinutes = model.DurationMinutes,
+                IsPreview = model.IsPreview
+            };
+
+
+            await lessonService.AddLessonAsync(lesson);
+
+            return Json(new
+            {
+                success = true,
+                courseId = model.CourseId,
+                redirectUrl = Url.Action("CreateCourseLesson", "Dashboard", new { area = "Admin", id = model.CourseId })
+
+            });
+        }
         #endregion
 
         #endregion
