@@ -19,11 +19,13 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
         private readonly IUnitOfWork unitOfWork;
         private readonly ICourseService courseService;
+        private readonly ILessonService lessonService;
 
-        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService)
+        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService)
         {
             this.unitOfWork = unitOfWork;
             this.courseService = courseService;
+            this.lessonService = lessonService;
         }
 
         public IActionResult Index()
@@ -95,7 +97,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             return PartialView("~/Areas/Admin/PartialViews/_UpdateCoursePopup.cshtml", vm);
         }
         #endregion
-        
+
         #region Post Actions
         [HttpPost]
         public IActionResult CreateCourse(CourseDto model)
@@ -214,38 +216,34 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             return View(coursesViewModel);
         }
 
-
-        public async Task<IActionResult> CreateLesson(int id)
+        [HttpGet]
+        public async Task<IActionResult> CreateCourseLesson(int id)
         {
-            var lessons = new List<LessonViewModel>()
+            var course = await courseService.GetByIdAsync(id);
+            if (course == null)
+                return View();
+
+            var lessonDtos = await lessonService.GetAllLessonsByIdAsync(course.Id);
+
+            LessonViewModel lessonViewModel = new()
             {
-                new LessonViewModel
-                {
-                    CourseId = id,
-                    Order = 1,
-                    Title = "Giriş ve Tanışma",
-                    DurationMinutes = 15,
-                    IsPreview = true
-                },
-                new LessonViewModel
-                {
-                    CourseId = id,
-                    Order = 2,
-                    Title = "Temel Kavramlar",
-                    DurationMinutes = 30,
-                    IsPreview = false
-                },
-                new LessonViewModel
-                {
-                    CourseId = id,
-                    Order = 3,
-                    Title = "İleri Düzey Teknikler",
-                    DurationMinutes = 45,
-                    IsPreview = false
-                }
+                lessonDtoList = lessonDtos,
+                Course = course
+            };
+           
+
+            return View(lessonViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult CreateLesson([FromQuery] int id)
+        {
+            CreateLessonViewModel lessonDto = new()
+            {
+                CourseId = id
             };
 
-            return View(lessons);
+            return PartialView("~/Areas/Admin/PartialViews/_CreateLessonPopup.cshtml", lessonDto);
         }
         #endregion
 

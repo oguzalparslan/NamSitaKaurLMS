@@ -38,6 +38,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(ICourseRepository), typeof(CourseRepository));
 builder.Services.AddScoped(typeof(ICourseService), typeof(CourseService));
+builder.Services.AddScoped(typeof(ILessonRepository), typeof(LessonRepository));
+builder.Services.AddScoped(typeof(ILessonService), typeof(LessonService));
 // Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

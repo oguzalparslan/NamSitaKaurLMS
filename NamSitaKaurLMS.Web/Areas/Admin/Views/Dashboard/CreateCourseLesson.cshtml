@@ -1,0 +1,90 @@
+﻿@model NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels.LessonViewModel
+
+
+<div id="lessonPopup"></div>
+
+@* <h2>Kurs : @Model.Select(x => x.CourseTitle).FirstOrDefault()</h2> *@
+<h2>Kurs : @Model.Course.Title</h2>
+
+<a id="btnCreateLesson"
+   class="btn btn-success mb-3"
+   data-course-id="@Model.Course.Id">
+    Yeni Ders Tanımla
+</a>
+<table class="table-bordered table-hover align-middle w-100">
+    <thead>
+        <tr>
+            <td>Sıra</td>
+            <td>Ders Adı</td>
+            <td>Süre</td>
+            <td>Önizleme Mi ?</td>
+            <td>İşlemler</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var lesson in Model.lessonDtoList)
+        {
+            <input type="hidden" value="@lesson." />
+
+            <tr>
+
+                <th>@lesson.Order</th>
+                <th>@lesson.Title</th>
+                <th>@lesson.DurationMinutes</th>
+                <th>
+                    @if (@lesson.IsPreview)
+                    {
+                        <span class="badge badge-danger w-100">Evet</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-primary w-100">Hayır</span>
+                    }
+                </th>
+
+                <th>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-info">Ders İçerik Gir</a>
+                        <a class="btn btn-outline-warning">Ders İçeriği Sil</a>
+                        <a class="btn btn-outline-danger">Dersi Sil</a>
+                    </div>
+
+
+                </th>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const popup = document.getElementById("lessonPopup");
+          const btn = document.getElementById("btnCreateLesson");
+          if (!btn) return;
+
+          btn.addEventListener("click", async function (e) {
+            e.preventDefault();
+
+            const courseId = btn.dataset.courseId;
+            if (!courseId) return;
+
+            const baseUrl = '@Url.Action("CreateLesson", "Dashboard", new { area = "Admin" })';
+            const url = `${baseUrl}?courseId=${courseId}`;
+
+            const res = await fetch(url, { credentials: "same-origin" });
+            const html = await res.text();
+
+            popup.innerHTML = html;
+
+            const modalEl = document.getElementById("createLessonModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+
+            // İptal butonu (partial yeniden basıldığı için burada bağlamak mantıklı)
+            modalEl.querySelector("#btnCancel")?.addEventListener("click", () => modal.hide());
+          });
+        });
+    </script>
+}

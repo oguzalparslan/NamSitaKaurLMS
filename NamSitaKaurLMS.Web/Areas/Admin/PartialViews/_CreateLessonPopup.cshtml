@@ -1,0 +1,61 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model CreateLessonViewModel
+
+
+
+<div class="modal fade" id="createLessonModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Ders Tanımlama</h5>
+            </div>
+
+            <form id="createLessonForm"
+                  asp-area="Admin"
+                  asp-controller="Dashboard"
+                  asp-action="CreateLesson"
+                  method="post"
+                  enctype="multipart/form-data">
+                <input type="hidden" name="courseId" value="@Model.CourseId" />
+                <div class="modal-body">
+                    <!-- Ders Adı -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="Title" class="col-md-4 col-form-label">Ders Adı</label>
+                        <div class="col-md-8">
+                            <input asp-for="Title" class="form-control" />
+                        </div>
+                    </div>
+                    <!-- Ders Sıra -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="Order" class="col-md-4 col-form-label">Sıra No</label>
+                        <div class="col-md-8">
+                            <input asp-for="Order" class="form-control" />
+                        </div>
+                    </div>
+                    <!-- Ders Süresi -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="DurationMinutes" class="col-md-4 col-form-label">Ders Süresi (dk)</label>
+                        <div class="col-md-8">
+                            <input asp-for="DurationMinutes" class="form-control" />
+                        </div>
+                    </div>
+                    <!-- Önizleme Mi-->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="IsPreview" class="col-md-4 col-form-label">Önizleme Mi</label>
+                        <div class="col-md-8">
+                            <input asp-for="IsPreview" class="form-control" type="checkbox" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button id="btnCancel" type="button" class="btn btn-secondary">İptal</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
