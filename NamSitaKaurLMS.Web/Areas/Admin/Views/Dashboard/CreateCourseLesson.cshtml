@@ -3,6 +3,10 @@
 
 <div id="lessonPopup"></div>
 
+<form id="antiForgeryForm" method="post">
+    @Html.AntiForgeryToken()
+</form>
+
 @* <h2>Kurs : @Model.Select(x => x.CourseTitle).FirstOrDefault()</h2> *@
 <h2>Kurs : @Model.Course.Title</h2>
 
@@ -25,7 +29,8 @@
     <tbody>
         @foreach (var lesson in Model.lessonDtoList)
         {
-            <input type="hidden" value="@lesson." />
+            <input type="hidden" name="LessonId" value="@lesson.LessonId" />
+            <input type="hidden" name="CourseId" value="@lesson.CourseId" />
 
             <tr>
 
@@ -40,9 +45,22 @@
 
                 <th>
                     <div class="btn-group">
-                        <a class="btn btn-outline-info">Ders İçerik Gir</a>
-                        <a class="btn btn-outline-warning">Ders İçeriği Sil</a>
-                        <a class="btn btn-outline-danger">Dersi Sil</a>
+
+                        <a class="btn btn-outline-info btn-add-lesson-content"
+                           data-lesson-id="@lesson.LessonId"
+                           data-course-id="@Model.Course.Id">
+                            Ders İçerik Gir
+                        </a>
+
+                        <a class="btn btn-outline-warning btn-delete-lesson-content">
+                            Ders İçeriği Sil
+                        </a>
+
+                        <a class="btn btn-outline-danger btn-delete-lesson"
+                           data-lesson-id="@lesson.LessonId"
+                           data-course-id="@Model.Course.Id">
+                            Dersi Sil
+                        </a>
                     </div>
 
 
@@ -110,5 +128,73 @@
             window.location.href = data.redirectUrl;
           }
         });
+
+                document.addEventListener("click", async function (e) {
+          const btn = e.target.closest(".btn-delete-lesson");
+          if (!btn) return;
+
+          e.preventDefault();
+
+          const lessonId = btn.dataset.lessonId;
+          const courseId = btn.dataset.courseId;
+
+          if (!lessonId) return;
+
+          if (!confirm("Bu dersi silmek istediğine emin misin?")) return;
+
+          // antiforgery token
+          const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+          const res = await fetch('@Url.Action("DeleteLesson", "Dashboard", new { area = "Admin" })', {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "RequestVerificationToken": token,
+              "X-Requested-With": "XMLHttpRequest"
+            },
+            body: new URLSearchParams({ id: lessonId, courseId: courseId }).toString(),
+            credentials: "same-origin"
+          });
+
+          const data = await res.json();
+
+          if (data.success) {
+            // 1) İstersen sadece satırı kaldır:
+            btn.closest("tr")?.remove();
+
+            // 2) veya komple refresh:
+            // window.location.href = data.redirectUrl;
+          }
+        });
+
+
+        document.addEventListener("click", async function (e){
+            const btnAddContent = document.querySelectorAll(".btn-add-lesson-content");
+            const popup = document.getElementById("lessonPopup");
+            if (!btnAddContent) return;
+
+            const btn = e.target.closest(".btn-add-lesson-content");
+
+             if (!btn) return;
+
+            e.preventDefault();
+
+
+            const form = e.target;
+            const courseId = btn.dataset.courseId;
+            const lessonId = btn.dataset.lessonId;
+
+            const baseUrl = '@Url.Action("CreateLessonContentForm", "Dashboard", new { area = "Admin" })';
+            const url = `${baseUrl}?courseId=${courseId}&lessonId=${lessonId}`;
+
+            const res = await fetch(url, { credentials: "same-origin" });
+            const html = await res.text();
+
+            popup.innerHTML = html;
+
+            const modalEl = document.getElementById("createLessonModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();        });
+
     </script>
 }

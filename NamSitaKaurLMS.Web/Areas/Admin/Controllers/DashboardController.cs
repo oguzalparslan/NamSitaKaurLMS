@@ -241,6 +241,20 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
             return PartialView("~/Areas/Admin/PartialViews/_CreateLessonPopup.cshtml", createLessonViewModel);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> CreateLessonContentForm([FromQuery] int courseId , int lessonId)
+        {
+            CreateLessonContentViewModel createLessonViewModel = new()
+            {
+                LessonId = lessonId,
+                CourseId = courseId,
+                LessonTitle = await lessonService.GetByLessonTitleAsync(lessonId)
+            };
+
+            return PartialView("~/Areas/Admin/PartialViews/_CreateLessonContentPopup.cshtml", createLessonViewModel);
+        }
         #endregion
 
         #region Post Actions
@@ -272,6 +286,52 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
             });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteLesson(int id, int courseId)
+        {
+            // güvenlik/validasyon
+            if (id <= 0) return BadRequest();
+
+            await lessonService.DeleteLessonAsync(id);
+
+            return Json(new
+            {
+                success = true,
+                courseId,
+                redirectUrl = Url.Action("CreateCourseLesson", "Dashboard", new { area = "Admin", id = courseId })
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateLessonContent(CreateLessonContentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return PartialView("~/Areas/Admin/PartialViews/_CreateLessonContentPopup.cshtml", model);
+            }
+
+            var lessonContent = new LessonContent()
+            {
+                ContentType = model.ContentType,
+                Url = model.Url,
+                Order = model.Order,
+                LessonId = model.LessonId,
+                Text = model.Text
+            };
+            //await lessonContentService.AddLessonAsync(lessonContent);
+
+            return Json(new
+            {
+                success = true,
+                courseId = model.CourseId,
+                redirectUrl = Url.Action("CreateCourseLesson", "Dashboard", new { area = "Admin", id = model.CourseId })
+
+            });
+
+        }
+
         #endregion
 
         #endregion

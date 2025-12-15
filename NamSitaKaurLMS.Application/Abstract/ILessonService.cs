@@ -12,5 +12,7 @@ namespace NamSitaKaurLMS.Application.Abstract
     {
         public Task<IEnumerable<LessonDto>> GetAllLessonsByIdAsync(int courseId);
         public Task AddLessonAsync(Lesson lesson);
+        public Task DeleteLessonAsync(int id);
+        public Task<string> GetByLessonTitleAsync(int id);
     }
 }

@@ -20,7 +20,6 @@ namespace NamSitaKaurLMS.Application.Concrete
             this.lessonRepository = lessonRepository;
             this.unitOfWork = unitOfWork;
         }
-
         public async Task<IEnumerable<LessonDto>> GetAllLessonsByIdAsync(int courseId)
         {
             var lessons = await lessonRepository.GetAllByCourseAsync(courseId);
@@ -41,6 +40,20 @@ namespace NamSitaKaurLMS.Application.Concrete
             await unitOfWork.Repository<Lesson>().AddAsync(lesson);
             await unitOfWork.SaveAsync();
 
+        }
+        public async Task DeleteLessonAsync(int id)
+        {
+            await unitOfWork.Repository<Lesson>().DeleteAsync(id);
+            await unitOfWork.SaveAsync();
+        }
+
+        public async Task<string> GetByLessonTitleAsync(int id)
+        {
+            var lessonTitle = string.Empty;
+            var lesson = await unitOfWork.Repository<Lesson>().GetByIdAsync(id);
+            if (lesson != null)
+                lessonTitle = lesson.Title;
+            return lessonTitle;
         }
     }
 }

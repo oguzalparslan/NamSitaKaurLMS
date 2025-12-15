@@ -1,0 +1,71 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model CreateLessonContentViewModel
+
+
+
+<div class="modal fade" id="createLessonModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Dersi İçerik Girişi
+                    <span class="badge bg-info text-light fs-5 px-4 py-2 ms-2">
+                        @Model.LessonTitle
+                    </span>
+                </h5>
+            </div>
+
+            <form id="CreateLessonContent"
+                  asp-area="Admin"
+                  asp-controller="Dashboard"
+                  asp-action="CreateLesson"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+
+
+                    <!-- İçerik Tipi -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="ContentType" class="col-md-4 col-form-label">İçerik Tipi</label>
+                        <div class="col-md-8">
+                            <input asp-for="ContentType" class="form-control" />
+                        </div>
+                    </div>
+                    <!-- Url -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="Url" class="col-md-4 col-form-label">Url</label>
+                        <div class="col-md-8">
+                            <input asp-for="Url" class="form-control" />
+                        </div>
+                    </div>
+                    <!--Url -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="Text" class="col-md-4 col-form-label">Açıklama</label>
+                        <div class="col-md-8">
+                            <input asp-for="Text" class="form-control" />
+                        </div>
+                    </div>
+                    <!-- İçerik Tipi -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="Order" class="col-md-4 col-form-label">Sıra</label>
+                        <div class="col-md-8">
+                            <input asp-for="Order" class="form-control" disabled />
+                            <input type="hidden" asp-for="Order" />
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button id="btnCancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
