@@ -20,12 +20,15 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly ICourseService courseService;
         private readonly ILessonService lessonService;
+        private readonly ILessonContentService lessonContentService;
 
-        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService)
+
+        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService)
         {
             this.unitOfWork = unitOfWork;
             this.courseService = courseService;
             this.lessonService = lessonService;
+            this.lessonContentService = lessonContentService;
         }
 
         public IActionResult Index()
@@ -34,6 +37,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         }
 
         #region Course Operations
+
         #region Get Actions
         [HttpGet]
         public async Task<IActionResult> Courses()
@@ -223,11 +227,12 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                 return View();
 
             var lessonDtos = await lessonService.GetAllLessonsByIdAsync(course.Id);
-
+            var lessonContent = await lessonContentService.GetLessonContentByCourseId(lessonDtos.Select(l => l.CourseId).FirstOrDefault());
             LessonViewModel lessonViewModel = new()
             {
                 lessonDtoList = lessonDtos,
-                Course = course
+                Course = course,
+                lessonContentList = lessonContent
             };
             return View(lessonViewModel);
         }
@@ -243,18 +248,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> CreateLessonContentForm([FromQuery] int courseId , int lessonId)
-        {
-            CreateLessonContentViewModel createLessonViewModel = new()
-            {
-                LessonId = lessonId,
-                CourseId = courseId,
-                LessonTitle = await lessonService.GetByLessonTitleAsync(lessonId)
-            };
 
-            return PartialView("~/Areas/Admin/PartialViews/_CreateLessonContentPopup.cshtml", createLessonViewModel);
-        }
         #endregion
 
         #region Post Actions
@@ -304,7 +298,32 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             });
         }
 
+
+
+        #endregion
+
+        #endregion
+
+        #region LessonContent Operations
+
+        #region Get Actions
+        [HttpGet]
+        public async Task<IActionResult> CreateLessonContentForm([FromQuery] int courseId, int lessonId)
+        {
+            CreateLessonContentViewModel createLessonViewModel = new()
+            {
+                LessonId = lessonId,
+                CourseId = courseId,
+                LessonTitle = await lessonService.GetByLessonTitleAsync(lessonId)
+            };
+
+            return PartialView("~/Areas/Admin/PartialViews/_CreateLessonContentPopup.cshtml", createLessonViewModel);
+        }
         [HttpPost]
+
+        #endregion
+
+        #region Post Actions
         public async Task<IActionResult> CreateLessonContent(CreateLessonContentViewModel model)
         {
             if (!ModelState.IsValid)
@@ -320,7 +339,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                 LessonId = model.LessonId,
                 Text = model.Text
             };
-            //await lessonContentService.AddLessonAsync(lessonContent);
+            await lessonContentService.AddLessonContentAsync(lessonContent);
 
             return Json(new
             {
@@ -334,8 +353,16 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Delete Actions
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCourseContent(int lessonId, int courseId)
+        {
+            await lessonContentService.DeleteCourseContentAsync(lessonId, courseId);
+
+            return RedirectToAction("CreateCourseLesson", "Dashboard", new { area = "Admin", id = courseId });
+        }
         #endregion
-
-
+        #endregion
     }
 }

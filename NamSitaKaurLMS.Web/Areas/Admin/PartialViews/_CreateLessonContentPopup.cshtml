@@ -19,9 +19,10 @@
             <form id="CreateLessonContent"
                   asp-area="Admin"
                   asp-controller="Dashboard"
-                  asp-action="CreateLesson"
+                  asp-action="CreateLessonContent"
                   method="post">
-
+                <input type="hidden" name="courseId" value="@Model.CourseId" />
+                <input type="hidden" name="LessonId" value="@Model.LessonId" />
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
 

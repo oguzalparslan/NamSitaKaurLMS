@@ -40,6 +40,9 @@ builder.Services.AddScoped(typeof(ICourseRepository), typeof(CourseRepository));
 builder.Services.AddScoped(typeof(ICourseService), typeof(CourseService));
 builder.Services.AddScoped(typeof(ILessonRepository), typeof(LessonRepository));
 builder.Services.AddScoped(typeof(ILessonService), typeof(LessonService));
+builder.Services.AddScoped(typeof(ILessonContentRepository), typeof(LessonContentRepository));
+builder.Services.AddScoped(typeof(ILessonContentService), typeof(LessonContentService));
+
 // Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

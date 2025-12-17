@@ -9,7 +9,7 @@ namespace NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
 
         public int CourseId { get; set; }
         public int LessonId { get; set; }
-        public string LessonTitle { get; set; }
+        public string? LessonTitle { get; set; }
         public string ContentType { get; set; }       // Video / Audio / Text / PDF
         public string Url { get; set; }               // Video linki
         public string Text { get; set; }              // Metin açıklaması

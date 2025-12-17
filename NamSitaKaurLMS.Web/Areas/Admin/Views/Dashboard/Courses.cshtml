@@ -66,8 +66,8 @@
 
                         <th>Yayında mı?</th>
 
-                        <th>#Düzenle</th>
-                        <th>#Sil</th>
+                        <th>Düzenle</th>
+                        <th>Sil</th>
                     </tr>
                 </thead>
 
@@ -84,9 +84,9 @@
                                 @if (course.IsFree || @course.Price == 0)
                                 {
                                     <span class="badge bg-success text-light
-                                             position-absolute top-0 bottom-0 start-0 end-0
-                                             d-flex align-items-center justify-content-center
-                                             w-100 h-100">
+                                                     position-absolute top-0 bottom-0 start-0 end-0
+                                                     d-flex align-items-center justify-content-center
+                                                     w-100 h-100">
                                         Ücretsiz
                                     </span>
                                 }
@@ -113,14 +113,14 @@
                                 @if (course.IsPublished)
                                 {
                                     <span class="badge bg-info text-light position-absolute top-0 bottom-0 start-0 end-0
-                                             d-flex align-items-center justify-content-center w-100 h-100">
+                                                     d-flex align-items-center justify-content-center w-100 h-100">
                                         Yayında
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="badge bg-secondary text-light position-absolute top-0 bottom-0 start-0 end-0
-                                             d-flex align-items-center justify-content-center w-100 h-100">
+                                                     d-flex align-items-center justify-content-center w-100 h-100">
                                         Taslak
                                     </span>
                                 }
@@ -130,14 +130,14 @@
 
                             <td>
                                 <a href="#"
-                                   class="btn btn-outline-success w-100 btnUpdateCourse"
+                                   class="btn btn-outline-success w-100 btnUpdateCourse @(course.Status == "Tamamlandı" ? "disabled" : "")"
                                    data-id="@(course.Id ?? 0)">
                                     Düzenle
                                 </a>
                             </td>
 
                             <td>
-                                <a class="btn btn-outline-danger w-100 btnDeleteCourse"
+                                <a class="btn btn-outline-danger w-100 btnDeleteCourse @(course.Status == "Tamamlandı" ? "disabled" : "")"
                                    asp-area="Admin"
                                    asp-controller="Dashboard"
                                    asp-action="DeleteCourse"
@@ -145,6 +145,7 @@
                                     Sil
                                 </a>
                             </td>
+
                         </tr>
                     }
                 </tbody>

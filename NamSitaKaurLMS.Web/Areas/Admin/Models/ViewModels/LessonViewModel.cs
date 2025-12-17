@@ -14,5 +14,6 @@ namespace NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
         //public bool IsPreview { get; set; }            // Ön izleme dersi mi?
         public IEnumerable<LessonDto> lessonDtoList { get; set; }
         public Course Course { get; set; }
+        public IEnumerable<LessonContent> lessonContentList{ get; set; }
     }
 }
