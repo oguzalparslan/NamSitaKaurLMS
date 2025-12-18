@@ -37,7 +37,7 @@ namespace NamSitaKaurLMS.WebUI.Seed
                 await userManager.SetUserNameAsync(adminUser, "lmsadmin");
                 await userManager.SetEmailAsync(adminUser, adminEmail);
 
-                var result = await userManager.CreateAsync(adminUser, "Ruhi123");
+                var result = await userManager.CreateAsync(adminUser, "lmsadmin35");
 
                 if (result.Succeeded)
                 {
