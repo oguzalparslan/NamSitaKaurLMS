@@ -1,0 +1,77 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model IEnumerable<UserListItemViewModel>
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+<div id="popup"></div>
+<h1>Kullanıcı Listesi</h1>
+
+<button id="btnAddNewUser" class="btn btn-outline-success my-2">Yeni Kullanıcı ekle</button>
+
+<table class="table table-bordered table-hover align-middle w-100">
+    <thead>
+        <tr>
+            <th>UserId</th>
+            <th>Kullanıcı Adı</th>
+            <th>e-Mail</th>
+            <th>e-Mail Doğrulanmış mı ?</th>
+            <th>Cep Telefonu</th>
+            <th>Kullanıcı Rolleri</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id.Substring(0, 3)*******@user.Id.Substring(user.Id.Length - 3, 3)</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.EmailConfirmed</td>
+                <td>@user.PhoneNumber</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        <span class="badge bg-@(user.Roles.Contains("Admin") ? "success" : "primary") text-light p-3">
+                            @role.ToString()
+                        </span>
+                    }
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary">Güncelle</button>
+                        <button type="button" class="btn btn-outline-primary">Sil</button>
+                        <button type="button" class="btn btn-outline-primary">Rol Değiştir</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function(){
+            var popup = document.querySelector("#popup");
+            var addUserButton = document.querySelector("#btnAddNewUser");
+
+            addUserButton.addEventListener("click", async function (e) {
+            //   alert(`addUserButton Clicked`);
+
+              e.preventDefault();
+
+              const url = '@Url.Action("CreateUser","Dashboard", new{ area = "Admin"})';
+              const res = await fetch(url, { credentials: "same-origin" });
+              const html = await res.text();
+
+              popup.innerHTML = html;
+
+              const modalEl = document.getElementById("createUserModal");
+              const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+              modal.show();
+            });
+        });
+
+    </script>
+}

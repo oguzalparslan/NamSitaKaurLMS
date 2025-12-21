@@ -1,20 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NamSitaKaurLMS.Application.Abstract;
-using NamSitaKaurLMS.Application.Concrete;
 using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Dtos;
 using NamSitaKaurLMS.Core.Interfaces;
+using NamSitaKaurLMS.Infrastructure.Identity;
 using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels;
 using NamSitaKaurLMS.WebUI.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 {
 
     [Area("Admin")]
+    [Authorize]
     public class DashboardController : Controller
     {
 
@@ -22,15 +24,15 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         private readonly ICourseService courseService;
         private readonly ILessonService lessonService;
         private readonly ILessonContentService lessonContentService;
-        private readonly IUserIdProvider userIdProvider;
+        private readonly UserManager<AppUser> userManager;
 
-        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService ,IUserIdProvider userIdProvider)
+        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService, UserManager<AppUser> userManager)
         {
             this.unitOfWork = unitOfWork;
             this.courseService = courseService;
             this.lessonService = lessonService;
             this.lessonContentService = lessonContentService;
-            this.userIdProvider = userIdProvider;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -365,5 +367,43 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         }
         #endregion
         #endregion
+
+        #region User Operations
+
+        #region GetActions
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await userManager.Users
+                                         .AsNoTracking()
+                                         .OrderBy(x => x.UserName)
+                                         .ToListAsync();
+            var userListViewModel = new List<UserListItemViewModel>(users.Count);
+
+            foreach (var user in users)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+
+                userListViewModel.Add(new UserListItemViewModel
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    EmailConfirmed = user.EmailConfirmed,
+                    Roles = roles.ToList()
+                });
+            }
+            return View(userListViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult CreateUser()
+        {
+            return PartialView("~/Areas/Admin/PartialViews/_CreateUserPopup.cshtml");
+        }
+        #endregion
+
+        #endregion
+
     }
 }

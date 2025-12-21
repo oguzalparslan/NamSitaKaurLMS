@@ -1,4 +1,9 @@
-﻿@model NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels.LessonViewModel
+﻿@{
+    ViewData["Title"] = "Ders Tanımlama";
+}
+
+
+@model NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels.LessonViewModel
 
 
 <div id="lessonPopup"></div>
@@ -20,7 +25,7 @@
         <tr>
             <td>Sıra</td>
             <td>Ders Adı</td>
-            <td>Süre</td>
+            <td>Süre (dk)</td>
             <td>Önizleme Mi ?</td>
             <td>Ders İçeriği</td>
             <td>İşlemler</td>
@@ -36,8 +41,8 @@
             <tr>
 
                 <td>@lesson.Order</td>
-                <th>@lesson.Title</th>
-                <th>@lesson.DurationMinutes</th>
+                <td>@lesson.Title</td>
+                <td>@lesson.DurationMinutes</td>
                 <td class="col-preview">
                     <span class="badge bg-@(lesson.IsPreview ? "success" : "secondary") text-light">
                         @(lesson.IsPreview ? "Evet" : "Hayır")
@@ -53,12 +58,8 @@
                         var content = Model.lessonContentList?
                         .FirstOrDefault(x => x.LessonId == lesson.LessonId);
                     }
-
-                <td>@(content?.Text ?? "İçerik Bulunamadı !")</td>
-
-
-                </td>
-                <th>
+                    @(content?.Text ?? "İçerik Bulunamadı !")
+                <td>
                     <div class="btn-group">
 
                         <a class="btn btn-outline-info btn-add-lesson-content"
@@ -84,7 +85,7 @@
                     </div>
 
 
-                </th>
+                </td>
             </tr>
         }
     </tbody>
