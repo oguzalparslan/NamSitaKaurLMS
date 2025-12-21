@@ -1,4 +1,4 @@
-﻿namespace NamSitaKaurLMS.WebUI.ViewModel
+﻿namespace NamSitaKaurLMS.WebUI.Models
 {
     public class LoginViewModel
     {

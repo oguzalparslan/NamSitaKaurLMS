@@ -18,10 +18,14 @@ namespace NamSitaKaurLMS.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login() => View();
-
+        public IActionResult Login(string? returnUrl = null)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -34,24 +38,32 @@ namespace NamSitaKaurLMS.WebUI.Controllers
                 return View(model);
             }
 
-            // *** ÖNEMLİ ***
-            // Email → Username’e çevrilmek zorunda
-            var userName = user.UserName;
-
-            var result = await _signInManager.PasswordSignInAsync(
-                userName,
+            var loginResult = await _signInManager.PasswordSignInAsync(
+                user,
                 model.Password,
-                false,
-                false
-            );
+                isPersistent: false,
+                lockoutOnFailure: true
+                );
 
-            if (result.Succeeded)
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            if (!loginResult.Succeeded)
+            {
+                ModelState.AddModelError("", "E Mail veya Şifre Hatalı !");
+            }
 
-            ModelState.AddModelError("", "Email veya şifre hatalı.");
-            return View(model);
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+                Redirect(returnUrl);
+
+            var userRole = await _userManager.GetRolesAsync(user);
+            if (userRole.Contains("Admin"))
+            {
+               return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public IActionResult AccessDenied() => View();
 
 
         public async Task<IActionResult> Logout()

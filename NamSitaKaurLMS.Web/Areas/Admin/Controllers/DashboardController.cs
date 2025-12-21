@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using NamSitaKaurLMS.Application.Abstract;
 using NamSitaKaurLMS.Application.Concrete;
 using NamSitaKaurLMS.Core.Concrete;
@@ -21,14 +22,15 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         private readonly ICourseService courseService;
         private readonly ILessonService lessonService;
         private readonly ILessonContentService lessonContentService;
+        private readonly IUserIdProvider userIdProvider;
 
-
-        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService)
+        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService ,IUserIdProvider userIdProvider)
         {
             this.unitOfWork = unitOfWork;
             this.courseService = courseService;
             this.lessonService = lessonService;
             this.lessonContentService = lessonContentService;
+            this.userIdProvider = userIdProvider;
         }
 
         public IActionResult Index()
@@ -43,7 +45,6 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Courses()
         {
             var courses = await courseService.GetAllAsync();
-
             List<CoursesViewModel> coursesViewModel = courses.Select(c => new CoursesViewModel
             {
                 Id = c.Id,

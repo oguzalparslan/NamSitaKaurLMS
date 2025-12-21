@@ -22,9 +22,12 @@ namespace NamSitaKaurLMS.WebUI.Seed
                 }
             }
 
-            // Admin kullanıcı
-            var adminEmail = "lms@namsitakaur.com";
-            var adminUserName = "lmsadmin1";
+            var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var adminEmail = config["SeedAdminData:email"];//"lms@namsitakaur.com";
+            var adminUserName = config["SeedAdminData:email"]; //"lmsadmin1";
+            var adminUserPassword = config["SeedAdminData:password"];
+
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
             if (adminUser == null)
@@ -37,7 +40,7 @@ namespace NamSitaKaurLMS.WebUI.Seed
                 await userManager.SetUserNameAsync(adminUser, "lmsadmin");
                 await userManager.SetEmailAsync(adminUser, adminEmail);
 
-                var result = await userManager.CreateAsync(adminUser, "lmsadmin35");
+                var result = await userManager.CreateAsync(adminUser, adminUserPassword /*"lmsadmin35"*/);
 
                 if (result.Succeeded)
                 {
