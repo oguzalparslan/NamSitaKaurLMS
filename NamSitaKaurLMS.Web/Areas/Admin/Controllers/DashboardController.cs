@@ -24,15 +24,21 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         private readonly ICourseService courseService;
         private readonly ILessonService lessonService;
         private readonly ILessonContentService lessonContentService;
-        private readonly UserManager<AppUser> userManager;
+        private readonly IUserService userService;
 
-        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService, UserManager<AppUser> userManager)
+        private readonly UserManager<AppUser> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
+
+
+        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService, IUserService userService ,UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.unitOfWork = unitOfWork;
             this.courseService = courseService;
             this.lessonService = lessonService;
             this.lessonContentService = lessonContentService;
+            this.userService = userService;
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -370,7 +376,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
         #region User Operations
 
-        #region GetActions
+        #region Get Actions
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await userManager.Users
@@ -395,7 +401,6 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             }
             return View(userListViewModel);
         }
-
         [HttpGet]
         public IActionResult CreateUser()
         {
@@ -403,6 +408,78 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         }
         #endregion
 
+        #region Post Actions
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(CreateUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                Response.StatusCode = 400;
+                return PartialView("_CreateUserModal", model);
+            }
+
+            var user = new AppUser
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                EmailConfirmed = true,
+                PhoneNumber = model.PhoneNumber
+            };
+
+            var result = await userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var e in result.Errors)
+                    ModelState.AddModelError("", e.Description);
+
+                Response.StatusCode = 400;
+                return PartialView("_CreateUserModal", model);
+            }
+
+            const string defaultRole = "Student";
+
+            if (!await roleManager.RoleExistsAsync(defaultRole))
+            {
+                var roleCreate = await roleManager.CreateAsync(new IdentityRole(defaultRole));
+                if (!roleCreate.Succeeded)
+                {
+                    await userManager.DeleteAsync(user); // rollback
+                    foreach (var e in roleCreate.Errors)
+                        ModelState.AddModelError("", e.Description);
+
+                    Response.StatusCode = 400;
+                    return PartialView("_CreateUserModal", model);
+                }
+            }
+
+            var addRoleResult = await userManager.AddToRoleAsync(user, defaultRole);
+            if (!addRoleResult.Succeeded)
+            {
+                await userManager.DeleteAsync(user); // rollback
+                foreach (var e in addRoleResult.Errors)
+                    ModelState.AddModelError("", e.Description);
+
+                Response.StatusCode = 400;
+                return PartialView("_CreateUserModal", model);
+            }
+            User applicationUser = new()
+            {
+                AppUserId = user.Id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            await userService.AddUserAsync(applicationUser);
+
+            return RedirectToAction("GetAllUsers", "Dashboard", new { area = "Admin" });
+        }
+
+        #endregion
         #endregion
 
     }

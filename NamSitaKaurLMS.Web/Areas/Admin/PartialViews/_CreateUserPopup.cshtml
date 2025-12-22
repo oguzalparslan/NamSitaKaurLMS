@@ -1,5 +1,5 @@
-﻿@using NamSitaKaurLMS.Core.Dtos
-@model CourseDto
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model CreateUserViewModel
 
 <div class="modal fade" id="createUserModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -9,19 +9,73 @@
                 <h5 class="modal-title">Yeni Kullanıcı Tanımlama</h5>
             </div>
 
-            <form id="createCourseForm"
+            <form id="createUserForm"
                   asp-area="Admin"
                   asp-controller="Dashboard"
-                  asp-action="CreateCourse"
-                  method="post"
-                  enctype="multipart/form-data">
+                  asp-action="CreateUser"
+                  method="post">
+                @Html.AntiForgeryToken()
 
                 <div class="modal-body">
-                    add user popup modal body
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="UserName" class="col-md-4 col-form-label">Kullanıcı Adı</label>
+                            <div class="col-md-8">
+                                <input asp-for="UserName" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="FirstName" class="col-md-4 col-form-label">Adı</label>
+                            <div class="col-md-8">
+                                <input asp-for="FirstName" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="LastName" class="col-md-4 col-form-label">Soyadı</label>
+                            <div class="col-md-8">
+                                <input asp-for="LastName" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="Email" class="col-md-4 col-form-label">e-Mail</label>
+                            <div class="col-md-8">
+                                <input asp-for="Email" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="PhoneNumber" class="col-md-4 col-form-label">Cep Telefonu</label>
+                            <div class="col-md-8">
+                                <input asp-for="PhoneNumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="Password" class="col-md-4 col-form-label">Şifre</label>
+                            <div class="col-md-8">
+                                <input asp-for="Password" type="password" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="PasswordConfirm" class="col-md-4 col-form-label">Şifre Tekrar</label>
+                            <div class="col-md-8">
+                                <input asp-for="PasswordConfirm" type="password" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="submit" id="btnSubmitCreateUser" class="btn btn-success">Kaydet</button>
                     <button id="btnCancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                 </div>
 
