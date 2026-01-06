@@ -11,5 +11,6 @@ namespace NamSitaKaurLMS.Application.Abstract
     public interface IUserService
     {
         public Task AddUserAsync(User user);
+        public Task<User> GetUser(string identityUserId);
     }
 }

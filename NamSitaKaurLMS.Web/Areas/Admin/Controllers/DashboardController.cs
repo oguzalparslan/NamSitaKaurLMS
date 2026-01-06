@@ -30,7 +30,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
 
 
-        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService, IUserService userService ,UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService, IUserService userService, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.unitOfWork = unitOfWork;
             this.courseService = courseService;
@@ -406,6 +406,25 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         {
             return PartialView("~/Areas/Admin/PartialViews/_CreateUserPopup.cshtml");
         }
+
+
+        [HttpGet]
+        public IActionResult UpdateUser(string id)
+        {
+            var identityUser = userManager.FindByIdAsync(id).Result;
+            var user = userService.GetUser(identityUser.Id).Result;
+            var userViewModel = new UpdateUserViewModel()
+            {
+                UserName = identityUser.UserName,
+                Email = identityUser.Email,
+                PhoneNumber = identityUser.PhoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+
+            return PartialView("~/Areas/Admin/PartialViews/_UpdateUserPopup.cshtml", userViewModel);
+        }
+
         #endregion
 
         #region Post Actions

@@ -1,0 +1,69 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model UpdateUserViewModel
+
+<div class="modal fade" id="updateUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Yeni Kullanıcı Tanımlama</h5>
+            </div>
+
+            <form id="createUserForm"
+                  asp-area="Admin"
+                  asp-controller="Dashboard"
+                  asp-action="UpdateUser"
+                  method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-body">
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="UserName" class="col-md-4 col-form-label">Kullanıcı Adı</label>
+                            <div class="col-md-8">
+                                <input asp-for="UserName" disabled class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="FirstName" class="col-md-4 col-form-label">Adı</label>
+                            <div class="col-md-8">
+                                <input asp-for="FirstName" disabled class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="LastName" class="col-md-4 col-form-label">Soyadı</label>
+                            <div class="col-md-8">
+                                <input asp-for="LastName" disabled class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="Email" class="col-md-4 col-form-label">e-Mail</label>
+                            <div class="col-md-8">
+                                <input asp-for="Email" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="div">
+                        <div class="row mb-2 align-items-center">
+                            <label asp-for="PhoneNumber" class="col-md-4 col-form-label">Cep Telefonu</label>
+                            <div class="col-md-8">
+                                <input asp-for="PhoneNumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="submit" id="btnSubmitUpdateUser" disabled class="btn btn-success">Kaydet</button>
+                    <button id="btnCancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+

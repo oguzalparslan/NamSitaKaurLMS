@@ -27,5 +27,13 @@ namespace NamSitaKaurLMS.Application.Concrete
             await unitOfWork.Repository<User>().AddAsync(user);
             await unitOfWork.SaveAsync();
         }
+
+        public  Task<User> GetUser(string identityUserId)
+        {
+            var user = userRepository.GetUserById(identityUserId);
+                
+            return user;
+
+        }
     }
 }

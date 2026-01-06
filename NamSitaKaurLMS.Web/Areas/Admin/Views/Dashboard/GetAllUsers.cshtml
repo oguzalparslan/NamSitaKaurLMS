@@ -39,7 +39,7 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                        <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
+                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
                         <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary">Sil</button>
                         <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary">Rol Değiştir</button>
                     </div>
@@ -104,17 +104,24 @@
         {
             const element = e.target.closest(".btnUpdateUser");
             if(!element) return ;
-            
+
             e.preventDefault();
 
 
-            const id = element.dataset.id; ;
-            console.log("id : " + id);
-            console.dir(element);
-            // console.log(element.className.includes("btnUpdateUser"));
-        
-        
-        
+            const id = element.value ;
+            
+            const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
+            const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
+            const res = await fetch(url, { credentials: "same-origin" });
+            const html = await res.text();
+
+            popup.innerHTML = html;
+
+            const modalEl = popup.querySelector("#updateUserModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+
+
         });
 
 
