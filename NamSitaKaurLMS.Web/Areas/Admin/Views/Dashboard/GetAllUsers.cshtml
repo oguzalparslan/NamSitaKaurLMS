@@ -39,9 +39,9 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-primary">Güncelle</button>
-                        <button type="button" class="btn btn-outline-primary">Sil</button>
-                        <button type="button" class="btn btn-outline-primary">Rol Değiştir</button>
+                        <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
+                        <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary">Sil</button>
+                        <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary">Rol Değiştir</button>
                     </div>
                 </td>
             </tr>
@@ -99,5 +99,24 @@
             modal.show();
           });
         });
+
+        document.addEventListener("click",async function(e)
+        {
+            const element = e.target.closest(".btnUpdateUser");
+            if(!element) return ;
+            
+            e.preventDefault();
+
+
+            const id = element.dataset.id; ;
+            console.log("id : " + id);
+            console.dir(element);
+            // console.log(element.className.includes("btnUpdateUser"));
+        
+        
+        
+        });
+
+
     </script>
 }
