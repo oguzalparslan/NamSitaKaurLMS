@@ -3,6 +3,11 @@
 @{
     ViewData["Title"] = "Kullanıcılar";
 }
+
+<form id="antiForgeryForm" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
 <div id="popup"></div>
 <h1>Kullanıcı Listesi</h1>
 
@@ -40,7 +45,7 @@
                 <td>
                     <div class="btn-group" role="group">
                         <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
-                        <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary">Sil</button>
+                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnRemoveUser">Sil</button>
                         <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary">Rol Değiştir</button>
                     </div>
                 </td>
@@ -83,47 +88,91 @@
               credentials: "same-origin"
             });
 
-            // ✅ ASIL OLAY: server redirect döndüyse, tarayıcıya biz redirect ettiriyoruz
             if (res.redirected) {
               window.location.href = res.url;
               return;
             }
 
-            // Redirect yoksa: büyük ihtimalle validation hatası -> partial html döndü
             const html = await res.text();
             popup.innerHTML = html;
 
-            // modal tekrar render olduysa yeniden show
             const modalEl = popup.querySelector("#createUserModal");
             const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
             modal.show();
           });
         });
+              document.addEventListener("DOMContentLoaded", function () {
+              const popup = document.querySelector("#popup");
 
-        document.addEventListener("click",async function(e)
-        {
-            const element = e.target.closest(".btnUpdateUser");
-            if(!element) return ;
+                  document.addEventListener("click",async function(e)
+                  {
+                      const element = e.target.closest(".btnUpdateUser");
+                      if(!element) return ;
 
-            e.preventDefault();
+                      e.preventDefault();
+                      const id = element.value ;
 
+                      const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
+                      const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
+                      const res = await fetch(url, { credentials: "same-origin" });
+                      const html = await res.text();
+                      popup.innerHTML = html;
+                      const modalEl = popup.querySelector("#updateUserModal");
+                      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                      modal.show();
+                  });
 
-            const id = element.value ;
-            
-            const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
-            const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
-            const res = await fetch(url, { credentials: "same-origin" });
-            const html = await res.text();
-
-            popup.innerHTML = html;
-
-            const modalEl = popup.querySelector("#updateUserModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
-
-
-        });
+              });
 
 
+              document.addEventListener("DOMContentLoaded", function () {
+                  document.addEventListener("click", async function(e) {
+
+                      const element = e.target.closest(".btnRemoveUser");
+                      if(!element) return;
+                      console.dir(element);
+
+                      const isConfirmed = confirm("Seçtiğiniz kayıt ve bağlı olduğu detay kayıtlar silinecektir. Onaylıyor musunuz ?");
+                      console.log(isConfirmed);
+
+                      if(!isConfirmed) return;
+
+                      const id = e.target.value;
+
+                      alert(`Seçili Id : ${id}`);
+
+                     const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+
+                      const baseUrl = '@Url.Action("DeleteUser", "Dashboard", new { area = "Admin" })';
+
+                      const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
+
+                             const res = await fetch(baseUrl, {
+                                    method: "POST",
+                                    credentials: "same-origin",
+                                    headers: {
+                                      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                                      "RequestVerificationToken": token
+                                    },
+                                    body: new URLSearchParams({ id })
+                                  });
+
+                                  if (res.redirected) {
+                                    window.location.href = res.url;
+                                    return;
+                                  }
+                                  if (res.ok) {
+                                    window.location.reload();
+                                    return;
+                                  }
+
+                                  const errText = await res.text();
+                                  alert("Silme işlemi başarısız: " + errText);
+                                });
+
+
+
+              });
     </script>
 }

@@ -10,7 +10,9 @@ using NamSitaKaurLMS.Infrastructure.Identity;
 using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels;
 using NamSitaKaurLMS.WebUI.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 {
@@ -30,7 +32,13 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
 
 
-        public DashboardController(IUnitOfWork unitOfWork, ICourseService courseService, ILessonService lessonService, ILessonContentService lessonContentService, IUserService userService, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        public DashboardController(IUnitOfWork unitOfWork,
+                                   ICourseService courseService,
+                                   ILessonService lessonService,
+                                   ILessonContentService lessonContentService,
+                                   IUserService userService,
+                                   UserManager<AppUser> userManager,
+                                   RoleManager<IdentityRole> roleManager)
         {
             this.unitOfWork = unitOfWork;
             this.courseService = courseService;
@@ -415,6 +423,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             var user = userService.GetUser(identityUser.Id).Result;
             var userViewModel = new UpdateUserViewModel()
             {
+                Id = identityUser.Id,
                 UserName = identityUser.UserName,
                 Email = identityUser.Email,
                 PhoneNumber = identityUser.PhoneNumber,
@@ -498,8 +507,62 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             return RedirectToAction("GetAllUsers", "Dashboard", new { area = "Admin" });
         }
 
+        [HttpPost]
+        public IActionResult UpdateUser(UpdateUserViewModel updateUserViewModel)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return PartialView("~/Areas/Admin/PartialViews/_UpdateUserPopup.cshtml", updateUserViewModel);
+            }
+
+            var updatedUser = userManager.FindByIdAsync(updateUserViewModel.Id).Result;
+
+            updatedUser.Email = updateUserViewModel.Email;
+            updatedUser.PhoneNumber = updateUserViewModel.PhoneNumber;
+            userManager.UpdateAsync(updatedUser).Wait();
+
+
+            return RedirectToAction("GetAllUsers", "Dashboard", new { area = "Admin" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string Id)
+        {
+
+            var user = await userManager.FindByIdAsync(Id);
+            try
+            {
+                await userManager.DeleteAsync(user);
+                // Todo: Users ten silme işlemi yapılacak.
+                return RedirectToAction("GelAllUsers", "Dashboard", new { area = "Admin" });
+            }
+            catch (Exception e)
+            {
+                throw e.InnerException;
+            }
+
+        }
+
         #endregion
         #endregion
 
+
+        #region SystemSettings Operations
+
+        #region Get Actions
+
+        public IActionResult GetSystemSettings()
+        {
+            SystemSettingsViewModel systemSettingsViewModel = new SystemSettingsViewModel();
+            systemSettingsViewModel.userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return View(systemSettingsViewModel);
+        }
+
+        #endregion
+
+        #endregion
     }
 }

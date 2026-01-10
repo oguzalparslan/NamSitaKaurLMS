@@ -2,6 +2,7 @@
     Layout = null;
     var title = ViewData["Title"] ?? "Admin Panel";
 }
+@using System.Security.Claims
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,6 +41,33 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0" />
+            @if (User?.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userName = User.Identity?.Name; // çoğu projede email/username
+
+                <div class="d-flex gap-2 align-items-center flex-column text-light">
+                    <span>Merhaba, <strong>@userName</strong></span>
+                    <small class="text-dark">
+                       User Id =>@{
+                            var masked = "-";
+                            if (!string.IsNullOrEmpty(userId))
+                            {
+                                masked = userId.Length <= 6
+                                ? userId
+                                : $"{userId.Substring(0, 3)}***{userId.Substring(userId.Length - 3, 3)}";
+                            }
+                        }
+                        @masked
+                    </small>
+                </div>
+            }
+            else
+            {
+                <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Giriş</a>
+            }
+
+            <hr class="sidebar-divider my-0" />
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
@@ -62,7 +90,7 @@
             <hr class="sidebar-divider d-none d-md-block" />
 
             <!-- Sidebar Toggler -->
-            <div class="text-center d-none d-md-inline">
+            @* <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
@@ -72,7 +100,7 @@
                     <strong>SB Admin Pro</strong> is packed with premium features, components, and more!
                 </p>
                 <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
+            </div> *@
 
         </ul>
         <!-- End of Sidebar -->

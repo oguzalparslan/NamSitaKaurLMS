@@ -1,0 +1,104 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+
+@{
+    ViewData["Title"] = "Sistem Ayarları";
+}
+
+ @model SystemSettingsViewModel;
+
+<h1>Uygulama Ayarları</h1>
+
+<p>User Id @Model.userid</p>
+
+<p>
+    Burada sistem ayarları gösterilecek ve düzenlenecek.
+</p>
+<table class="table table-bordered table-hover align-middle w-100">
+    <thead>
+        <tr>
+            <th>Kod</th>
+            <th>Adı</th>
+            <th>Değeri</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>course.allow_free_course</td>
+            <td>Ücretsiz kurs eklenebilsin mi?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>course.delete_mode</td>
+            <td>Kurs silme işlemi seçimi? (1=Soft Delete, 0=Hard Delete)</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>course.require_unique_slug</td>
+            <td>Slug benzersiz olmak zorunda mı?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>course.auto_publish_new_course</td>
+            <td>Yeni kurs eklenince otomatik yayınlansın mı?</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>course.max_quota_enabled</td>
+            <td>Kota aktif mi?</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>lesson.preview_enabled</td>
+            <td>Ders “Önizleme” özelliği aktif mi?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>security.require_email_confirm</td>
+            <td>Email doğrulaması zorunlu mu?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>security.two_factor_enabled</td>
+            <td>2FA (iki aşamalı doğrulama) aktif mi?</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>media.upload_enabled</td>
+            <td>Dosya yükleme aktif mi?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>media.video_enabled</td>
+            <td>Video içerik tipi aktif mi?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>media.pdf_enabled</td>
+            <td>PDF içerik tipi aktif mi?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>media.text_enabled</td>
+            <td>Metin içerik tipi aktif mi?</td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>media.link_enabled</td>
+            <td>Link içerik tipi aktif mi?</td>
+            <td>1</td>
+        </tr>
+    </tbody>
+</table>
