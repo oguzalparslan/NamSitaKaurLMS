@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NamSitaKaurLMS.Application.Abstract;
 using NamSitaKaurLMS.Core.Concrete;
@@ -439,19 +440,82 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateUserRole(string userId)
 
         {
+            if (string.IsNullOrWhiteSpace(userId))
+                return BadRequest("userId boş olamaz.");
+
             var user = await userManager.FindByIdAsync(userId);
+
+            if (user is null)
+            {
+                return NotFound("Kullanıcı bulunamadı.");
+            }
             var userRoles = await userManager.GetRolesAsync(user);
+            var currentRoleName = userRoles.FirstOrDefault();
+
+            var roles = await roleManager.Roles.ToListAsync();
+
+            var currentRole = !string.IsNullOrWhiteSpace(currentRoleName)
+                    ? roles.FirstOrDefault(r => r.Name == currentRoleName)
+                    : null;
 
             var userRoleViewModel = new UpdateUserRoleViewModel()
             {
                 UserId = userId,
                 UserName = user.UserName,
-                CurrentRoleId = "",
-                CurrentRoleName = "",
-                NewRoleId = null,
-                NewRoleName = null
+                CurrentRoleId = currentRole.Id,
+                CurrentRoleName = currentRole.Name,
+                NewRoleId = currentRole?.Id,
+                NewRoleName = currentRole?.Name,
+                AllRoles = roles
+                        .OrderBy(r => r.Name)
+                        .Select(r => new SelectListItem
+                        {
+                            Value = r.Id,
+                            Text = r.Name,
+                            Selected = (r.Id == currentRole?.Id)
+                        })
+                        .ToList()
 
             };
+
+
+            /*
+             if (string.IsNullOrWhiteSpace(userId))
+                 return BadRequest("userId boş olamaz.");
+
+                var user = await userManager.FindByIdAsync(userId);
+                if (user is null)
+                    return NotFound("Kullanıcı bulunamadı.");
+
+                var userRoles = await userManager.GetRolesAsync(user);
+                var currentRoleName = userRoles.FirstOrDefault(); // tek rol varsayımı
+
+                var roles = roleManager.Roles.ToList(); // EF kullanıyorsan ToListAsync de olur
+
+                var currentRole = !string.IsNullOrWhiteSpace(currentRoleName)
+                    ? roles.FirstOrDefault(r => r.Name == currentRoleName)
+                    : null;
+
+                var vm = new UpdateUserRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    CurrentRoleId = currentRole?.Id,
+                    CurrentRoleName = currentRole?.Name,
+                    // default seçili gelsin
+                    NewRoleId = currentRole?.Id,
+                    NewRoleName = currentRole?.Name,
+                    AllRoles = roles
+                        .OrderBy(r => r.Name)
+                        .Select(r => new SelectListItem
+                        {
+                            Value = r.Id,
+                            Text = r.Name,
+                            Selected = (r.Id == currentRole?.Id)
+                        })
+                        .ToList()
+                };
+             */
 
 
             return PartialView("~/Areas/Admin/PartialViews/_UpdateUserRolePopup.cshtml", userRoleViewModel);

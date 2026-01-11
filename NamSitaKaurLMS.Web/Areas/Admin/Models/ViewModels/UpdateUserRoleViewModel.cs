@@ -1,4 +1,6 @@
-﻿namespace NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
 {
     public class UpdateUserRoleViewModel
     {
@@ -8,5 +10,6 @@
         public string CurrentRoleName { get; set; }
         public string NewRoleId { get; set; }
         public string NewRoleName { get; set; }
+        public List<SelectListItem> AllRoles { get; set; } = new();
     }
 }

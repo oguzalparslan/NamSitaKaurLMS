@@ -1,32 +1,56 @@
 ﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
 @model UpdateUserRoleViewModel
 
-<div class="modal fade" id="updateUserRolePopup" tabindex="-1">
+<div class="modal fade" id="updateUserRolePopup" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Kullanıcı Role Güncelleme (@Model.UserName) </h5>
+                <h5 class="modal-title">Kullanıcı Rol Güncelleme (@Model.UserName)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
             </div>
 
             <form id="updateUserRoleForm"
                   asp-area="Admin"
                   asp-controller="Dashboard"
-                  asp-action="UpdateUser"
-                  method="post"
-            >
+                  asp-action="UpdateUserRole"
+                  method="post">
                 @Html.AntiForgeryToken()
 
                 <div class="modal-body">
-                    <h3>@Model.UserId</h3>
-                    <h3>@Model.UserName</h3>
-                    <h3>@Model.CurrentRoleId</h3>
-                    <h3>@Model.CurrentRoleName</h3>
-                    <h3>@Model.NewRoleId</h3>
-                    <h3>@Model.NewRoleName</h3>
+
+                    <input type="hidden" asp-for="UserId" />
+                    <input type="hidden" asp-for="CurrentRoleId" />
+
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="UserName" class="col-md-4 col-form-label">Kullanıcı Adı</label>
+                        <div class="col-md-8">
+                            <input asp-for="UserName" readonly class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="CurrentRoleName" class="col-md-4 col-form-label">Mevcut Rol</label>
+                        <div class="col-md-8">
+                            <input asp-for="CurrentRoleName" readonly class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="NewRoleId" class="col-md-4 col-form-label">Yeni Rol</label>
+                        <div class="col-md-8">
+                            <select class="form-select" asp-for="NewRoleId" asp-items="Model.AllRoles"></select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
-
