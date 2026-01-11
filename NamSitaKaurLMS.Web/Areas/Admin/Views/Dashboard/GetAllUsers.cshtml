@@ -46,7 +46,7 @@
                     <div class="btn-group" role="group">
                         <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
                         <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnRemoveUser">Sil</button>
-                        <button type="button" asp-route-id="@user.Id" class="btn btn-outline-primary">Rol Değiştir</button>
+                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnChangeUserRole">Rol Değiştir</button>
                     </div>
                 </td>
             </tr>
@@ -172,6 +172,33 @@
                                 });
 
 
+
+              });
+
+
+              document.addEventListener("DOMContentLoaded", function () {
+              const popup = document.querySelector("#popup");
+
+                  document.addEventListener("click",async function(e)
+                  {
+                      const element = e.target.closest(".btnChangeUserRole");
+                      if(!element) return ;
+
+                      alert(element);
+                        console.dir(element);
+                      e.preventDefault();
+                      const userId = element.value ;
+                      console.log(userId);
+                      const baseUrl = '@Url.Action("UpdateUserRole", "Dashboard", new { area = "Admin" })';
+                      const url = `${baseUrl}?userId=${encodeURIComponent(userId)}`;
+                      console.log(url);
+                      const res = await fetch(url, { credentials: "same-origin" });
+                      const html = await res.text();
+                      popup.innerHTML = html;
+                      const modalEl = popup.querySelector("#updateUserRolePopup");
+                      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                      modal.show();
+                  });
 
               });
     </script>

@@ -11,6 +11,7 @@ using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels;
 using NamSitaKaurLMS.WebUI.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -434,6 +435,27 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             return PartialView("~/Areas/Admin/PartialViews/_UpdateUserPopup.cshtml", userViewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UpdateUserRole(string userId)
+
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            var userRoleViewModel = new UpdateUserRoleViewModel()
+            {
+                UserId = userId,
+                UserName = user.UserName,
+                CurrentRoleId = "",
+                CurrentRoleName = "",
+                NewRoleId = null,
+                NewRoleName = null
+
+            };
+
+
+            return PartialView("~/Areas/Admin/PartialViews/_UpdateUserRolePopup.cshtml", userRoleViewModel);
+        }
         #endregion
 
         #region Post Actions
