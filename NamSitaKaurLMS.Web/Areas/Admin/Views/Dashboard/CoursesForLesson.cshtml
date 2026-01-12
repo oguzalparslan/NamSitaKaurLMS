@@ -10,8 +10,8 @@
     ViewData["Title"] = "Kurs İçerik Girişi";
 }
 
-
-<table class="table table-bordered table-hover align-middle w-50">
+<div id="popup"></div>
+<table class="table table-bordered table-hover align-middle w-100">
     <thead>
         <tr>
             <th>Kurs Adı</th>
@@ -35,12 +35,48 @@
                     <a asp-action="CreateCourseLesson"
                        asp-controller="Dashboard"
                        asp-area="Admin"
-                       asp-route-id="@course.Id" 
-                    class="btn btn-secondary">
+                       asp-route-id="@course.Id"
+                       class="btn btn-outline-secondary">
                         Dersler
                     </a>
+                    <button type="button" value="@course.Id"
+                            class="btn btn-outline-success btnAddUserForCourse">
+                        Kullanıcı Girişi
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+<script>
+    const popup = document.getElementById("popup") ;
+
+    document.addEventListener("DOMContentLoaded", async function (e)
+    {
+        document.addEventListener("click", async function (e)
+        {
+            var element = e.target.closest(".btnAddUserForCourse");
+            if(!element) return ;
+
+            e.preventDefault();
+            const courseId = element.value;
+
+            const baseUrl = '@Url.Action("AddUserForCoursePopup", "Dashboard", new { area = "Admin" })';
+            const url = `${baseUrl}?courseId=${encodeURIComponent(courseId)}`;
+
+            const res = await fetch(url, { credentials: "same-origin" });
+            const html = await res.text();
+
+            popup.innerHTML = html;
+
+            const modalEl = document.getElementById("addUserForCourseModal");
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+
+        });
+    });
+
+
+</script>

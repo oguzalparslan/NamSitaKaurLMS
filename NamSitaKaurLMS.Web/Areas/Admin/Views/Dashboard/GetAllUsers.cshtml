@@ -184,11 +184,9 @@
                       const element = e.target.closest(".btnChangeUserRole");
                       if(!element) return ;
 
-                      alert(element);
-                        console.dir(element);
+                      
                       e.preventDefault();
                       const userId = element.value ;
-                      console.log(userId);
                       const baseUrl = '@Url.Action("UpdateUserRole", "Dashboard", new { area = "Admin" })';
                       const url = `${baseUrl}?userId=${encodeURIComponent(userId)}`;
                       console.log(url);

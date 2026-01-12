@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NamSitaKaurLMS.Application.Abstract;
+using NamSitaKaurLMS.Application.Concrete;
 using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Dtos;
 using NamSitaKaurLMS.Core.Interfaces;
@@ -119,6 +120,21 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             };
             return PartialView("~/Areas/Admin/PartialViews/_UpdateCoursePopup.cshtml", vm);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AddUserForCoursePopup(int courseId)
+        {
+            var users = await userManager.Users.ToListAsync(); 
+
+            var model = new AddUserForCourseViewModel
+            {
+                CourseId = courseId,
+                Users = users
+            };
+
+            return PartialView("~/Areas/Admin/PartialViews/_AddUserForCoursePopup.cshtml", model);
+        }
+
         #endregion
 
         #region Post Actions
@@ -417,7 +433,6 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             return PartialView("~/Areas/Admin/PartialViews/_CreateUserPopup.cshtml");
         }
 
-
         [HttpGet]
         public IActionResult UpdateUser(string id)
         {
@@ -631,6 +646,23 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserRole(UpdateUserRoleViewModel updateUserRoleViewModel)
+        {
+
+            var user = await userManager.FindByIdAsync(updateUserRoleViewModel.UserId);
+            var currentRoles = await userManager.GetRolesAsync(user);
+            if (currentRoles.Any())
+            {
+                await userManager.RemoveFromRolesAsync(user, currentRoles);
+            }
+            var newRole = await roleManager.FindByIdAsync(updateUserRoleViewModel.NewRoleId);
+            if (newRole != null)
+            {
+                await userManager.AddToRoleAsync(user, newRole.Name);
+            }
+            return RedirectToAction("GetAllUsers", "Dashboard", new { Area = "Admin" });
+        }
         #endregion
         #endregion
 
