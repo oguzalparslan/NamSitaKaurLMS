@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NamSitaKaurLMS.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using NamSitaKaurLMS.Infrastructure.Context;
 namespace NamSitaKaurLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(NamSitaKaurLMSContext))]
-    partial class NamSitaKaurLMSContextModelSnapshot : ModelSnapshot
+    [Migration("20260131222959_UserCourseFix")]
+    partial class UserCourseFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -375,9 +378,6 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
 
                     b.Property<bool>("IsPreview")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime>("LessonDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");

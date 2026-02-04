@@ -14,6 +14,7 @@ namespace NamSitaKaurLMS.Core.Dtos
         public string CourseTitle { get; set; }
         public int Order { get; set; }
         public string Title { get; set; }
+        public DateTime LessonDate { get; set; }
         public int DurationMinutes { get; set; }
         public bool IsPreview { get; set; }
     }

@@ -39,7 +39,8 @@ namespace NamSitaKaurLMS.Infrastructure.Repository
 
         public Task<LessonContent> GetLessonContentByLessonId(int lessonId)
         {
-            throw new NotImplementedException();
+            var lessonContent = _context.LessonContents.FirstOrDefaultAsync(lc => lc.LessonId == lessonId);
+            return lessonContent;
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NamSitaKaurLMS.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using NamSitaKaurLMS.Infrastructure.Context;
 namespace NamSitaKaurLMS.Infrastructure.Migrations
 {
     [DbContext(typeof(NamSitaKaurLMSContext))]
-    partial class NamSitaKaurLMSContextModelSnapshot : ModelSnapshot
+    [Migration("20260131212258_UserCourseAddAppUserField")]
+    partial class UserCourseAddAppUserField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,9 +379,6 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
                     b.Property<bool>("IsPreview")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LessonDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
@@ -542,11 +542,16 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserCourses");
                 });
@@ -784,7 +789,15 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("NamSitaKaurLMS.Core.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Course");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("NamSitaKaurLMS.Core.Concrete.Course", b =>

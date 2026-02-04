@@ -9,7 +9,7 @@ namespace NamSitaKaurLMS.Core.Concrete
         public string Title { get; set; }
         public int DurationMinutes { get; set; }
         public bool IsPreview { get; set; }            // Ön izleme dersi mi?
-
+        public DateTime LessonDate { get; set; }
         public Course Courses { get; set; }
         public ICollection<LessonContent> Contents { get; set; }
     }

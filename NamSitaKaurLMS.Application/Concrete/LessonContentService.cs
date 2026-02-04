@@ -1,4 +1,5 @@
-﻿using NamSitaKaurLMS.Application.Abstract;
+﻿using Microsoft.VisualBasic;
+using NamSitaKaurLMS.Application.Abstract;
 using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Interfaces;
 using System;
@@ -46,7 +47,8 @@ namespace NamSitaKaurLMS.Application.Concrete
 
         public Task<LessonContent> GetLessonContentByLessonId(int lessonId)
         {
-            throw new NotImplementedException();
+            var lessonContent = lessonContentRepository.GetLessonContentByLessonId(lessonId);
+            return lessonContent;
         }
     }
 }

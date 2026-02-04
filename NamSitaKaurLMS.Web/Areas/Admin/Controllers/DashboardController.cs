@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NamSitaKaurLMS.Application.Abstract;
 using NamSitaKaurLMS.Application.Concrete;
 using NamSitaKaurLMS.Core.Concrete;
@@ -16,6 +17,7 @@ using System.Globalization;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text.Json.Nodes;
 
 namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 {
@@ -30,6 +32,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         private readonly ILessonService lessonService;
         private readonly ILessonContentService lessonContentService;
         private readonly IUserService userService;
+        private readonly IUserCourseService userCourseService;
 
         private readonly UserManager<AppUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
@@ -40,6 +43,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                                    ILessonService lessonService,
                                    ILessonContentService lessonContentService,
                                    IUserService userService,
+                                   IUserCourseService userCourseService,
                                    UserManager<AppUser> userManager,
                                    RoleManager<IdentityRole> roleManager)
         {
@@ -48,6 +52,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             this.lessonService = lessonService;
             this.lessonContentService = lessonContentService;
             this.userService = userService;
+            this.userCourseService = userCourseService;
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
@@ -124,15 +129,40 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> AddUserForCoursePopup(int courseId)
         {
-            var users = await userManager.Users.ToListAsync(); 
+            var users = await userManager.Users.ToListAsync();
+            var courseUsers = await userCourseService.GetUsersByCourseAsync(courseId);
+            var courseUserIds = courseUsers.Select(cu => cu.AppUserId).ToHashSet();
+
+            ICollection<AppUser> appUsers = users.Where(u => !courseUserIds.Contains(u.Id)).ToList();
+
 
             var model = new AddUserForCourseViewModel
             {
                 CourseId = courseId,
-                Users = users
+                Users = appUsers
             };
 
             return PartialView("~/Areas/Admin/PartialViews/_AddUserForCoursePopup.cshtml", model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ManageUserForCoursePopup(int courseId)
+        {
+            var users = await userManager.Users.ToListAsync();
+
+            var courseUsers = await userCourseService.GetUsersByCourseAsync(courseId);
+            var courseUserIds = courseUsers.Select(cu => cu.AppUserId).ToHashSet();
+
+            ICollection<AppUser> appUsers = users.Where(u => courseUserIds.Contains(u.Id)).ToList();
+
+            var model = new UserForCourseViewModel
+            {
+                CourseId = courseId,
+                Users = appUsers
+            };
+
+            return PartialView("~/Areas/Admin/PartialViews/_ManageUserForCoursePopup.cshtml", model);
         }
 
         #endregion
@@ -209,6 +239,53 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
             return Json(new { success = true });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUsersToCourse([FromBody] AddUsersToCourseDto addUsersToCourseDto)
+        {
+            List<UserCourse> userCourses = new List<UserCourse>();
+
+            try
+            {
+                if (addUsersToCourseDto.CourseId != 0 && addUsersToCourseDto.UserIds.Count() > 0)
+                {
+                    foreach (var userId in addUsersToCourseDto.UserIds)
+                    {
+                        AppUser? user = await userManager.FindByIdAsync(userId);
+
+                        if (user != null)
+                        {
+                            UserCourse userCourse = new UserCourse
+                            {
+                                AppUserId = user.Id,
+                                CourseId = addUsersToCourseDto.CourseId,
+                                EnrollmentDate = DateTime.UtcNow,
+                                ProgressPercent = 0,
+                                IsCompleted = false
+                            };
+                            userCourses.Add(userCourse);
+                        }
+                    }
+
+                    if (userCourses.Count > 0)
+                    {
+                        await userCourseService.AddRangeAsync(userCourses);
+
+                        return Json(new { success = true, message = "Katılımcılar başarıyla eklendi." });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
+
+            return Json(new { success = false, message = "Katılımcı ekleme işleminde hata." });
+        }
+
         #endregion
 
         #region Delete Action
@@ -218,6 +295,29 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             await courseService.DeleteAsync(id);
             return RedirectToAction("Courses", "Dashboard", new { area = "Admin" });
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> RemoveUserByCourse(int courseId, string userId)
+        {
+            if (courseId != 0 && !userId.IsNullOrEmpty())
+            {
+                try
+                {
+                    await userCourseService.RemoveUserByCourseAsync(courseId, userId);
+
+                }
+                catch (Exception)
+                {
+                    return Json(new { success = false, message = "Katılımcı silme işleminde hata." });
+                }
+                return Json(new { success = true, message = "Katılımcı başarıyla kurstan silindi." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Katılımcı ve kurs bulunamadı." });
+            }
+        }
+
         #endregion
         #endregion
 
@@ -288,22 +388,21 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
         #region Post Actions
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateLesson(CreateLessonViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return PartialView("~/Areas/Admin/PartialViews/_CreateLessonPopup.cshtml", model);
-            }
 
             var lesson = new Lesson()
             {
                 CourseId = model.CourseId,
                 Order = model.Order,
                 Title = model.Title,
+                LessonDate = model.LessonDate,
                 DurationMinutes = model.DurationMinutes,
                 IsPreview = model.IsPreview
             };
-
 
             await lessonService.AddLessonAsync(lesson);
 
@@ -311,11 +410,10 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             {
                 success = true,
                 courseId = model.CourseId,
-                redirectUrl = Url.Action("CreateCourseLesson", "Dashboard", new { area = "Admin", id = model.CourseId })
-
+                redirectUrl = Url.Action("CreateCourseLesson", "Dashboard", new { area = "Admin", id = model.CourseId }),
+                redirected = true
             });
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteLesson(int id, int courseId)
@@ -393,10 +491,17 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCourseContent(int lessonId, int courseId)
         {
-            await lessonContentService.DeleteCourseContentAsync(lessonId, courseId);
+            var courseContent = await lessonContentService.GetLessonContentByLessonId(lessonId);
+            await lessonContentService.DeleteCourseContentAsync(courseContent.Id, courseId);
 
-            return RedirectToAction("CreateCourseLesson", "Dashboard", new { area = "Admin", id = courseId });
+            return Json(new
+            {
+                success = true,
+                courseId,
+                lessonId
+            });
         }
+
         #endregion
         #endregion
 
@@ -665,7 +770,6 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         }
         #endregion
         #endregion
-
 
         #region SystemSettings Operations
 

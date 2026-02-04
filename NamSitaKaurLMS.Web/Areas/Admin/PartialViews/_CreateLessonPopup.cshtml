@@ -35,6 +35,13 @@
                             <input asp-for="Order" class="form-control" />
                         </div>
                     </div>
+                    <!-- Ders Tarihi -->
+                    <div class="row mb-2 align-items-center">
+                        <label asp-for="LessonDate" class="col-md-4 col-form-label">Ders Tarihi</label>
+                        <div class="col-md-8">
+                            <input type="date" asp-for="LessonDate" class="form-control" />
+                        </div>
+                    </div>
                     <!-- Ders Süresi -->
                     <div class="row mb-2 align-items-center">
                         <label asp-for="DurationMinutes" class="col-md-4 col-form-label">Ders Süresi (dk)</label>
@@ -58,7 +65,7 @@
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Kaydet</button>
-                    <button id="btnCancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal" >İptal</button>
+                    <button id="btnCancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                 </div>
 
             </form>

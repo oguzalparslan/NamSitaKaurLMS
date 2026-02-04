@@ -30,7 +30,7 @@
                 justify-content: center;
                 width: 100%;
                 height: 100%;
-                border-radius: 0.375rem; /* köşeleri düzgün */
+                border-radius: 0.375rem;
             }
 
 </style>
@@ -88,9 +88,9 @@
                                 @if (course.IsFree || @course.Price == 0)
                                 {
                                     <span class="badge bg-success text-light
-                                                     position-absolute top-0 bottom-0 start-0 end-0
-                                                     d-flex align-items-center justify-content-center
-                                                     w-100 h-100">
+                                                             position-absolute top-0 bottom-0 start-0 end-0
+                                                             d-flex align-items-center justify-content-center
+                                                             w-100 h-100">
                                         Ücretsiz
                                     </span>
                                 }
@@ -117,14 +117,14 @@
                                 @if (course.IsPublished)
                                 {
                                     <span class="badge bg-info text-light position-absolute top-0 bottom-0 start-0 end-0
-                                                     d-flex align-items-center justify-content-center w-100 h-100">
+                                                             d-flex align-items-center justify-content-center w-100 h-100">
                                         Yayında
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="badge bg-secondary text-light position-absolute top-0 bottom-0 start-0 end-0
-                                                     d-flex align-items-center justify-content-center w-100 h-100">
+                                                             d-flex align-items-center justify-content-center w-100 h-100">
                                         Taslak
                                     </span>
                                 }
@@ -183,43 +183,193 @@
             modal.show();
           });
         });
+
+
         //Create Form Submit
-        document.addEventListener("submit", async function (e) {
-          const form = e.target;
-          if (!form || form.id !== "createCourseForm") return;
+        // document.addEventListener("click", async function (e) {
+        //     const element = e.target;
 
-          e.preventDefault();
+        //   if (element.id !== "btnSaveCourse") return;
 
+
+        //   e.preventDefault();
+
+        //   const popup = document.getElementById("popup");
+        //   const form = document.getElementById("createCourseForm");
+        //   const baseUrl = '@Url.Action("CreateCourse", "Dashboard", new { area = "Admin" })';
+        //   const result = await fetch(baseUrl ,
+        //       {
+        //         method:"POST",
+        //         body: new FormData(form),
+        //       credentials: "same-origin"
+        //       } );
+
+        // const contentType = (result.headers.get("content-type") || "").toLowerCase();
+          
+        //  if (contentType.includes("application/json")) {
+        //     const data = await result.json();
+            
+        //  }
+        //  console.log(new FormData(form));
+
+        // // const res = await fetch(form.action, {
+        //   //   method: "POST",
+        //   //   body: new FormData(form),
+        //   //   credentials: "same-origin"
+        //   // });
+
+        //   // const contentType = (res.headers.get("content-type") || "").toLowerCase();
+
+        //   // // Başarılıysa controller Json dönüyor, validation hatasında HTML partial dönüyor
+        //   // if (contentType.includes("application/json")) {
+        //   //   const data = await res.json();
+
+        //   //   if (data.success) {
+        //   //     window.location.href = data.redirectUrl || window.location.href;
+        //   //   } else {
+        //   //     // (Şimdilik) başarısız json senaryosu olursa fallback
+        //   //     window.location.reload();
+        //   //   }
+        //   // } else {
+        //   //   const html = await res.text();
+        //   //   popup.innerHTML = html;
+
+        //   //   // partial yeniden basıldığı için modalı tekrar göster
+        //   //   const modalEl = document.getElementById("createCourseModal");
+        //   //   const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        //   //   modal.show();
+        //   // }
+        // });
+
+          async function saveCourse() {
           const popup = document.getElementById("popup");
+          const form = document.getElementById("createCourseForm");
+          const btn = document.getElementById("btnSaveCourse");
+          if (!form) return;
 
-          const res = await fetch(form.action, {
-            method: "POST",
-            body: new FormData(form),
-            credentials: "same-origin"
-          });
+          const url = form.action || '@Url.Action("CreateCourse", "Dashboard", new { area = "Admin" })';
 
-          const contentType = (res.headers.get("content-type") || "").toLowerCase();
+          if (btn) btn.disabled = true;
 
-          // Başarılıysa controller Json dönüyor, validation hatasında HTML partial dönüyor
-          if (contentType.includes("application/json")) {
-            const data = await res.json();
+            alert("girdi");
+          try {
+            const res = await fetch(url, {
+              method: "POST",
+              body: new FormData(form),
+              credentials: "same-origin",
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
 
-            if (data.success) {
-              window.location.href = data.redirectUrl || window.location.href;
-            } else {
-              // (Şimdilik) başarısız json senaryosu olursa fallback
-              window.location.reload();
-            }
-          } else {
+
+
+            // // Server redirect attıysa yakala
+            // if (res.redirected) {
+            //   window.location.href = res.redirectUrl;
+            //   return;
+            // }
+
+            // const contentType = (res.headers.get("content-type") || "").toLowerCase();
+
+            // if (contentType.includes("application/json")) {
+            //   const data = await res.json();
+
+            //   if (data.success) {
+            //     window.location.href = data.redirectUrl || window.location.href;
+            //     return;
+            //   }
+
+            //   alert(data.message || "İşlem başarısız.");
+            //   return;
+            // }
+
+            // HTML partial (validation)
             const html = await res.text();
             popup.innerHTML = html;
 
-            // partial yeniden basıldığı için modalı tekrar göster
-            const modalEl = document.getElementById("createCourseModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
+            const modalEl =
+              document.getElementById("createCourseModal") ||
+              document.getElementById("createLessonModal");
+
+            if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
+
+          } catch (err) {
+            console.error(err);
+            alert("İstek sırasında hata oluştu.");
+          } finally {
+            if (btn) btn.disabled = false;
           }
+        }
+
+        // 1) Buton tıklaması
+        document.addEventListener("click", (e) => {
+          const btn = e.target.closest("#btnSaveCourse");
+          if (!btn) return;
+          e.preventDefault();
+         const popup = document.getElementById("popup");
+          const form = document.getElementById("createCourseForm");
+          const btn = document.getElementById("btnSaveCourse");
+          if (!form) return;
+
+          const url = '@Url.Action("CreateCourse", "Dashboard", new { area = "Admin" })';
+
+          if (btn) btn.disabled = true;
+
+            // try {
+            const res = await fetch(url, {
+              method: "POST",
+              body: new FormData(form),
+              credentials: "same-origin",
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+
+
+            // // Server redirect attıysa yakala
+            // if (res.redirected) {
+            //   window.location.href = res.redirectUrl;
+            //   return;
+            // }
+
+            // const contentType = (res.headers.get("content-type") || "").toLowerCase();
+
+            // if (contentType.includes("application/json")) {
+            //   const data = await res.json();
+
+            //   if (data.success) {
+            //     window.location.href = data.redirectUrl || window.location.href;
+            //     return;
+            //   }
+
+            //   alert(data.message || "İşlem başarısız.");
+            //   return;
+            // }
+
+            // HTML partial (validation)
+          //   const html = await res.text();
+          //   popup.innerHTML = html;
+
+          //   const modalEl =
+          //     document.getElementById("createCourseModal") ||
+          //     document.getElementById("createLessonModal");
+
+          //   if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
+
+          // } catch (err) {
+          //   console.error(err);
+          //   alert("İstek sırasında hata oluştu.");
+          // } finally {
+          //   if (btn) btn.disabled = false;
         });
+
+        // 2) Enter vs. ile form submit olursa JSON basmasın diye engelle
+        document.addEventListener("submit", (e) => {
+          const form = e.target;
+          if (!form || form.id !== "createCourseForm") return;
+          e.preventDefault();
+          saveCourse();
+        });
+
+
         //Create İptal Butonu
         document.addEventListener("click", function (e) {
           const target = e.target;

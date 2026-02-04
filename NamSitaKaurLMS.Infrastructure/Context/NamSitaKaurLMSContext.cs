@@ -7,10 +7,21 @@ namespace NamSitaKaurLMS.Infrastructure.Context
 {
     public class NamSitaKaurLMSContext : IdentityDbContext<AppUser>
     {
-        public NamSitaKaurLMSContext(DbContextOptions options) : base(options)
+        public NamSitaKaurLMSContext(DbContextOptions<NamSitaKaurLMSContext> options) : base(options)
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            // Fluent API configurations can be added here if needed
+
+            modelBuilder.Entity<UserCourse>()
+            .HasOne<AppUser>()
+            .WithMany()
+            .HasForeignKey(x => x.AppUserId);
+
+        }
         #region DbSets
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseComment> CourseComments { get; set; }
