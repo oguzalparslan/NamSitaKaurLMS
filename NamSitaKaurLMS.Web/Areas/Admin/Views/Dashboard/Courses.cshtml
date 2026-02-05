@@ -88,9 +88,9 @@
                                 @if (course.IsFree || @course.Price == 0)
                                 {
                                     <span class="badge bg-success text-light
-                                                             position-absolute top-0 bottom-0 start-0 end-0
-                                                             d-flex align-items-center justify-content-center
-                                                             w-100 h-100">
+                                                                                     position-absolute top-0 bottom-0 start-0 end-0
+                                                                                     d-flex align-items-center justify-content-center
+                                                                                     w-100 h-100">
                                         Ücretsiz
                                     </span>
                                 }
@@ -117,14 +117,14 @@
                                 @if (course.IsPublished)
                                 {
                                     <span class="badge bg-info text-light position-absolute top-0 bottom-0 start-0 end-0
-                                                             d-flex align-items-center justify-content-center w-100 h-100">
+                                                                                     d-flex align-items-center justify-content-center w-100 h-100">
                                         Yayında
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="badge bg-secondary text-light position-absolute top-0 bottom-0 start-0 end-0
-                                                             d-flex align-items-center justify-content-center w-100 h-100">
+                                                                                     d-flex align-items-center justify-content-center w-100 h-100">
                                         Taslak
                                     </span>
                                 }
@@ -205,10 +205,10 @@
         //       } );
 
         // const contentType = (result.headers.get("content-type") || "").toLowerCase();
-          
+
         //  if (contentType.includes("application/json")) {
         //     const data = await result.json();
-            
+
         //  }
         //  console.log(new FormData(form));
 
@@ -321,44 +321,6 @@
               credentials: "same-origin",
               headers: { "X-Requested-With": "XMLHttpRequest" }
             });
-
-
-
-            // // Server redirect attıysa yakala
-            // if (res.redirected) {
-            //   window.location.href = res.redirectUrl;
-            //   return;
-            // }
-
-            // const contentType = (res.headers.get("content-type") || "").toLowerCase();
-
-            // if (contentType.includes("application/json")) {
-            //   const data = await res.json();
-
-            //   if (data.success) {
-            //     window.location.href = data.redirectUrl || window.location.href;
-            //     return;
-            //   }
-
-            //   alert(data.message || "İşlem başarısız.");
-            //   return;
-            // }
-
-            // HTML partial (validation)
-          //   const html = await res.text();
-          //   popup.innerHTML = html;
-
-          //   const modalEl =
-          //     document.getElementById("createCourseModal") ||
-          //     document.getElementById("createLessonModal");
-
-          //   if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
-
-          // } catch (err) {
-          //   console.error(err);
-          //   alert("İstek sırasında hata oluştu.");
-          // } finally {
-          //   if (btn) btn.disabled = false;
         });
 
         // 2) Enter vs. ile form submit olursa JSON basmasın diye engelle

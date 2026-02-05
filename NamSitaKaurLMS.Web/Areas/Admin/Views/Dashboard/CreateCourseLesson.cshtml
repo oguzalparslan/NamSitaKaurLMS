@@ -92,7 +92,7 @@
 
 @section Scripts {
     <script>
-            document.addEventListener("DOMContentLoaded", () => {
+                    document.addEventListener("DOMContentLoaded", () => {
             const popup = document.getElementById("lessonPopup");
             const modalEl = document.getElementById("createLessonModal");
             const getModal = () => bootstrap.Modal.getOrCreateInstance(document.getElementById("createLessonModal"));
@@ -216,6 +216,44 @@
                 if (data.success && data.redirectUrl) {
                     window.location.href = data.redirectUrl;
                 }
+            });
+
+
+            // Create Form Submit
+            document.addEventListener("click", async function (e) {
+                const element = e.target;
+                if (element.id !== "saveLesson") return;
+
+                e.preventDefault();
+
+                const popup = document.getElementById("lessonPopup");
+                const form = document.getElementById("createLessonForm");
+                const baseUrl = '@Url.Action("CreateLesson", "Dashboard", new { area = "Admin" })';
+                const result = await fetch(baseUrl,
+                    {
+                        method: "POST",
+                        body: new FormData(form),
+                        credentials: "same-origin"
+                    });
+
+                const contentType = (result.headers.get("content-type") || "").toLowerCase();
+
+                if (contentType.includes("application/json")) {
+                    const data = await result.json();
+
+                    if (data.success) {
+                        window.location.href = data.redirectUrl || window.location.href;
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    const html = await result.text();
+                    popup.innerHTML = html;
+
+                    const modalEl = document.getElementById("createLessonModal");
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                      }
             });
         });
 
