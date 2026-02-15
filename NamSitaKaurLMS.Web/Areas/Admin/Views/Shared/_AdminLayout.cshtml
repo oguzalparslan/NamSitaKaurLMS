@@ -2,6 +2,7 @@
     Layout = null;
     var title = ViewData["Title"] ?? "Admin Panel";
 }
+@using System.Security.Claims
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,8 +18,20 @@
     <link href="/admin-static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <link href="/admin-static/css/sb-admin-2.min.css" rel="stylesheet" />
 
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/theme.css" />
+    <link rel="stylesheet" href="~/css/components/buttons.css" />
+    <link rel="stylesheet" href="~/css/components/cards.css" />
 
     @RenderSection("Styles", false)
 </head>
@@ -34,11 +47,38 @@
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center"
                asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                
-                <div class="sidebar-brand-text mx-3">NamSitaKaur<sup>web</sup></div>
+
+                <div class="sidebar-brand-text mx-3">NamSitaKaur<sup>WEB</sup></div>
             </a>
 
             <!-- Divider -->
+            <hr class="sidebar-divider my-0" />
+            @if (User?.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userName = User.Identity?.Name; // çoğu projede email/username
+
+                <div class="d-flex gap-2 align-items-center flex-column text-light">
+                    <span>Merhaba, <strong>@userName</strong></span>
+                    <small class="text-dark">
+                        User Id =>@{
+                        var masked = "-";
+                        if (!string.IsNullOrEmpty(userId))
+                        {
+                            masked = userId.Length <= 6
+                            ? userId
+                            : $"{userId.Substring(0, 3)}***{userId.Substring(userId.Length - 3, 3)}";
+                        }
+                    }
+                    @masked
+                </small>
+            </div>
+                        }
+                        else
+            {
+                <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Giriş</a>
+            }
+         
             <hr class="sidebar-divider my-0" />
 
             <!-- Nav Item - Dashboard -->
@@ -54,7 +94,6 @@
             <hr class="sidebar-divider" />
 
             <!-- Heading -->
-            
             @await Html.PartialAsync("_DashboardMenuPartial")
 
             <!-- ... diğer sidebar item’ların aynı kalabilir ... -->
@@ -62,7 +101,7 @@
             <hr class="sidebar-divider d-none d-md-block" />
 
             <!-- Sidebar Toggler -->
-            <div class="text-center d-none d-md-inline">
+            @* <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
@@ -72,7 +111,7 @@
                     <strong>SB Admin Pro</strong> is packed with premium features, components, and more!
                 </p>
                 <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
+            </div> *@
 
         </ul>
         <!-- End of Sidebar -->
@@ -121,7 +160,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website @DateTime.Now.ToShortDateString()</span>
+                        <span>Copyright &copy; NamSitaKaur<sub>Web</sub> @DateTime.Now.Year</span>
                     </div>
                 </div>
             </footer>
@@ -151,7 +190,8 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="#">Logout</a>
+                    <a href="@Url.Action("Logout", "Account", new { area = " " })">Çıkış Yap</a>
+
                 </div>
             </div>
         </div>
@@ -165,8 +205,12 @@
     <script src="/admin-static/vendor/chart.js/Chart.min.js"></script>
     <script src="/admin-static/js/demo/chart-area-demo.js"></script>
     <script src="/admin-static/js/demo/chart-pie-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/ui-interactions.js"></script>
+    <script src="~/js/slider.js"></script>
 
 
 

@@ -14,5 +14,7 @@ namespace NamSitaKaurLMS.Application.Abstract
         public Task AddLessonAsync(Lesson lesson);
         public Task DeleteLessonAsync(int id);
         public Task<string> GetByLessonTitleAsync(int id);
+        public Task<IEnumerable<Lesson>> GetAllByCourseAndAsync(int courseId);
+
     }
 }

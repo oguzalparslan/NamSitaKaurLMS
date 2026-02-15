@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="~/css/components/cards.css" />
 </head>
 <body>
-    <header>
+  @*   <header>
         <nav class="navbar navbar-expand-md navbar-light py-2">
             <div class="container-lg">
                 <a asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center">
@@ -48,13 +48,13 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header> *@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top border-primary-soft bg-soft-gray mt-4">
+    @* <footer class="border-top border-primary-soft bg-soft-gray mt-4">
         <div class="container-lg py-4 small">
             <div class="row g-4">
                 <div class="col-md-4">
@@ -84,7 +84,7 @@
                 © 2025 Namsita Yoga LMS. All rights reserved.
             </div>
         </div>
-    </footer>
+    </footer> *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

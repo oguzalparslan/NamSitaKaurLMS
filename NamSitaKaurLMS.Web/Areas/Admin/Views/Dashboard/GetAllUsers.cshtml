@@ -1,0 +1,203 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model IEnumerable<UserListItemViewModel>
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<form id="antiForgeryForm" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
+<div id="popup"></div>
+<h1>Kullanıcı Listesi</h1>
+
+<button id="btnAddNewUser" class="btn btn-outline-success my-2">Yeni Kullanıcı ekle</button>
+
+<table class="table table-bordered table-hover align-middle w-100">
+    <thead>
+        <tr>
+            <th>UserId</th>
+            <th>Kullanıcı Adı</th>
+            <th>e-Mail</th>
+            <th>e-Mail Doğrulanmış mı ?</th>
+            <th>Cep Telefonu</th>
+            <th>Kullanıcı Rolleri</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id.Substring(0, 3)*******@user.Id.Substring(user.Id.Length - 3, 3)</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.EmailConfirmed</td>
+                <td>@user.PhoneNumber</td>
+                <td>
+                    @foreach (var role in user.Roles)
+                    {
+                        <span class="badge bg-@(user.Roles.Contains("Admin") ? "success" : "primary") text-light p-3">
+                            @role.ToString()
+                        </span>
+                    }
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
+                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnRemoveUser">Sil</button>
+                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnChangeUserRole">Rol Değiştir</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const popup = document.querySelector("#popup");
+          const addUserButton = document.querySelector("#btnAddNewUser");
+
+          // 1) Modalı GET ile çekip göster
+          addUserButton.addEventListener("click", async function (e) {
+            e.preventDefault();
+
+            const url = '@Url.Action("CreateUser", "Dashboard", new { area = "Admin" })';
+            const res = await fetch(url, { credentials: "same-origin" });
+            const html = await res.text();
+
+            popup.innerHTML = html;
+
+            const modalEl = popup.querySelector("#createUserModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+          });
+
+          // 2) Modal içindeki form submit’ini yakala (delegation)
+          popup.addEventListener("submit", async function (e) {
+            const form = e.target;
+            if (!form.matches("#createUserForm")) return;
+
+            e.preventDefault();
+
+            const res = await fetch(form.action, {
+              method: "POST",
+              body: new FormData(form),
+              credentials: "same-origin"
+            });
+
+            if (res.redirected) {
+              window.location.href = res.url;
+              return;
+            }
+
+            const html = await res.text();
+            popup.innerHTML = html;
+
+            const modalEl = popup.querySelector("#createUserModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+          });
+        });
+              document.addEventListener("DOMContentLoaded", function () {
+              const popup = document.querySelector("#popup");
+
+                  document.addEventListener("click",async function(e)
+                  {
+                      const element = e.target.closest(".btnUpdateUser");
+                      if(!element) return ;
+
+                      e.preventDefault();
+                      const id = element.value ;
+
+                      const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
+                      const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
+                      const res = await fetch(url, { credentials: "same-origin" });
+                      const html = await res.text();
+                      popup.innerHTML = html;
+                      const modalEl = popup.querySelector("#updateUserModal");
+                      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                      modal.show();
+                  });
+
+              });
+
+
+              document.addEventListener("DOMContentLoaded", function () {
+                  document.addEventListener("click", async function(e) {
+
+                      const element = e.target.closest(".btnRemoveUser");
+                      if(!element) return;
+                      console.dir(element);
+
+                      const isConfirmed = confirm("Seçtiğiniz kayıt ve bağlı olduğu detay kayıtlar silinecektir. Onaylıyor musunuz ?");
+                      console.log(isConfirmed);
+
+                      if(!isConfirmed) return;
+
+                      const id = e.target.value;
+
+                      alert(`Seçili Id : ${id}`);
+
+                     const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+
+                      const baseUrl = '@Url.Action("DeleteUser", "Dashboard", new { area = "Admin" })';
+
+                      const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
+
+                             const res = await fetch(baseUrl, {
+                                    method: "POST",
+                                    credentials: "same-origin",
+                                    headers: {
+                                      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                                      "RequestVerificationToken": token
+                                    },
+                                    body: new URLSearchParams({ id })
+                                  });
+
+                                  if (res.redirected) {
+                                    window.location.href = res.url;
+                                    return;
+                                  }
+                                  if (res.ok) {
+                                    window.location.reload();
+                                    return;
+                                  }
+
+                                  const errText = await res.text();
+                                  alert("Silme işlemi başarısız: " + errText);
+                                });
+
+
+
+              });
+
+
+              document.addEventListener("DOMContentLoaded", function () {
+              const popup = document.querySelector("#popup");
+
+                  document.addEventListener("click",async function(e)
+                  {
+                      const element = e.target.closest(".btnChangeUserRole");
+                      if(!element) return ;
+
+                      
+                      e.preventDefault();
+                      const userId = element.value ;
+                      const baseUrl = '@Url.Action("UpdateUserRole", "Dashboard", new { area = "Admin" })';
+                      const url = `${baseUrl}?userId=${encodeURIComponent(userId)}`;
+                      console.log(url);
+                      const res = await fetch(url, { credentials: "same-origin" });
+                      const html = await res.text();
+                      popup.innerHTML = html;
+                      const modalEl = popup.querySelector("#updateUserRolePopup");
+                      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                      modal.show();
+                  });
+
+              });
+    </script>
+}

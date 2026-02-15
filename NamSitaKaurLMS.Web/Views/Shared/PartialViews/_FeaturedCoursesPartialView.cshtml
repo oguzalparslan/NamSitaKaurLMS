@@ -1,0 +1,44 @@
+﻿@model ICollection<NamSitaKaurLMS.WebUI.Models.UserCoursesViewModel>
+
+<section class="app-section py-5 my-5">
+    <div class="container-lg">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h2 class="section-title mb-1">Öne Çıkan Programlar</h2>
+                <p class="section-subtitle mb-0">
+                    Pratiğinin farklı aşamalarını desteklemek için tasarlanmış yapılandırılmış seriler.
+                </p>
+            </div>
+            <a class="link-soft d-none d-md-inline-flex" asp-action="Index" asp-controller="Courses">
+                Tüm kursları gör →
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card-course">
+                        <div class="card-course-thumb">
+                            <div class="card-course-badge">
+                                @item.LessonCount Ders
+                            </div>
+                        </div>
+                        <div class="card-course-body">
+                            <h3 class="card-course-title">@item.Name</h3>
+                            <p class="card-course-meta"></p>
+                            <div class="card-course-instructor">
+                                <div class="card-course-avatar"></div>
+                                <span>@item.Description</span>
+                            </div>
+                            <a href="#" class="btn-ghost-sm mt-2 d-inline-flex">
+                                Kursa Git
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</section>

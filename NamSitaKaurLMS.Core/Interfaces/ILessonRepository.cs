@@ -10,5 +10,6 @@ namespace NamSitaKaurLMS.Core.Interfaces
     public interface ILessonRepository : IRepository<Lesson>
     {
         public Task<IEnumerable<Lesson>> GetAllByCourseAsync(int courseId);
+        public Task<IEnumerable<Lesson>> GetAllByCourseAndAsync(int courseId);
     }
 }

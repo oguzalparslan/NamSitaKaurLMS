@@ -12,6 +12,7 @@ namespace NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
         public string CourseTitle { get; set; }
         public int Order { get; set; }                 // Sıra numarası
         public string Title { get; set; }
+        public DateTime LessonDate { get; set; }
         public int DurationMinutes { get; set; }
         public bool IsPreview { get; set; }            // Ön izleme dersi mi?
 

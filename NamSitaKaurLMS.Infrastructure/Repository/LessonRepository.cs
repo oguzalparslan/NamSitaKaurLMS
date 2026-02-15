@@ -1,4 +1,5 @@
-﻿using NamSitaKaurLMS.Core.Concrete;
+﻿using Microsoft.EntityFrameworkCore;
+using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Interfaces;
 using NamSitaKaurLMS.Infrastructure.Context;
 using System;
@@ -15,7 +16,11 @@ namespace NamSitaKaurLMS.Infrastructure.Repository
         {
         }
 
-        
+        public Task<IEnumerable<Lesson>> GetAllByCourseAndAsync(int courseId)
+        {
+            var lessons = _context.Lessons.Include(x=> x.Contents).Where(l => l.CourseId == courseId).AsEnumerable();
+            return Task.FromResult(lessons);
+        }
 
         public Task<IEnumerable<Lesson>> GetAllByCourseAsync(int courseId)
         {

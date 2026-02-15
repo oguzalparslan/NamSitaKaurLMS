@@ -17,6 +17,7 @@
         public string StartDate { get; set; }     // Kurs başlangıç tarihi
         public string EndDate { get; set; }       // Kurs bitiş tarihi
         public int Quota { get; set; }              // Maksimum öğrenci sayısı
+        public int RemainingQuota { get; set; }              // Maksimum öğrenci sayısı
         public string Environment { get; set; }     // Ortam tipi (Online, Offline, Hybrid)
     }
 }

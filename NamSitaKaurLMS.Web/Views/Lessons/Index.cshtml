@@ -1,0 +1,198 @@
+﻿@model LessonsViewModel
+
+@{
+    ViewData["Title"] = "Dersler";
+    Layout = "_LayoutApp";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <h1 class="h3 mb-1"> @ViewData["CourseTitle"] Dersleri</h1>
+@*             <div class="text-muted">CourseId: @Model.CourseId</div>
+ *@        </div>
+
+        <a asp-controller="Courses" asp-action="Index" class="btn btn-outline-secondary">
+            ← Kurslara dön
+        </a>
+    </div>
+
+    @if (Model?.Lessons == null || !Model.Lessons.Any())
+    {
+        <div class="alert alert-info">
+            Bu kurs için henüz ders bulunamadı.
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="lessonsAcc">
+            @for (int i = 0; i < Model.Lessons.Count; i++)
+            {
+                var lesson = Model.Lessons[i];
+                var collapseId = $"collapse_{lesson.LessonId}";
+                var headingId = $"heading_{lesson.LessonId}";
+
+                <div class="accordion-item mb-2">
+                    <h2 class="accordion-header" id="@headingId">
+                        <button class="accordion-button @(i == 0 ? "" : "collapsed")"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#@collapseId"
+                                aria-expanded="@(i == 0 ? "true" : "false")"
+                                aria-controls="@collapseId">
+                            <span class="me-2 text-muted">@(lesson.Order)</span>
+                            <strong>@lesson.Title</strong>
+                        </button>
+                    </h2>
+
+                    <div id="@collapseId"
+                         class="accordion-collapse collapse @(i == 0 ? "show" : "")"
+                         aria-labelledby="@headingId"
+                         data-bs-parent="#lessonsAcc">
+
+                        <div class="accordion-body">
+
+                            @if (lesson.Contents == null || !lesson.Contents.Any())
+                            {
+                                <div class="text-muted">Bu ders için içerik yok.</div>
+                            }
+                            else
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:50px;">#</th>
+                                                <th>İçerik</th>
+                                                <th style="width:140px;">Tür</th>
+                                                <th style="width:160px;" class="text-end">İşlem</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var j = 1;
+                                                foreach (var c in lesson.Contents)
+                                                {
+                                                    <tr>
+                                                        <td>@j</td>
+                                                        <td>@c.Name</td>
+                                                        <td>
+                                                            @if (!string.IsNullOrWhiteSpace(c.ContentType))
+                                                            {
+                                                                <span class="badge bg-light text-dark border">@c.ContentType</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text-muted">-</span>
+                                                            }
+                                                        </td>
+                                                        <td class="text-end">
+                                                            @if (!string.IsNullOrWhiteSpace(c.Url))
+                                                            {
+                                                                <button type="button"
+                                                                        class="btn btn-outline-primary btn-sm js-open-video"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#videoModal"
+                                                                        data-video-url="@c.Url">
+                                                                    Aç
+                                                                </button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text-muted">-</span>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    j++;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
+<!-- Video Modal -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Video</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="videoIframe"
+                            src=""
+                            title="YouTube video player"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function getYouTubeId(url) {
+            if (!url) return null;
+
+            // youtu.be/ID
+            let m = url.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/);
+            if (m && m[1]) return m[1];
+
+            // youtube.com/watch?v=ID
+            m = url.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
+            if (m && m[1]) return m[1];
+
+            // youtube.com/embed/ID
+            m = url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/);
+            if (m && m[1]) return m[1];
+
+            // youtube.com/shorts/ID
+            m = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/);
+            if (m && m[1]) return m[1];
+
+            return null;
+        }
+
+        document.addEventListener("click", function (e) {
+            const btn = e.target.closest(".js-open-video");
+            if (!btn) return;
+
+            const url = btn.getAttribute("data-video-url");
+            const id = getYouTubeId(url);
+
+            const iframe = document.getElementById("videoIframe");
+            if (!iframe) return;
+
+            if (!id) {
+                // YouTube değilse yine de yeni sekme fallback
+                window.open(url, "_blank");
+                return;
+            }
+
+            // autoplay=1: açınca otomatik başlar
+            iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+        });
+
+        // Modal kapanınca video dursun
+        const videoModalEl = document.getElementById("videoModal");
+        if (videoModalEl) {
+            videoModalEl.addEventListener("hidden.bs.modal", function () {
+                const iframe = document.getElementById("videoIframe");
+                if (iframe) iframe.src = "";
+            });
+        }
+    </script>
+}

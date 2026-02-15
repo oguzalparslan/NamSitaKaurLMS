@@ -1,0 +1,39 @@
+﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+@model AddUserForCourseViewModel
+
+<div class="modal fade" id="addUserForCourseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Kullanıcı Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="CourseId" value="@Model.CourseId" />
+
+                <button type="button" id="addSelectedUsers" class="btn btn-outline-success"> Seçili Kullanıcıları Ekle</button>
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Kullanıcı</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model.Users)
+                        {
+                            <tr>
+                                <td> <input type="checkbox" class="userIdCheckedValue" value="@u.Id" /></td>
+                                <td>@u.UserName</td>
+                                <td>@u.Email</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

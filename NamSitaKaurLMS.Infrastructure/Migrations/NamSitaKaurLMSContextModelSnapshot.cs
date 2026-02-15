@@ -376,6 +376,9 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
                     b.Property<bool>("IsPreview")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("LessonDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
@@ -453,6 +456,10 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SettingCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
@@ -462,7 +469,7 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SystemSetting");
+                    b.ToTable("SystemSettings");
                 });
 
             modelBuilder.Entity("NamSitaKaurLMS.Core.Concrete.User", b =>
@@ -473,11 +480,23 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -494,6 +513,10 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
@@ -519,14 +542,11 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("AppUserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CourseId");
 
                     b.ToTable("UserCourses");
                 });
@@ -752,21 +772,19 @@ namespace NamSitaKaurLMS.Infrastructure.Migrations
 
             modelBuilder.Entity("NamSitaKaurLMS.Core.Concrete.UserCourse", b =>
                 {
+                    b.HasOne("NamSitaKaurLMS.Infrastructure.Identity.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("NamSitaKaurLMS.Core.Concrete.Course", "Course")
                         .WithMany("UserCourses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NamSitaKaurLMS.Core.Concrete.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Course");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("NamSitaKaurLMS.Core.Concrete.Course", b =>

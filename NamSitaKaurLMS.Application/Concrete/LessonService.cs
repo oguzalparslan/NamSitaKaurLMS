@@ -2,11 +2,6 @@
 using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Dtos;
 using NamSitaKaurLMS.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NamSitaKaurLMS.Application.Concrete
 {
@@ -29,6 +24,7 @@ namespace NamSitaKaurLMS.Application.Concrete
                 LessonId = l.Id,
                 Order = l.Order,
                 Title = l.Title,
+                LessonDate = l.LessonDate,
                 DurationMinutes = l.DurationMinutes,
                 IsPreview = l.IsPreview
             }).ToList();
@@ -54,6 +50,13 @@ namespace NamSitaKaurLMS.Application.Concrete
             if (lesson != null)
                 lessonTitle = lesson.Title;
             return lessonTitle;
+        }
+
+        public Task<IEnumerable<Lesson>> GetAllByCourseAndAsync(int courseId)
+        {
+            var lessons = lessonRepository.GetAllByCourseAndAsync(courseId);
+
+            return lessons;
         }
     }
 }
