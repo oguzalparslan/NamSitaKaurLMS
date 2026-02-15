@@ -51,5 +51,12 @@ namespace NamSitaKaurLMS.Application.Concrete
                 lessonTitle = lesson.Title;
             return lessonTitle;
         }
+
+        public Task<IEnumerable<Lesson>> GetAllByCourseAndAsync(int courseId)
+        {
+            var lessons = lessonRepository.GetAllByCourseAndAsync(courseId);
+
+            return lessons;
+        }
     }
 }

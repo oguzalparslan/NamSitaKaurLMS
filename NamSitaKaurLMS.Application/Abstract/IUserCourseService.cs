@@ -12,7 +12,8 @@ namespace NamSitaKaurLMS.Application.Abstract
     {
         public Task AddRangeAsync(ICollection<UserCourse> userCourses);
         public Task<ICollection<UserCourse>> GetUsersByCourseAsync(int courseId);
-
         public Task RemoveUserByCourseAsync(int courseId, string userId);
+        public Task<ICollection<CourseUserCountDto>> GetAllCourseUsers();
+        public Task<ICollection<UserCoursesDto>> GetAllCoursesByUser(string userId);
     }
 }

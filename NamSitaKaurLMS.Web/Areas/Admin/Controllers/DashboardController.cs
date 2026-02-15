@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +10,7 @@ using NamSitaKaurLMS.Core.Concrete;
 using NamSitaKaurLMS.Core.Dtos;
 using NamSitaKaurLMS.Core.Interfaces;
 using NamSitaKaurLMS.Infrastructure.Identity;
+using NamSitaKaurLMS.WebUI.Areas.Admin.Models;
 using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels;
 using NamSitaKaurLMS.WebUI.Enums;
 using System.ComponentModel.DataAnnotations;
@@ -18,12 +19,13 @@ using System.Net.WebSockets;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 
 namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 {
 
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class DashboardController : Controller
     {
 
@@ -69,31 +71,46 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Courses()
         {
             var courses = await courseService.GetAllAsync();
-            List<CoursesViewModel> coursesViewModel = courses.Select(c => new CoursesViewModel
+            var userCourses = await userCourseService.GetAllCourseUsers(); // CourseId, UserCount
+
+            var userCountByCourseId = userCourses.ToDictionary(x => x.CourseId, x => x.UserCount);
+
+            var coursesViewModel = courses.Select(c =>
             {
-                Id = c.Id,
-                Title = c.Title,
-                Slug = c.Slug,
-                ThumbnailUrl = c.ThumbnailUrl,
-                Level = c.Level,
-                Category = c.Category,
-                Price = c.Price,
-                IsFree = c.IsFree,
-                DurationMinutes = c.DurationMinutes,
-                Language = c.Language,
-                IsPublished = c.IsPublished,
-                Status = ((CourseStatusEnum)c.Status)
-                                                    .GetType()
-                                                    .GetField(((CourseStatusEnum)c.Status).ToString())
-                                                    .GetCustomAttribute<DisplayAttribute>()?.Name,
-                StartDate = c.StartDate.ToShortDateString(),
-                EndDate = c.EndDate.ToShortDateString(),
-                Quota = c.Quota,
-                Environment = "Zoom"
+                userCountByCourseId.TryGetValue(c.Id, out var enrolledCount);
+
+                var remaining = c.Quota - enrolledCount;
+                if (remaining < 0) remaining = 0; // istersen clamp
+
+                return new CoursesViewModel
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    Slug = c.Slug,
+                    ThumbnailUrl = c.ThumbnailUrl,
+                    Level = c.Level,
+                    Category = c.Category,
+                    Price = c.Price,
+                    IsFree = c.IsFree,
+                    DurationMinutes = c.DurationMinutes,
+                    Language = c.Language,
+                    IsPublished = c.IsPublished,
+                    Status = ((CourseStatusEnum)c.Status)
+                        .GetType()
+                        .GetField(((CourseStatusEnum)c.Status).ToString())
+                        .GetCustomAttribute<DisplayAttribute>()?.Name,
+                    StartDate = c.StartDate.ToShortDateString(),
+                    EndDate = c.EndDate.ToShortDateString(),
+                    Quota = c.Quota,
+                    Environment = "Zoom",
+                    RemainingQuota = remaining
+                };
             }).ToList();
 
             return View(coursesViewModel);
         }
+
+        
         [HttpGet]
         public IActionResult CreateCourse()
         {
@@ -169,14 +186,11 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
 
         #region Post Actions
         [HttpPost]
-        public IActionResult CreateCourse(CourseDto model)
+        public async Task<IActionResult> CreateCourse(CourseDto model)
         {
             if (!ModelState.IsValid)
-            {
                 return PartialView("~/Areas/Admin/PartialViews/_CreateCoursePopup.cshtml", model);
-            }
 
-            // ✅ KAYDETME İŞLEMİ
             var course = new Course
             {
                 Title = model.Title,
@@ -198,15 +212,12 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                 IsActive = true
             };
 
+            await courseService.AddAsync(course);
 
-            courseService.AddAsync(course);
-
-            // ✅ AJAX'e başarı bilgisi dön
-            return Json(new
-            {
-                success = true,
-                redirectUrl = Url.Action("Courses", "Dashboard", new { area = "Admin" })
-            });
+            return Json(new AjaxResponse(
+                Success: true,
+                RedirectUrl: Url.Action("Courses", "Dashboard", new { area = "Admin" })
+            ));
         }
 
         [HttpPost]
@@ -289,7 +300,8 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         #endregion
 
         #region Delete Action
-        [HttpDelete]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCourse(int id)
         {
             await courseService.DeleteAsync(id);
@@ -491,12 +503,30 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteCourseContent(int lessonId, int courseId)
         {
+            if (lessonId <= 0 || courseId <= 0)
+            {
+                return BadRequest();
+            }
+
             var courseContent = await lessonContentService.GetLessonContentByLessonId(lessonId);
+
+            if (courseContent == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Silinecek içerik bulunamadı.",
+                    courseId,
+                    lessonId
+                });
+            }
+
             await lessonContentService.DeleteCourseContentAsync(courseContent.Id, courseId);
 
             return Json(new
             {
                 success = true,
+                message = "Silme işlemi başarılı",
                 courseId,
                 lessonId
             });

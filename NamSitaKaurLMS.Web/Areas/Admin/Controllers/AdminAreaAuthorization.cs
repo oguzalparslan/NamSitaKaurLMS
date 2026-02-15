@@ -20,24 +20,26 @@ namespace NamSitaKaurLMS.WebUI.Areas.Admin.Controllers
         //}
 
 
-        public void OnAuthorization(AuthorizationFilterContext authorizationFilterContext)
+        public void OnAuthorization(AuthorizationFilterContext ctx)
         {
-            var area = authorizationFilterContext.RouteData.Values["area"]?.ToString();
+            var area = ctx.RouteData.Values["area"]?.ToString();
+
             if (area == "Admin")
             {
-                if (!authorizationFilterContext.HttpContext.User.Identity?.IsAuthenticated ?? true)
+                if (!(ctx.HttpContext.User.Identity?.IsAuthenticated ?? false))
                 {
-                    authorizationFilterContext.Result = new RedirectToActionResult("Login", "Account", null);
+                    ctx.Result = new RedirectToActionResult("Login", "Account", new { area = "" });
                     return;
                 }
 
-                if (!authorizationFilterContext.HttpContext.User.IsInRole("Admin"))
+                if (!ctx.HttpContext.User.IsInRole("Admin"))
                 {
-                    authorizationFilterContext.Result = new RedirectToActionResult("AccessDenied", "Account", null);
+                    ctx.Result = new RedirectToActionResult("AccessDenied", "Account", new { area = "" });
                     return;
                 }
             }
         }
+
     }
 
 }

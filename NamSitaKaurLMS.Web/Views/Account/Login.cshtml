@@ -1,17 +1,44 @@
-﻿@model NamSitaKaurLMS.WebUI.ViewModels.LoginViewModel
+﻿@{
+    Layout = "_LayoutPublic";
+}
+@model NamSitaKaurLMS.WebUI.ViewModels.LoginViewModel
+<div class="container w-75 d-flex flex-column justify-content-center align-items-center">
 
-<form asp-controller="Account" asp-action="Login" method="post">
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="loginCard">
+        <div class="card">
+            <div class="card-header">
+                Giriş Yap
+            </div>
+            <div class="card-body">
+                <form asp-controller="Account" asp-action="Login" method="post">
+                    <div class="form-group mt-2">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="form-control" type="password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <hr />
+                    <button type="submit" class="btn btn-primary">Login</button>
+
+                </form>
+            </div>
+            <div class="card-footer">
+                <strong>
+                    Giriş yap ve rahatlamaya hazır ol
+                </strong>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" type="password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+</div>
 
-    <button type="submit" class="btn btn-primary">Login</button>
+<style>
 
-</form>
+    .loginCard{
+        margin: 350px auto;
+    }
+
+</style>

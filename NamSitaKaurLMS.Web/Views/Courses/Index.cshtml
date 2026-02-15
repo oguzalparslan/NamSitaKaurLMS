@@ -1,0 +1,106 @@
+﻿@model ICollection<UserCoursesViewModel>
+@using NamSitaKaurLMS.WebUI.Models
+@{
+    ViewData["Title"] = "Kurslarım";
+    Layout = "_LayoutApp";
+}
+
+<style>
+    .action-col {
+        width: 220px;
+    }
+
+    .action-link {
+        position: relative !important; /* en kritik satır */
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        white-space: nowrap;
+        padding: .5rem .75rem;
+        line-height: 1.15;
+        border: 1px solid var(--color-primary) !important;
+    }
+
+    .course-badge {
+        position: absolute;
+        top: -8px; /* butonun üstünde dursun */
+        right: 10px;
+        z-index: 2;
+        background: var(--color-primary);
+        color: #fff;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: .70rem;
+        max-width: 85%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .action-link:hover{
+      background-color:var(--color-primary) !important;
+            color: aliceblue !important;
+        border: 1px solid var(--color-primary) !important;
+        }
+</style>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Kurslarım</h6>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center table-center" width="100%" cellspacing="5">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Adı</th>
+                        <th>Açıklama</th>
+                        <th>Ders Sayısı</th>
+                        <th> ==> </th>
+                    </tr>
+                </thead>
+
+
+
+            
+
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr><td colspan="4">Kayıt bulunamadı.</td></tr>
+                    }
+                    else
+                    {
+                        var i = 1;
+                        foreach (var c in Model)
+                        {
+                            <tr>
+                                <td>@i</td>
+                                <td>@c.Name</td>
+                                <td>@c.Description</td>
+                                <td>@c.LessonCount</td>
+                                <td class="action-col">
+                                    <a asp-action="Index"
+                                       asp-controller="Lessons" 
+                                       asp-route-courseId="@c.CourseId"
+                                    class="btn btn-outline-info action-link text-primary">
+                                        Derslere git
+                                    </a>
+                                </td>
+
+                            </tr>
+                            i++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <form id="af-form">@Html.AntiForgeryToken()</form>
+</div>
+

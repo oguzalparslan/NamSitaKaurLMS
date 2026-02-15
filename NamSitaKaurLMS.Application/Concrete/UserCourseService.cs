@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using NamSitaKaurLMS.Application.Abstract;
 using NamSitaKaurLMS.Core.Concrete;
+using NamSitaKaurLMS.Core.Dtos;
 using NamSitaKaurLMS.Core.Interfaces;
 using NamSitaKaurLMS.Infrastructure.Repository;
 using System;
@@ -32,7 +33,7 @@ namespace NamSitaKaurLMS.Application.Concrete
 
         public async Task<ICollection<UserCourse>> GetUsersByCourseAsync(int courseId)
         {
-            ICollection<UserCourse> courseUsers =  await userCourseRepository.GetAllUsersByCourseAsync(courseId);
+            ICollection<UserCourse> courseUsers = await userCourseRepository.GetAllUsersByCourseAsync(courseId);
 
             return courseUsers;
         }
@@ -52,8 +53,36 @@ namespace NamSitaKaurLMS.Application.Concrete
                 catch (Exception)
                 {
                     throw;
-                }    
+                }
             }
         }
+
+        public async Task<ICollection<CourseUserCountDto>> GetAllCourseUsers()
+        {
+
+            var courseUsersCount = await userCourseRepository.GetAllCourseUsers();
+            return courseUsersCount;
+        }
+
+        public async Task<ICollection<UserCoursesDto>> GetAllCoursesByUser(string userId)
+        {
+            var userCourses = await userCourseRepository.GetAllCoursesByUserAsync(userId);
+
+            
+            var coursesByUser = userCourses
+                .Where(x => x.Course.Status == 1)
+                .Select(x => new UserCoursesDto
+                {
+                    Name = x.Course?.Title,
+                    CourseId = x.CourseId,
+                    Description = x.Course?.Level,
+                    LessonCount = (x.Course?.Lessons?.Count ?? 0).ToString()
+                })
+                .ToList();
+
+            return coursesByUser;
+        }
+
+
     }
 }

@@ -56,7 +56,7 @@ namespace NamSitaKaurLMS.WebUI.Controllers
             var userRole = await _userManager.GetRolesAsync(user);
             if (userRole.Contains("Admin"))
             {
-               return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
 
             return RedirectToAction("Index", "Home");
@@ -65,11 +65,10 @@ namespace NamSitaKaurLMS.WebUI.Controllers
         [HttpGet]
         public IActionResult AccessDenied() => View();
 
-
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account", new { area = "" });
         }
     }
 

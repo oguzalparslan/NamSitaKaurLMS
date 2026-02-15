@@ -2,87 +2,133 @@
   Views/Shared/_LayoutApp.cshtml
 *@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - Namsita Yoga LMS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Google Fonts -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <!-- Bootstrap 5 -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
 
-    <!-- Custom CSS -->
+    <!-- Theme -->
     <link rel="stylesheet" href="~/css/theme.css" />
     <link rel="stylesheet" href="~/css/components/buttons.css" />
     <link rel="stylesheet" href="~/css/components/cards.css" />
+    <link rel="stylesheet" href="~/css/app-shell.css" />
 </head>
-<body class="bg-beige">
+
+@{
+        var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+        var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+        var isAuth = User.Identity?.IsAuthenticated ?? false;
+
+        // Aktiflik için basit yardımcı:
+        Func<string, string, string> isActive = (c, a) => (ctrl == c && (string.IsNullOrEmpty(a) || act == a)) ? "active" : "";
+}
+
+<body class="bg-beige app-shell-bg app-has-bottom-nav">
     <div class="d-flex flex-column min-vh-100">
 
-        <header class="border-bottom border-primary-soft bg-beige sticky-top">
-            <nav class="navbar navbar-expand-md navbar-light py-2">
+        <!-- NAVBAR -->
+        <header class="app-navbar sticky-top">
+            <nav class="py-2">
                 <div class="container-lg">
-                    <a asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center">
-                        <div class="brand-icon d-flex align-items-center justify-content-center me-2">
-                            <span class="text-primary fs-5">ॐ</span>
-                        </div>
-                        <div class="d-flex flex-column lh-1">
-                            <span class="font-display fw-semibold small text-slate-900">Namsita Yoga LMS</span>
-                            <span class="xsmall text-slate-500">Find Your Inner Balance</span>
-                        </div>
-                    </a>
+                    <div class="app-navgrid">
+                        <!-- Sol boş kolon (logo tam ortalansın diye) -->
+                        <div></div>
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                        <!-- Logo (ORTA) -->
+                        <a asp-controller="Home" asp-action="Index" class="app-brand justify-self-center">
+                            <div class="brand-icon d-flex align-items-center justify-content-center">
+                                <span class="text-primary fs-5">ॐ</span>
+                            </div>
+                            <div class="d-flex flex-column lh-1">
+                                <span class="font-display fw-semibold small text-slate-900">Namsita Yoga LMS</span>
+                                <span class="xsmall text-slate-500">Find Your Inner Balance</span>
+                            </div>
+                        </a>
 
-                    <div class="collapse navbar-collapse" id="mainNavbar">
-                        <ul class="navbar-nav ms-auto align-items-md-center gap-md-3">
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-soft" asp-controller="Courses" asp-action="Index">Classes</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-soft" asp-controller="Profile" asp-action="Index">My Space</a>
-                            </li>
-                            <li class="nav-item d-none d-md-block">
-                                <a class="nav-link nav-link-soft" asp-controller="Home" asp-action="Index" asp-fragment="schedule">Schedule</a>
-                            </li>
-                            <li class="nav-item d-none d-md-block">
-                                <a class="nav-link nav-link-soft" asp-controller="Home" asp-action="Index" asp-fragment="testimonials">Stories</a>
-                            </li>
-                            <li class="nav-item ms-md-2 mt-2 mt-md-0">
-                                <a asp-controller="Account" asp-action="Login" class="btn-ghost-sm">Sign In</a>
-                            </li>
-                            <li class="nav-item mt-2 mt-md-0">
-                                <a asp-controller="Account" asp-action="Register" class="btn-primary-sm">Join Now</a>
-                            </li>
-                        </ul>
+                        <!-- Sağ: kullanıcı adı + çıkış -->
+                        <div class="d-flex align-items-center justify-content-end gap-2">
+                            @if (isAuth)
+                            {
+                                <span class="app-username d-none d-sm-inline">@User.Identity?.Name</span>
+                                <a asp-controller="Account" asp-action="Logout" class="btn-ghost-sm">
+                                    <i class="bi bi-box-arrow-right me-1"></i> Çıkış
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Account" asp-action="Login" class="btn-ghost-sm">Giriş</a>
+                                <a asp-controller="Account" asp-action="Register" class="btn-primary-sm">Kayıt Ol</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </nav>
+
+            <!-- TOOLBAR (md ve üstü) -->
+            <div class="app-toolbar d-none d-md-block">
+                <div class="container-lg py-2">
+                    <ul class="nav nav-pills app-pills gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link @isActive("Courses", "Index")"
+                               asp-controller="Courses" asp-action="Index">
+                                <i class="bi bi-collection-play me-1"></i> Kurslarım
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @isActive("Home", "Index")"
+                               asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-person-heart me-1"></i> Profilim
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </header>
 
-        <main class="flex-grow-1">
+        <main class="flex-grow-1 container">
             @RenderBody()
         </main>
 
-        <footer class="border-top border-primary-soft bg-soft-gray mt-4">
-            @* Buraya index.html’deki footer'ı aynen taşı *@
-            <div class="container-lg py-4 small">
-                <!-- ... -->
+        <!-- MOBİL BOTTOM NAV -->
+        <nav class="bottom-nav d-md-none fixed-bottom">
+            <div class="container">
+                <div class="d-flex">
+                    <a class="bottom-nav__item @isActive("Home", "Index")"
+                       asp-controller="Courses" asp-action="Index">
+                        <i class="bi bi-collection-play"></i>
+                        <span>Kurslarım</span>
+                    </a>
+
+                    <a class="bottom-nav__item @isActive("Home", "Index")"
+                       asp-controller="Profile" asp-action="Index">
+                        <i class="bi bi-person-heart"></i>
+                        <span>Profilim</span>
+                    </a>
+
+                    <a class="bottom-nav__item"
+                       asp-controller="Account" asp-action="Logout">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Çıkış</span>
+                    </a>
+                </div>
             </div>
-        </footer>
+        </nav>
+
+        @* İstersen footer ekleyebilirsin *@
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/ui-interactions.js"></script>
-    <script src="~/js/slider.js"></script>
+    <script src="~/js/viewport-sections.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>
