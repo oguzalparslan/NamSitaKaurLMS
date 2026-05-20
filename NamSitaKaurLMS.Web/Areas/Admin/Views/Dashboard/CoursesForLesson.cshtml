@@ -11,6 +11,19 @@
 }
 
 <div id="popup"></div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Aktif Kurslar</h6>
+    </div>
+    <div class="card-body">
+        <div>
+            <a id="btnCreateCourse"
+               class="btn btn-outline-success mb-4">
+                Yeni Kurs Tanımla
+            </a>
+        </div>
+        <div class="table-responsive">
 <table class="table table-bordered table-hover align-middle w-100">
     <thead>
         <tr>
@@ -52,6 +65,12 @@
         }
     </tbody>
 </table>
+
+        </div>
+    </div>
+    <form id="af-form">@Html.AntiForgeryToken()</form>
+
+</div>
 
 <script>
     const popup = document.getElementById("popup");

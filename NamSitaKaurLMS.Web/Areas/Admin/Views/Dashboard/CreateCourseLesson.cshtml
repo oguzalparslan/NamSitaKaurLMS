@@ -15,294 +15,305 @@
 @* <h2>Kurs : @Model.Select(x => x.CourseTitle).FirstOrDefault()</h2> *@
 <h2>Kurs : @Model.Course.Title</h2>
 
-<a id="btnCreateLesson"
-   class="btn btn-success mb-3"
-   data-course-id="@Model.Course.Id">
-    Yeni Ders Tanımla
-</a>
-<table class="table table-bordered table-striped align-middle lesson-table">
-    <thead>
-        <tr>
-            <td>Sıra</td>
-            <td>Ders Adı</td>
-            <td>Ders Tarihi</td>
-            <td>Süre (dk)</td>
-            <td>Önizleme Mi ?</td>
-            <td>Ders İçeriği</td>
-            <td>İşlemler</td>
-        </tr>
-    </thead>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Dersler</h6>
+    </div>
+    <div class="card-body">
+        <div class="my-3">
+            <a id="btnCreateLesson"
+               class="btn btn-outline-success mb-3"
+               data-course-id="@Model.Course.Id">
+                Yeni Ders Tanımla
+            </a>
+        </div>
+        <table class="table table-bordered table-striped align-middle lesson-table">
+            <thead>
+                <tr>
+                    <td>Sıra</td>
+                    <td>Ders Adı</td>
+                    <td>Ders Tarihi</td>
+                    <td>Süre (dk)</td>
+                    <td>Önizleme Mi ?</td>
+                    <td>Ders İçeriği</td>
+                    <td>İşlemler</td>
+                </tr>
+            </thead>
 
-    <tbody>
-        @foreach (var lesson in Model.lessonDtoList)
-        {
-<tr>
+            <tbody>
+                @foreach (var lesson in Model.lessonDtoList)
+                {
+                    <tr>
 
-                <td>@lesson.Order</td>
-                <td>@lesson.Title</td>
-                <td>@lesson.LessonDate.ToShortDateString()</td>
-                <td>@lesson.DurationMinutes</td>
-                <td class="col-preview">
-                    <span class="badge bg-@(lesson.IsPreview ? "success" : "secondary") text-light">
-                        @(lesson.IsPreview ? "Evet" : "Hayır")
-                    </span>
-                </td>
-                <td>
-                    @{
-                        var content = Model.lessonContentList?
-                            .FirstOrDefault(x => x.LessonId == lesson.LessonId);
-                    }
-                    <span class="lesson-content-cell">
-                        @(content?.Text ?? "İçerik Bulunamadı !")
-                    </span>
-                </td>
-                <td>
+                        <td>@lesson.Order</td>
+                        <td>@lesson.Title</td>
+                        <td>@lesson.LessonDate.ToShortDateString()</td>
+                        <td>@lesson.DurationMinutes</td>
+                        <td class="col-preview">
+                            <span class="badge bg-@(lesson.IsPreview ? "success" : "secondary") text-light">
+                                @(lesson.IsPreview ? "Evet" : "Hayır")
+                            </span>
+                        </td>
+                        <td>
+                            @{
+                                var content = Model.lessonContentList?
+                                    .FirstOrDefault(x => x.LessonId == lesson.LessonId);
+                            }
+                            <span class="lesson-content-cell">
+                                @(content?.Text ?? "İçerik Bulunamadı !")
+                            </span>
+                        </td>
+                        <td>
 
-                    <div class="btn-group">
+                            <div class="btn-group">
 
-                        <a class="btn btn-outline-info btn-add-lesson-content"
-                           data-lesson-id="@lesson.LessonId"
-                           data-course-id="@Model.Course.Id">
-                            Ders İçerik Gir
-                        </a>
-                        <a class="btn btn-outline-warning btn-delete-lesson-content"
-                           data-lesson-id="@lesson.LessonId"
-                           data-course-id="@lesson.CourseId">
-                            Ders İçeriği Sil
-                        </a>
-                        <a class="btn btn-outline-danger btn-delete-lesson"
-                           data-lesson-id="@lesson.LessonId"
-                           data-course-id="@Model.Course.Id">
-                            Dersi Sil
-                        </a>
-                    </div>
+                                <a class="btn btn-outline-info btn-add-lesson-content"
+                                   data-lesson-id="@lesson.LessonId"
+                                   data-course-id="@Model.Course.Id">
+                                    Ders İçerik Gir
+                                </a>
+                                <a class="btn btn-outline-warning btn-delete-lesson-content"
+                                   data-lesson-id="@lesson.LessonId"
+                                   data-course-id="@lesson.CourseId">
+                                    Ders İçeriği Sil
+                                </a>
+                                <a class="btn btn-outline-danger btn-delete-lesson"
+                                   data-lesson-id="@lesson.LessonId"
+                                   data-course-id="@Model.Course.Id">
+                                    Dersi Sil
+                                </a>
+                            </div>
 
 
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
 
 @section Scripts {
     <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-            const popup = document.getElementById("lessonPopup");
-            const modalEl = document.getElementById("createLessonModal");
-            const getModal = () => bootstrap.Modal.getOrCreateInstance(document.getElementById("createLessonModal"));
+                            document.addEventListener("DOMContentLoaded", () => {
+                    const popup = document.getElementById("lessonPopup");
+                    const modalEl = document.getElementById("createLessonModal");
+                    const getModal = () => bootstrap.Modal.getOrCreateInstance(document.getElementById("createLessonModal"));
 
-            async function openPopup(url) {
-                const res = await fetch(url, { credentials: "same-origin" });
-                const html = await res.text();
+                    async function openPopup(url) {
+                        const res = await fetch(url, { credentials: "same-origin" });
+                        const html = await res.text();
 
-                popup.innerHTML = html;
+                        popup.innerHTML = html;
 
-                // popup içeriği geldikten sonra modal zaten DOM’da olacak
-                getModal().show();
-            }
+                        // popup içeriği geldikten sonra modal zaten DOM’da olacak
+                        getModal().show();
+                    }
 
-            function showPopupHtml(html) {
-                popup.innerHTML = html;
-                getModal().show();
-            }
+                    function showPopupHtml(html) {
+                        popup.innerHTML = html;
+                        getModal().show();
+                    }
 
-            // ✅ TEK click listener: popup açma / silme / iptal vb.
-            document.addEventListener("click", async (e) => {
-                // 1) Yeni ders tanımla
-                const createLessonBtn = e.target.closest("#btnCreateLesson");
-                if (createLessonBtn) {
-                    e.preventDefault();
+                    // ✅ TEK click listener: popup açma / silme / iptal vb.
+                    document.addEventListener("click", async (e) => {
+                        // 1) Yeni ders tanımla
+                        const createLessonBtn = e.target.closest("#btnCreateLesson");
+                        if (createLessonBtn) {
+                            e.preventDefault();
 
-                    const courseId = createLessonBtn.dataset.courseId;
-                    if (!courseId) return;
+                            const courseId = createLessonBtn.dataset.courseId;
+                            if (!courseId) return;
 
-                    const baseUrl = '@Url.Action("CreateLessonForm", "Dashboard", new { area = "Admin" })';
-                    await openPopup(`${baseUrl}?courseId=${courseId}`);
-                    return;
-                }
+                            const baseUrl = '@Url.Action("CreateLessonForm", "Dashboard", new { area = "Admin" })';
+                            await openPopup(`${baseUrl}?courseId=${courseId}`);
+                            return;
+                        }
 
 
 
-                // 2) Ders içerik gir
-                const addContentBtn = e.target.closest(".btn-add-lesson-content");
-                if (addContentBtn) {
-                    e.preventDefault();
+                        // 2) Ders içerik gir
+                        const addContentBtn = e.target.closest(".btn-add-lesson-content");
+                        if (addContentBtn) {
+                            e.preventDefault();
 
-                    const courseId = addContentBtn.dataset.courseId;
-                    const lessonId = addContentBtn.dataset.lessonId;
-                    if (!courseId || !lessonId) return;
+                            const courseId = addContentBtn.dataset.courseId;
+                            const lessonId = addContentBtn.dataset.lessonId;
+                            if (!courseId || !lessonId) return;
 
-                    const baseUrl = '@Url.Action("CreateLessonContentForm", "Dashboard", new { area = "Admin" })';
-                    await openPopup(`${baseUrl}?courseId=${courseId}&lessonId=${lessonId}`);
-                    return;
-                }
+                            const baseUrl = '@Url.Action("CreateLessonContentForm", "Dashboard", new { area = "Admin" })';
+                            await openPopup(`${baseUrl}?courseId=${courseId}&lessonId=${lessonId}`);
+                            return;
+                        }
 
                 
-                // 2b) Ders içeriği sil
-                const deleteContentBtn = e.target.closest(".btn-delete-lesson-content");
+                        // 2b) Ders içeriği sil
+                        const deleteContentBtn = e.target.closest(".btn-delete-lesson-content");
 
-                debugger;
-                if (deleteContentBtn) {
-                    e.preventDefault();
+                        debugger;
+                        if (deleteContentBtn) {
+                            e.preventDefault();
 
-                    const lessonId = deleteContentBtn.dataset.lessonId;
-                    const courseId = deleteContentBtn.dataset.courseId;
-                    if (!lessonId || !courseId) return;
+                            const lessonId = deleteContentBtn.dataset.lessonId;
+                            const courseId = deleteContentBtn.dataset.courseId;
+                            if (!lessonId || !courseId) return;
 
-                    if (!confirm("Bu ders içeriğini silmek istediğine emin misin?")) return;
+                            if (!confirm("Bu ders içeriğini silmek istediğine emin misin?")) return;
 
-                    const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]')?.value;
-                    if (!token) {
-                        alert("CSRF token bulunamadı. Sayfayı yenileyip tekrar dener misin?");
-                        return;
-                    }
+                            const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]')?.value;
+                            if (!token) {
+                                alert("CSRF token bulunamadı. Sayfayı yenileyip tekrar dener misin?");
+                                return;
+                            }
 
-                    const res = await fetch('@Url.Action("DeleteCourseContent", "Dashboard", new { area = "Admin" })', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                            "RequestVerificationToken": token,
-                            "X-Requested-With": "XMLHttpRequest"
-                        },
-                        body: new URLSearchParams({ lessonId, courseId }).toString(),
-                        credentials: "same-origin"
+                            const res = await fetch('@Url.Action("DeleteCourseContent", "Dashboard", new { area = "Admin" })', {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                                    "RequestVerificationToken": token,
+                                    "X-Requested-With": "XMLHttpRequest"
+                                },
+                                body: new URLSearchParams({ lessonId, courseId }).toString(),
+                                credentials: "same-origin"
+                            });
+
+                            const contentType = (res.headers.get("content-type") || "").toLowerCase();
+                            if (!contentType.includes("application/json")) {
+                                const txt = await res.text();
+                                console.error("DeleteCourseContent non-JSON response:", txt);
+                                alert("İçerik silinirken beklenmeyen yanıt alındı. Console'u kontrol et.");
+                                return;
+                            }
+
+                            const data = await res.json();
+                            if (data.success) {
+                                const row = deleteContentBtn.closest("tr");
+                                const cell = row?.querySelector(".lesson-content-cell");
+                                if (cell) cell.textContent = "İçerik Bulunamadı !";
+
+                                deleteContentBtn.classList.add("disabled");
+                                deleteContentBtn.setAttribute("aria-disabled", "true");
+                            } else {
+                                alert(data.message || "İçerik silinirken hata oluştu.");
+                            }
+                            return;
+                        }
+
+        // 3) Modal iptal
+                        const cancelBtn = e.target.closest("#btnCancel");
+                        if (cancelBtn) {
+                            e.preventDefault();
+                            getModal().hide();
+                            return;
+                        }
+
+                        // 4) Ders sil
+                        const deleteLessonBtn = e.target.closest(".btn-delete-lesson");
+                        if (deleteLessonBtn) {
+                            e.preventDefault();
+
+                            const lessonId = deleteLessonBtn.dataset.lessonId;
+                            const courseId = deleteLessonBtn.dataset.courseId;
+                            if (!lessonId) return;
+
+                            if (!confirm("Bu dersi silmek istediğine emin misin?")) return;
+
+                            const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]')?.value;
+                            if (!token) return;
+
+                            const res = await fetch('@Url.Action("DeleteLesson", "Dashboard", new { area = "Admin" })', {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                                    "RequestVerificationToken": token,
+                                    "X-Requested-With": "XMLHttpRequest"
+                                },
+                                body: new URLSearchParams({ id: lessonId, courseId }).toString(),
+                                credentials: "same-origin"
+                            });
+
+                            const data = await res.json();
+                            if (data.success) {
+                                deleteLessonBtn.closest("tr")?.remove();
+                            }
+                            return;
+                        }
                     });
 
-                    const contentType = (res.headers.get("content-type") || "").toLowerCase();
-                    if (!contentType.includes("application/json")) {
-                        const txt = await res.text();
-                        console.error("DeleteCourseContent non-JSON response:", txt);
-                        alert("İçerik silinirken beklenmeyen yanıt alındı. Console'u kontrol et.");
-                        return;
-                    }
+                    // ✅ TEK submit listener: popup içindeki formlar (create lesson / create content vs.)
+                    document.addEventListener("submit", async (e) => {
+                        const form = e.target;
+                        console.log(e.target);
+                        // Sadece popup içinden gelen formları yakala
+                        if (!e.target.matches("#CreateLessonContent")) return;
+                        // İstersen id bazlı filtrele:
+                        // if (!["createLessonForm", "createLessonContentForm"].includes(form.id)) return;
 
-                    const data = await res.json();
-                    if (data.success) {
-                        const row = deleteContentBtn.closest("tr");
-                        const cell = row?.querySelector(".lesson-content-cell");
-                        if (cell) cell.textContent = "İçerik Bulunamadı !";
+                        e.preventDefault();
 
-                        deleteContentBtn.classList.add("disabled");
-                        deleteContentBtn.setAttribute("aria-disabled", "true");
-                    } else {
-                        alert(data.message || "İçerik silinirken hata oluştu.");
-                    }
-                    return;
-                }
+                        const res = await fetch(form.action, {
+                            method: form.method || "POST",
+                            body: new FormData(form),
+                            headers: { "X-Requested-With": "XMLHttpRequest" },
+                            credentials: "same-origin"
+                        });
 
-// 3) Modal iptal
-                const cancelBtn = e.target.closest("#btnCancel");
-                if (cancelBtn) {
-                    e.preventDefault();
-                    getModal().hide();
-                    return;
-                }
+                        const contentType = res.headers.get("content-type") || "";
 
-                // 4) Ders sil
-                const deleteLessonBtn = e.target.closest(".btn-delete-lesson");
-                if (deleteLessonBtn) {
-                    e.preventDefault();
+                        // Validation hatası: partial html geri döner
+                        if (!contentType.includes("application/json")) {
+                            const html = await res.text();
+                            showPopupHtml(html);
+                            return;
+                        }
 
-                    const lessonId = deleteLessonBtn.dataset.lessonId;
-                    const courseId = deleteLessonBtn.dataset.courseId;
-                    if (!lessonId) return;
-
-                    if (!confirm("Bu dersi silmek istediğine emin misin?")) return;
-
-                    const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]')?.value;
-                    if (!token) return;
-
-                    const res = await fetch('@Url.Action("DeleteLesson", "Dashboard", new { area = "Admin" })', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                            "RequestVerificationToken": token,
-                            "X-Requested-With": "XMLHttpRequest"
-                        },
-                        body: new URLSearchParams({ id: lessonId, courseId }).toString(),
-                        credentials: "same-origin"
+                        // Başarılı: JSON
+                        const data = await res.json();
+                        if (data.success && data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        }
                     });
 
-                    const data = await res.json();
-                    if (data.success) {
-                        deleteLessonBtn.closest("tr")?.remove();
-                    }
-                    return;
-                }
-            });
 
-            // ✅ TEK submit listener: popup içindeki formlar (create lesson / create content vs.)
-            document.addEventListener("submit", async (e) => {
-                const form = e.target;
-                console.log(e.target);
-                // Sadece popup içinden gelen formları yakala
-                if (!e.target.matches("#CreateLessonContent")) return;
-                // İstersen id bazlı filtrele:
-                // if (!["createLessonForm", "createLessonContentForm"].includes(form.id)) return;
+                    // Create Form Submit
+                    document.addEventListener("click", async function (e) {
+                        const element = e.target;
+                        if (element.id !== "saveLesson") return;
 
-                e.preventDefault();
+                        e.preventDefault();
 
-                const res = await fetch(form.action, {
-                    method: form.method || "POST",
-                    body: new FormData(form),
-                    headers: { "X-Requested-With": "XMLHttpRequest" },
-                    credentials: "same-origin"
+                        const popup = document.getElementById("lessonPopup");
+                        const form = document.getElementById("createLessonForm");
+                        const baseUrl = '@Url.Action("CreateLesson", "Dashboard", new { area = "Admin" })';
+                        const result = await fetch(baseUrl,
+                            {
+                                method: "POST",
+                                body: new FormData(form),
+                                credentials: "same-origin"
+                            });
+
+                        const contentType = (result.headers.get("content-type") || "").toLowerCase();
+
+                        if (contentType.includes("application/json")) {
+                            const data = await result.json();
+
+                            if (data.success) {
+                                window.location.href = data.redirectUrl || window.location.href;
+                            } else {
+                                window.location.reload();
+                            }
+                        } else {
+                            const html = await result.text();
+                            popup.innerHTML = html;
+
+                            const modalEl = document.getElementById("createLessonModal");
+                            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                            modal.show();
+                              }
+                    });
                 });
-
-                const contentType = res.headers.get("content-type") || "";
-
-                // Validation hatası: partial html geri döner
-                if (!contentType.includes("application/json")) {
-                    const html = await res.text();
-                    showPopupHtml(html);
-                    return;
-                }
-
-                // Başarılı: JSON
-                const data = await res.json();
-                if (data.success && data.redirectUrl) {
-                    window.location.href = data.redirectUrl;
-                }
-            });
-
-
-            // Create Form Submit
-            document.addEventListener("click", async function (e) {
-                const element = e.target;
-                if (element.id !== "saveLesson") return;
-
-                e.preventDefault();
-
-                const popup = document.getElementById("lessonPopup");
-                const form = document.getElementById("createLessonForm");
-                const baseUrl = '@Url.Action("CreateLesson", "Dashboard", new { area = "Admin" })';
-                const result = await fetch(baseUrl,
-                    {
-                        method: "POST",
-                        body: new FormData(form),
-                        credentials: "same-origin"
-                    });
-
-                const contentType = (result.headers.get("content-type") || "").toLowerCase();
-
-                if (contentType.includes("application/json")) {
-                    const data = await result.json();
-
-                    if (data.success) {
-                        window.location.href = data.redirectUrl || window.location.href;
-                    } else {
-                        window.location.reload();
-                    }
-                } else {
-                    const html = await result.text();
-                    popup.innerHTML = html;
-
-                    const modalEl = document.getElementById("createLessonModal");
-                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                    modal.show();
-                      }
-            });
-        });
 
     </script>
 }

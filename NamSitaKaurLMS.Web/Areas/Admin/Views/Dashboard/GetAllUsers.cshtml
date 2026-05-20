@@ -1,203 +1,208 @@
-﻿@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
+﻿@using System.Text.Json
+@using NamSitaKaurLMS.WebUI.Areas.Admin.Models.ViewModels
 @model IEnumerable<UserListItemViewModel>
 @{
     ViewData["Title"] = "Kullanıcılar";
 }
 
-<form id="antiForgeryForm" style="display:none;">
-    @Html.AntiForgeryToken()
-</form>
+<style>
+    #userTableContainer .tabulator-row.email-confirmed-row {
+        background-color: #d1e7dd !important;
+    }
 
-<div id="popup"></div>
-<h1>Kullanıcı Listesi</h1>
+    #userTableContainer .tabulator-row.email-not-confirmed-row {
+        background-color: #f8d7da !important;
+    }</style>
+    <form id="antiForgeryForm" style="display:none;">
+        @Html.AntiForgeryToken()
+    </form>
 
-<button id="btnAddNewUser" class="btn btn-outline-success my-2">Yeni Kullanıcı ekle</button>
+    <div id="popup"></div>
+    <!--
 
-<table class="table table-bordered table-hover align-middle w-100">
-    <thead>
-        <tr>
-            <th>UserId</th>
-            <th>Kullanıcı Adı</th>
-            <th>e-Mail</th>
-            <th>e-Mail Doğrulanmış mı ?</th>
-            <th>Cep Telefonu</th>
-            <th>Kullanıcı Rolleri</th>
-            <th>İşlemler</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Id.Substring(0, 3)*******@user.Id.Substring(user.Id.Length - 3, 3)</td>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
-                <td>@user.EmailConfirmed</td>
-                <td>@user.PhoneNumber</td>
-                <td>
-                    @foreach (var role in user.Roles)
+<div class="card shadow mb-4" readonly>
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Kullanıcı Listesi</h6>
+    </div>
+    <div class="card-body">
+        <div class="my-3">
+            <button id="btnAddNewUser" class="btn btn-outline-success">Yeni Kullanıcı ekle</button>
+        </div>
+        <div class="my-3">
+            <button id="btnAddNewUserNew" class="btn btn-outline-success">Yeni Kullanıcı ekle Yeni !</button>
+        </div>
+        <div class="table-responsive"> -->
+    @*     <div class="my-3">
+        <button id="btnAddNewUserNew" class="btn btn-outline-success">Yeni Kullanıcı ekle Yeni !</button>
+    </div>
+
+    <div id="userTableContainer"></div>
+ *@
+
+    <div class="page-content">
+
+        <div class="mb-3">
+            <button id="btnAddNewUserNew" class="btn btn-outline-success">Yeni Kullanıcı ekle Yeni !</button>
+        </div>
+
+        <div class="user-table-wrapper">
+            <div id="userTableContainer"></div>
+        </div>
+
+    </div>
+    <!--
+            <table class="table table-bordered table-hover align-middle w-100">
+                <thead>
+                    <tr>
+                        <th>UserId</th>
+                        <th>Kullanıcı Adı</th>
+                        <th>e-Mail</th>
+                        <th>e-Mail Doğrulanmış mı ?</th>
+                        <th>Cep Telefonu</th>
+                        <th>Kullanıcı Rolleri</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
                     {
-                        <span class="badge bg-@(user.Roles.Contains("Admin") ? "success" : "primary") text-light p-3">
-                            @role.ToString()
-                        </span>
+                        <tr>
+                            <td>@user.Id.Substring(0, 3)*******@user.Id.Substring(user.Id.Length - 3, 3)</td>
+                            <td>@user.UserName</td>
+                            <td>@user.Email</td>
+                            <td>@user.EmailConfirmed</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>
+                                @foreach (var role in user.Roles)
+                                {
+                                    <span class="badge bg-@(user.Roles.Contains("Admin") ? "success" : "primary") text-light p-3">
+                                        @role.ToString()
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
+                                    <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnRemoveUser">Sil</button>
+                                    <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnChangeUserRole">Rol Değiştir</button>
+                                </div>
+                            </td>
+                        </tr>
                     }
-                </td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
-                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnRemoveUser">Sil</button>
-                        <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnChangeUserRole">Rol Değiştir</button>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
 
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          const popup = document.querySelector("#popup");
-          const addUserButton = document.querySelector("#btnAddNewUser");
+        </div>
+    </div>
+    <form id="af-form">@Html.AntiForgeryToken()</form>
 
-          // 1) Modalı GET ile çekip göster
-          addUserButton.addEventListener("click", async function (e) {
-            e.preventDefault();
+</div>-->
+    @section Scripts {
 
-            const url = '@Url.Action("CreateUser", "Dashboard", new { area = "Admin" })';
-            const res = await fetch(url, { credentials: "same-origin" });
-            const html = await res.text();
+    
 
-            popup.innerHTML = html;
+        <script>
 
-            const modalEl = popup.querySelector("#createUserModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
-          });
+            const tableData = @Html.Raw(JsonSerializer.Serialize(Model));
+            var printIcon = function(cell, formatterParams){ return "<i class='fa fa-print'></i>"; };
+            var editIcon = function(cell, formatterParams){ return "<i class='fa fa-edit'></i>"; };
 
-          // 2) Modal içindeki form submit’ini yakala (delegation)
-          popup.addEventListener("submit", async function (e) {
-            const form = e.target;
-            if (!form.matches("#createUserForm")) return;
+        
+            var table = new Tabulator("#userTableContainer", {
+                height: "calc(100vh - 230px)"        ,
+                width:"100%",
+                data: tableData,
+                rowFormatter: function (row) {
+                var data = row.getData();
+                var element = row.getElement();
 
-            e.preventDefault();
+                element.classList.remove("email-confirmed-row", "email-not-confirmed-row");
 
-            const res = await fetch(form.action, {
-              method: "POST",
-              body: new FormData(form),
-              credentials: "same-origin"
+                if (data.EmailConfirmed === true) {
+                    element.classList.add("email-confirmed-row");
+                } else {
+                    element.classList.add("email-not-confirmed-row");
+                }
+            },
+
+                renderHorizontal:"virtual",
+                layout:"fitDataFill",
+                pagination:"local",
+                paginationSize:20,
+                paginationSizeSelector:[20, 40],
+
+             popupContainer:"#popup",
+             columns:[
+
+                    
+                    {
+                        title:"Kullanıcı Bilgileri",
+                        columns:[
+
+                                {title:"Id", field:"Id", headerHozAlign:"center",headerWordWrap:true , width:"15%"},
+                                    {title:"Kullanıcı Adı", field:"UserName", width:"15%",  headerFilter:"input", headerHozAlign:"center",headerVerAlign:"center",headerWordWrap:true},
+                                {title:"e-Mail", field:"Email", width:"15%",headerWordWrap:true},
+                                {title:"Telefonu", field:"PhoneNumber", width:"15%", headerWordWrap:true},
+                        ]
+                    },
+                        // {formatter:printIcon, width:40, hozAlign:"center", cellClick:function(e, cell){alert("Printing row data for: " + cell.getRow().getData().name)},headerWordWrap:true},
+                        {formatter:editIcon, title:"Edit Role",width:100, hozAlign:"center", cellClick: function(e, cell){ 
+
+                            debugger;
+                            const selectedRowId = cell.getRow().getData().Id;
+                            openPopupPage(selectedRowId);
+                        },headerWordWrap:true},
+                                    {title:"Email Doğrulandı", field:"EmailConfirmed", wrap:true,  width:"15%", headerHozAlign:"center",headerWordWrap:true},
+                        {title:"Roller", field:"Roles", width:"15%", headerHozAlign:"center",sorter:"string",headerWordWrap:true}
+
+                ]
+
             });
 
-            if (res.redirected) {
-              window.location.href = res.url;
-              return;
-            }
-
-            const html = await res.text();
-            popup.innerHTML = html;
-
-            const modalEl = popup.querySelector("#createUserModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
-          });
-        });
-              document.addEventListener("DOMContentLoaded", function () {
-              const popup = document.querySelector("#popup");
-
-                  document.addEventListener("click",async function(e)
-                  {
-                      const element = e.target.closest(".btnUpdateUser");
-                      if(!element) return ;
-
-                      e.preventDefault();
-                      const id = element.value ;
-
-                      const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
-                      const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
-                      const res = await fetch(url, { credentials: "same-origin" });
-                      const html = await res.text();
-                      popup.innerHTML = html;
-                      const modalEl = popup.querySelector("#updateUserModal");
-                      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                      modal.show();
-                  });
-
-              });
-
-
-              document.addEventListener("DOMContentLoaded", function () {
-                  document.addEventListener("click", async function(e) {
-
-                      const element = e.target.closest(".btnRemoveUser");
-                      if(!element) return;
-                      console.dir(element);
-
-                      const isConfirmed = confirm("Seçtiğiniz kayıt ve bağlı olduğu detay kayıtlar silinecektir. Onaylıyor musunuz ?");
-                      console.log(isConfirmed);
-
-                      if(!isConfirmed) return;
-
-                      const id = e.target.value;
-
-                      alert(`Seçili Id : ${id}`);
-
-                     const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
-
-
-                      const baseUrl = '@Url.Action("DeleteUser", "Dashboard", new { area = "Admin" })';
-
-                      const url = `${baseUrl}?id=${encodeURIComponent(id)}`;
-
-                             const res = await fetch(baseUrl, {
-                                    method: "POST",
-                                    credentials: "same-origin",
-                                    headers: {
-                                      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                                      "RequestVerificationToken": token
-                                    },
-                                    body: new URLSearchParams({ id })
-                                  });
-
-                                  if (res.redirected) {
-                                    window.location.href = res.url;
-                                    return;
-                                  }
-                                  if (res.ok) {
-                                    window.location.reload();
-                                    return;
-                                  }
-
-                                  const errText = await res.text();
-                                  alert("Silme işlemi başarısız: " + errText);
-                                });
 
 
 
-              });
+            const createUserButtonNew = document.querySelector("#btnAddNewUserNew");
+               createUserButtonNew.addEventListener("click", function (e) {
+                 e.preventDefault();
+
+                 $.ajax({
+                   url: '@Url.Action("CreateUserNew", "Dashboard", new { area = "Admin" })',
+                   method: "GET",
+                   success: function (html) {
+                     $("#popup").html(html);
+                     const modalEl = document.querySelector("#createUserModal");
+                     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                     modal.show();
+                   },
+                   error: function () {
+                     alert("Modal yüklenirken bir hata oluştu.");
+                   }
+                 });
 
 
-              document.addEventListener("DOMContentLoaded", function () {
-              const popup = document.querySelector("#popup");
 
-                  document.addEventListener("click",async function(e)
-                  {
-                      const element = e.target.closest(".btnChangeUserRole");
-                      if(!element) return ;
+               });
 
-                      
-                      e.preventDefault();
-                      const userId = element.value ;
-                      const baseUrl = '@Url.Action("UpdateUserRole", "Dashboard", new { area = "Admin" })';
-                      const url = `${baseUrl}?userId=${encodeURIComponent(userId)}`;
-                      console.log(url);
-                      const res = await fetch(url, { credentials: "same-origin" });
-                      const html = await res.text();
-                      popup.innerHTML = html;
-                      const modalEl = popup.querySelector("#updateUserRolePopup");
-                      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                      modal.show();
-                  });
 
-              });
-    </script>
-}
+
+
+
+                             function openPopupPage(selectedRowId)
+            {
+                      debugger;
+                    const popup = document.querySelector("#popup");
+                    const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
+                    const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
+                    fetch(url, { credentials: "same-origin" })
+                      .then(response => response.text())
+                      .then(html => {
+                        popup.innerHTML = html;
+                        const modalEl = popup.querySelector("#updateUserModal");
+                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        modal.show();
+                      })
+                      .catch(() => alert("Modal yüklenirken bir hata oluştu."));
+                  };
+        </script>
+    }

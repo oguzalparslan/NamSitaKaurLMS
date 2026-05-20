@@ -1,0 +1,58 @@
+.admin-table {
+    --admin-table-border: #e5e7eb;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border: 1px solid var(--admin-table-border);
+    border-radius: .75rem;
+    overflow: hidden;
+}
+
+.admin-table thead th {
+    background: #f8fafc;
+    color: #334155;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--admin-table-border);
+    white-space: nowrap;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: .85rem .9rem;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.admin-table .table-actions {
+    display: flex;
+    gap: .5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-table .cell-badge {
+    display: inline-flex;
+    min-width: 5.5rem;
+    justify-content: center;
+    border-radius: 999px;
+    padding: .35rem .65rem;
+    font-weight: 600;
+}
+
+.admin-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}

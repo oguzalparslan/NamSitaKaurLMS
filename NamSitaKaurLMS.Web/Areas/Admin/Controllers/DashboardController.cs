@@ -567,10 +567,16 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         {
             return PartialView("~/Areas/Admin/PartialViews/_CreateUserPopup.cshtml");
         }
+        [HttpGet]
+        public IActionResult CreateUserNew()
+        {
+            return PartialView("~/Areas/Admin/PartialViews/_CreateUserPopupNew.cshtml");
+        }
 
         [HttpGet]
         public IActionResult UpdateUser(string id)
         {
+
             var identityUser = userManager.FindByIdAsync(id).Result;
             var user = userService.GetUser(identityUser.Id).Result;
             var userViewModel = new UpdateUserViewModel()
@@ -677,6 +683,74 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(CreateUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                Response.StatusCode = 400;
+                return PartialView("_CreateUserModal", model);
+            }
+
+            var user = new AppUser
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                EmailConfirmed = true,
+                PhoneNumber = model.PhoneNumber
+            };
+
+            var result = await userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var e in result.Errors)
+                    ModelState.AddModelError("", e.Description);
+
+                Response.StatusCode = 400;
+                return PartialView("_CreateUserModal", model);
+            }
+
+            const string defaultRole = "Student";
+
+            if (!await roleManager.RoleExistsAsync(defaultRole))
+            {
+                var roleCreate = await roleManager.CreateAsync(new IdentityRole(defaultRole));
+                if (!roleCreate.Succeeded)
+                {
+                    await userManager.DeleteAsync(user); // rollback
+                    foreach (var e in roleCreate.Errors)
+                        ModelState.AddModelError("", e.Description);
+
+                    Response.StatusCode = 400;
+                    return PartialView("_CreateUserModal", model);
+                }
+            }
+
+            var addRoleResult = await userManager.AddToRoleAsync(user, defaultRole);
+            if (!addRoleResult.Succeeded)
+            {
+                await userManager.DeleteAsync(user); // rollback
+                foreach (var e in addRoleResult.Errors)
+                    ModelState.AddModelError("", e.Description);
+
+                Response.StatusCode = 400;
+                return PartialView("_CreateUserModal", model);
+            }
+            User applicationUser = new()
+            {
+                AppUserId = user.Id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            await userService.AddUserAsync(applicationUser);
+
+            return RedirectToAction("GetAllUsers", "Dashboard", new { area = "Admin" });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUserNew(CreateUserViewModel model)
         {
             if (!ModelState.IsValid)
             {
