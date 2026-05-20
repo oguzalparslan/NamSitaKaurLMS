@@ -150,7 +150,7 @@
 
                             debugger;
                             const selectedRowId = cell.getRow().getData().Id;
-                            openPopupPage(selectedRowId);
+                            openUpdatePopupPage(selectedRowId);
                         },headerWordWrap:true},
                                     {title:"Email Doğrulandı", field:"EmailConfirmed", wrap:true,  width:"15%", headerHozAlign:"center",headerWordWrap:true},
                         {title:"Roller", field:"Roles", width:"15%", headerHozAlign:"center",sorter:"string",headerWordWrap:true}
@@ -184,11 +184,7 @@
 
                });
 
-
-
-
-
-                             function openPopupPage(selectedRowId)
+            function openUpdatePopupPage(selectedRowId)
             {
                       debugger;
                     const popup = document.querySelector("#popup");
