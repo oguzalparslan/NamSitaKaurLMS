@@ -842,17 +842,21 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         {
 
             var user = await userManager.FindByIdAsync(Id);
-            try
-            {
-                await userManager.DeleteAsync(user);
-                // Todo: Users ten silme işlemi yapılacak.
-                return RedirectToAction("GelAllUsers", "Dashboard", new { area = "Admin" });
-            }
-            catch (Exception e)
-            {
-                throw e.InnerException;
-            }
 
+            if (user != null)
+            {
+
+                try
+                {
+                    var result = await userManager.DeleteAsync(user);
+                    return RedirectToAction("GetAllUsers", "Dashboard", new { area = "Admin" });
+                }
+                catch (Exception e)
+                {
+                    throw e.InnerException;
+                }
+            }
+            return RedirectToAction("GetAllUsers", "Dashboard", new { area = "Admin" });
         }
 
         [HttpPost]

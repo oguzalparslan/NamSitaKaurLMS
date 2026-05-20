@@ -99,106 +99,197 @@
 </div>-->
     @section Scripts {
 
-    
-
         <script>
 
             const tableData = @Html.Raw(JsonSerializer.Serialize(Model));
-            var printIcon = function(cell, formatterParams){ return "<i class='fa fa-print'></i>"; };
-            var editIcon = function(cell, formatterParams){ return "<i class='fa fa-edit'></i>"; };
+            var printIcon = function(cell, formatterParams) {
+            return "<i class='fa fa-print'></i>";
+            };
+            var editIcon = function(cell, formatterParams) {
+            return "<i class='fa fa-edit  text-primary'></i>";
+            };
+            var deleteIcon = function(cell, formatterParams) {
+            return "<i class='fa fa-times text-danger'></i>";
+            };
 
-        
+
             var table = new Tabulator("#userTableContainer", {
-                height: "calc(100vh - 230px)"        ,
-                width:"100%",
-                data: tableData,
-                rowFormatter: function (row) {
-                var data = row.getData();
-                var element = row.getElement();
+            height: "calc(100vh - 230px)",
+            width: "100%",
+            data: tableData,
+            rowFormatter: function(row) {
+            var data = row.getData();
+            var element = row.getElement();
 
-                element.classList.remove("email-confirmed-row", "email-not-confirmed-row");
+            element.classList.remove("email-confirmed-row", "email-not-confirmed-row");
 
-                if (data.EmailConfirmed === true) {
-                    element.classList.add("email-confirmed-row");
-                } else {
-                    element.classList.add("email-not-confirmed-row");
-                }
+            if (data.EmailConfirmed === true) {
+            element.classList.add("email-confirmed-row");
+            } else {
+            element.classList.add("email-not-confirmed-row");
+            }
             },
 
-                renderHorizontal:"virtual",
-                layout:"fitDataFill",
-                pagination:"local",
-                paginationSize:20,
-                paginationSizeSelector:[20, 40],
+            renderHorizontal: "virtual",
+            layout: "fitColumn",
+            pagination: "local",
+            paginationSize: 20,
+            paginationSizeSelector: [20, 40],
+            popupContainer: "#popup",
+            columns: [{
+            title: "Kullanıcı Bilgileri",
+            columns: [{
+            formatter: editIcon,
+            title: "Kullanıcı Güncelle",
+            width: 100,
+            hozAlign: "center",
+            cellClick: function(e, cell) {
+            const selectedRowId = cell.getRow().getData().Id;
+            openUpdatePopupPage(selectedRowId);
+            },
+            headerWordWrap: true
+            },
+            {
+            formatter: deleteIcon,
+            title: "Kullanıcı Sil",
+            width: 100,
+            hozAlign: "center",
+            cellClick: function(e, cell) {
+            const selectedRowId = cell.getRow().getData().Id;
+            deleteUser(selectedRowId);
+            },
+            headerWordWrap: true
+            },
+            {
+            title: "Id",
+            field: "Id",
+            headerHozAlign: "center",
+            headerWordWrap: true,
+            width: "15%"
+            },
+            {
+            title: "Kullanıcı Adı",
+            field: "UserName",
+            width: "15%",
+            headerFilter: "input",
+            headerHozAlign: "center",
+            headerVerAlign: "center",
+            headerWordWrap: true
+            },
+            {
+            title: "e-Mail",
+            field: "Email",
+            width: "15%",
+            headerWordWrap: true
+            },
+            {
+            title: "Telefonu",
+            field: "PhoneNumber",
+            width: "15%",
+            headerWordWrap: true
+            },
+            ]
+            },
 
-             popupContainer:"#popup",
-             columns:[
-
-                    
-                    {
-                        title:"Kullanıcı Bilgileri",
-                        columns:[
-
-                                {title:"Id", field:"Id", headerHozAlign:"center",headerWordWrap:true , width:"15%"},
-                                    {title:"Kullanıcı Adı", field:"UserName", width:"15%",  headerFilter:"input", headerHozAlign:"center",headerVerAlign:"center",headerWordWrap:true},
-                                {title:"e-Mail", field:"Email", width:"15%",headerWordWrap:true},
-                                {title:"Telefonu", field:"PhoneNumber", width:"15%", headerWordWrap:true},
-                        ]
-                    },
-                        // {formatter:printIcon, width:40, hozAlign:"center", cellClick:function(e, cell){alert("Printing row data for: " + cell.getRow().getData().name)},headerWordWrap:true},
-                        {formatter:editIcon, title:"Edit Role",width:100, hozAlign:"center", cellClick: function(e, cell){ 
-
-                            debugger;
-                            const selectedRowId = cell.getRow().getData().Id;
-                            openUpdatePopupPage(selectedRowId);
-                        },headerWordWrap:true},
-                                    {title:"Email Doğrulandı", field:"EmailConfirmed", wrap:true,  width:"15%", headerHozAlign:"center",headerWordWrap:true},
-                        {title:"Roller", field:"Roles", width:"15%", headerHozAlign:"center",sorter:"string",headerWordWrap:true}
-
-                ]
-
+            {
+            title: "Email Doğrulandı",
+            field: "EmailConfirmed",
+            wrap: true,
+            width: "15%",
+            headerHozAlign: "center",
+            headerWordWrap: true
+            },
+            {
+            title: "Roller",
+            field: "Roles",
+            width: "15%",
+            headerHozAlign: "center",
+            sorter: "string",
+            headerWordWrap: true
+            }
+            ]
             });
 
 
 
 
             const createUserButtonNew = document.querySelector("#btnAddNewUserNew");
-               createUserButtonNew.addEventListener("click", function (e) {
-                 e.preventDefault();
+            createUserButtonNew.addEventListener("click", function(e) {
+            e.preventDefault();
 
-                 $.ajax({
-                   url: '@Url.Action("CreateUserNew", "Dashboard", new { area = "Admin" })',
-                   method: "GET",
-                   success: function (html) {
-                     $("#popup").html(html);
-                     const modalEl = document.querySelector("#createUserModal");
-                     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                     modal.show();
-                   },
-                   error: function () {
-                     alert("Modal yüklenirken bir hata oluştu.");
-                   }
-                 });
+            $.ajax({
+            url: '@Url.Action("CreateUserNew", "Dashboard", new { area = "Admin" })',
+            method: "GET",
+            success: function(html) {
+            $("#popup").html(html);
+            const modalEl = document.querySelector("#createUserModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+            },
+            error: function() {
+            alert("Modal yüklenirken bir hata oluştu.");
+            }
+            });
 
 
 
-               });
+            });
 
-            function openUpdatePopupPage(selectedRowId)
-            {
-                      debugger;
-                    const popup = document.querySelector("#popup");
-                    const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
-                    const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
-                    fetch(url, { credentials: "same-origin" })
-                      .then(response => response.text())
-                      .then(html => {
-                        popup.innerHTML = html;
-                        const modalEl = popup.querySelector("#updateUserModal");
-                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                        modal.show();
-                      })
-                      .catch(() => alert("Modal yüklenirken bir hata oluştu."));
-                  };
-        </script>
+            function openUpdatePopupPage(selectedRowId) {
+            debugger;
+            const popup = document.querySelector("#popup");
+            const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
+            const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
+            fetch(url, {
+            credentials: "same-origin"
+            })
+            .then(response => response.text())
+            .then(html => {
+            popup.innerHTML = html;
+            const modalEl = popup.querySelector("#updateUserModal");
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+            })
+            .catch(() => alert("Modal yüklenirken bir hata oluştu."));
+            };
+
+            function deleteUser(selectedRowId) {
+            debugger;
+
+            console.log("deleteUser fonksiyonuna geldi.");
+            console.log("selectedRowId:", selectedRowId);
+
+            const popup = document.querySelector("#popup");
+
+            if (!popup) {
+            alert("#popup elementi bulunamadı.");
+            return;
+            }
+
+            const baseUrl = '@Url.Action("DeleteUser", "Dashboard", new { area = "Admin" })';
+
+            console.log("baseUrl:", baseUrl);
+
+            const url = baseUrl + "?Id=" + encodeURIComponent(selectedRowId);
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            console.log("fetch url:", url);
+
+            $.ajax({
+            url: baseUrl,
+            method: "POST",
+            data: {
+            Id: selectedRowId,
+            __RequestVerificationToken: token
+            },
+            success: function() {
+            window.location.href = '@Url.Action("GetAllUsers", "Dashboard", new { area = "Admin" })';
+            },
+            error: function(xhr) {
+            console.error(xhr);
+            alert("Kullanıcı silinirken hata oluştu.");
+            }
+            });
+            } 
+            </script>
     }
