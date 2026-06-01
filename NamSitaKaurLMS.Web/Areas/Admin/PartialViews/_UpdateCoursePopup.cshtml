@@ -2,7 +2,7 @@
 @model CourseDto
 
 @{
-    var isReadonly = Model.Status == 1 || Model.Status == 2;
+    var isReadonly = /* Model.Status == 1 || */ Model.Status == 2;
     string? fsDisabled = isReadonly ? "disabled" : null; // null => attribute hiç yazılmaz
 }
 
@@ -25,7 +25,6 @@
 
                 <fieldset disabled="@fsDisabled">
                     <div class="modal-body">
-
                         <!-- Kurs Adı -->
                         <div class="row mb-2 align-items-center">
                             <label class="col-md-4 col-form-label">Kurs Adı</label>

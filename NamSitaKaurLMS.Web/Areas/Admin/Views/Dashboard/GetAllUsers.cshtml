@@ -18,26 +18,7 @@
     </form>
 
     <div id="popup"></div>
-    <!--
 
-<div class="card shadow mb-4" readonly>
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Kullanıcı Listesi</h6>
-    </div>
-    <div class="card-body">
-        <div class="my-3">
-            <button id="btnAddNewUser" class="btn btn-outline-success">Yeni Kullanıcı ekle</button>
-        </div>
-        <div class="my-3">
-            <button id="btnAddNewUserNew" class="btn btn-outline-success">Yeni Kullanıcı ekle Yeni !</button>
-        </div>
-        <div class="table-responsive"> -->
-    @*     <div class="my-3">
-        <button id="btnAddNewUserNew" class="btn btn-outline-success">Yeni Kullanıcı ekle Yeni !</button>
-    </div>
-
-    <div id="userTableContainer"></div>
- *@
 
     <div class="page-content">
 
@@ -50,53 +31,6 @@
         </div>
 
     </div>
-    <!--
-            <table class="table table-bordered table-hover align-middle w-100">
-                <thead>
-                    <tr>
-                        <th>UserId</th>
-                        <th>Kullanıcı Adı</th>
-                        <th>e-Mail</th>
-                        <th>e-Mail Doğrulanmış mı ?</th>
-                        <th>Cep Telefonu</th>
-                        <th>Kullanıcı Rolleri</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model)
-                    {
-                        <tr>
-                            <td>@user.Id.Substring(0, 3)*******@user.Id.Substring(user.Id.Length - 3, 3)</td>
-                            <td>@user.UserName</td>
-                            <td>@user.Email</td>
-                            <td>@user.EmailConfirmed</td>
-                            <td>@user.PhoneNumber</td>
-                            <td>
-                                @foreach (var role in user.Roles)
-                                {
-                                    <span class="badge bg-@(user.Roles.Contains("Admin") ? "success" : "primary") text-light p-3">
-                                        @role.ToString()
-                                    </span>
-                                }
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnUpdateUser">Güncelle</button>
-                                    <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnRemoveUser">Sil</button>
-                                    <button type="button" asp-route-id="@user.Id" value="@user.Id" class="btn btn-outline-primary btnChangeUserRole">Rol Değiştir</button>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-
-        </div>
-    </div>
-    <form id="af-form">@Html.AntiForgeryToken()</form>
-
-</div>-->
     @section Scripts {
 
         <script>

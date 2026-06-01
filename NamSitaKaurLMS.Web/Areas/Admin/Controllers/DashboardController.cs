@@ -213,7 +213,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             };
 
             await courseService.AddAsync(course);
-
+            return RedirectToAction(nameof(DashboardController.Courses));
             return Json(new AjaxResponse(
                 Success: true,
                 RedirectUrl: Url.Action("Courses", "Dashboard", new { area = "Admin" })
