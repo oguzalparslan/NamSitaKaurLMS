@@ -64,264 +64,460 @@
 
 </div>                  
 
+<style>
+    /* ================================
+           Courses Tabulator Theme
+           ================================ */
 
+    #coursesGrid {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #e4d8f4;
+        background: #fff;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
 
- @section Scripts {
- <script>
- const tableData = @Html.Raw(JsonSerializer.Serialize(Model));
-var printIcon = function (cell, formatterParams) {
-    return "<i class='fa fa-print'></i>";
-};
-var editIcon = function (cell, formatterParams) {
-    return "<i class='fa fa-edit  text-primary'></i>";
-};
-var deleteIcon = function (cell, formatterParams) {
-    return "<i class='fa fa-times text-danger'></i>";
-};
-
-
-var table = new Tabulator("#coursesGrid", {
-    height: "calc(90vh - 280px)",
-    width: "100%",
-    data: tableData,
-
-    layout: "fitColumns", // önemli olan burası
-
-    pagination: "local",
-    paginationSize: 20,
-    paginationSizeSelector: [10, 20, 30, 40],
-
-    rowFormatter: function(row) {
-            var data = row.getData();
-            var element = row.getElement();
-
-            element.classList.remove("course-status-planned","course-status-continuing", "course-status-complated");
-            
-            if (data.Status == "Planlanan") { element.classList.add("course-status-planned");} 
-            else if (data.Status == "Devam Eden") { element.classList.add("course-status-continuing");} 
-            else if (data.Status == "Tamamlandı") { element.classList.add("course-status-complated");}
-            },
-    columns: [
-        {
-            formatter: editIcon,
-            title: "Kurs Güncelle",
-            width: 95,
-            widthGrow: 0,
-            hozAlign: "center",
-            headerSort: false,
-            cellClick: function (e, cell) {
-            const selectedRowId = cell.getRow().getData().Id;
-            openUpdatePopupPage(selectedRowId);
-            },
-            headerWordWrap: true
-        },
-        {
-            formatter: deleteIcon,
-            title: "Kurs Sil",
-            width: 85,
-            widthGrow: 0,
-            hozAlign: "center",
-            headerSort: false,
-            cellClick: function (e, cell) {
-            const selectedRowId = cell.getRow().getData().Id;
-            deleteCourse(selectedRowId);
-            },
-            headerWordWrap: true
-        },
-        {
-            title: "Id",
-            field: "Id",
-            width: 70,
-            widthGrow: 0,
-            headerHozAlign: "center"
-        },
-        {
-            title: "Kurs Adı",
-            field: "Title",
-            minWidth: 180,
-            widthGrow: 2,
-            headerFilter: "input",
-            headerHozAlign: "center"
-        },
-       
-        {
-            title: "Normalize Adı",
-            field: "Slug",
-            visible: false
-        },
-        {
-            title: "ThumbnailUrl",
-            field: "ThumbnailUrl",
-            visible: false
-        } ,
-
-        {
-            title: "Level",
-            field: "Level",
-            minWidth: 110,
-            widthGrow: 1
-        },
-        {
-            title: "Category",
-            field: "Category",
-            minWidth: 130,
-            headerFilter: "input",
-            widthGrow: 1
-        },
-        {
-            title: "Price",
-            field: "Price",
-            minWidth: 90,
-            widthGrow: 1
-        },
-        {
-            title: "IsFree",
-            field: "IsFree",
-            minWidth: 90,
-            widthGrow: 1
-        },
-        {
-            title: "DurationMinutes",
-            field: "DurationMinutes",
-            minWidth: 130,
-            widthGrow: 1
-        },
-        {
-            title: "Language",
-            field: "Language",
-            minWidth: 110,
-            widthGrow: 1
-        },
-        {
-            title: "IsPublished",
-            field: "IsPublished",
-            minWidth: 120,
-            widthGrow: 1
-        },
-        {
-            title: "Status",
-            field: "Status",
-            minWidth: 120,
-            widthGrow: 1
-        },
-        {
-            title: "StartDate",
-            field: "StartDate",
-            minWidth: 120,
-            widthGrow: 1
-        },
-        {
-            title: "EndDate",
-            field: "EndDate",
-            minWidth: 120,
-            widthGrow: 1
-        },
-        {
-            title: "Quota",
-            field: "Quota",
-            minWidth: 90,
-            widthGrow: 1
-        },
-        {
-            title: "Environment",
-            field: "Environment",
-            minWidth: 120,
-            widthGrow: 1
-        },
-        {
-            title: "RemainingQuota",
-            field: "RemainingQuota",
-            minWidth: 140,
-            widthGrow: 1
+        #coursesGrid .tabulator-header {
+            background: linear-gradient(135deg, #e8d7ff, #d9f5e6) !important;
+            border-bottom: 1px solid #d7c7ee;
+            color: #3d2f4f;
+            font-weight: 700;
         }
-    ]
-});
 
+        #coursesGrid .tabulator-col {
+            background: transparent !important;
+            border-right: 1px solid rgba(120, 90, 150, 0.18);
+        }
 
-          function openUpdatePopupPage(selectedRowId) {
-          const popup = document.querySelector("#popup");
-          const baseUrl = '@Url.Action("UpdateCourse", "Dashboard", new { area = "Admin" })';
-          const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
-          fetch(url,{ credentials: "same-origin"})
-          .then(response => response.text())
-          .then(html => {
-          popup.innerHTML = html;
-          const modalEl = popup.querySelector("#updateCourseModal");
-          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-          NamsitaKaurLMSNotify.success("Modal başarılı bir şekilde yüklendi.");
-          modal.show();
-          })
-          .catch(() => alert("Modal yüklenirken bir hata oluştu."));
-          };
+        #coursesGrid .tabulator-col-title {
+            color: #3d2f4f;
+            font-size: 13px;
+            font-weight: 700;
+        }
 
-          function openCreatePopupPage() {
-            
+        #coursesGrid .tabulator-row {
+            border-bottom: 1px solid #f1edf7;
+            background-color: #ffffff;
+            transition: background-color 0.15s ease;
+        }
+
+            #coursesGrid .tabulator-row:nth-child(even) {
+                background-color: #fbf8ff;
+            }
+
+            #coursesGrid .tabulator-row:hover {
+                background-color: #f0e8ff !important;
+                color: #2f243d !important;
+            }
+
+        #coursesGrid .tabulator-cell {
+            border-right: 1px solid #f0edf4;
+            padding: 10px 12px;
+            font-size: 13px;
+            vertical-align: middle;
+            white-space: normal !important;
+        }
+
+        #coursesGrid .tabulator-footer {
+            background: #faf7ff;
+            border-top: 1px solid #e4d8f4;
+        }
+
+        #coursesGrid .tabulator-page {
+            border-radius: 8px;
+            border: 1px solid #d7c7ee;
+            background: #ffffff;
+            color: #5b3f7a;
+            margin: 0 2px;
+            padding: 4px 9px;
+        }
+
+            #coursesGrid .tabulator-page.active {
+                background: #7e57c2 !important;
+                color: #fff !important;
+                border-color: #7e57c2 !important;
+            }
+
+            #coursesGrid .tabulator-page:hover {
+                background: #eee3ff;
+                color: #3d2f4f;
+            }
+
+        #coursesGrid .tabulator-header-filter input {
+            border-radius: 8px;
+            border: 1px solid #d7c7ee;
+            padding: 5px 8px;
+            outline: none;
+            font-size: 12px;
+        }
+
+            #coursesGrid .tabulator-header-filter input:focus {
+                border-color: #7e57c2;
+                box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.15);
+            }
+
+        /* Status bazlı satır renkleri */
+        #coursesGrid .tabulator-row.course-status-planned {
+            background-color: #eefaf3 !important;
+        }
+
+        #coursesGrid .tabulator-row.course-status-continuing {
+            background-color: #eef5ff !important;
+            color: #24364f !important;
+        }
+
+        #coursesGrid .tabulator-row.course-status-complated {
+            background-color: #f2ecff !important;
+            color: #3d2f4f !important;
+        }
+
+            #coursesGrid .tabulator-row.course-status-planned:hover,
+            #coursesGrid .tabulator-row.course-status-continuing:hover,
+            #coursesGrid .tabulator-row.course-status-complated:hover {
+                background-color: #e6dbff !important;
+                color: #2f243d !important;
+            }
+
+        /* İşlem iconları */
+        #coursesGrid .course-action-icon {
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #coursesGrid .course-action-edit {
+            color: #5b6ee1;
+        }
+
+        #coursesGrid .course-action-delete {
+            color: #dc3545;
+        }
+
+        #coursesGrid .course-action-icon:hover {
+            transform: scale(1.12);
+        }
+
+        /* Uzun textler taşmasın */
+        #coursesGrid .tabulator-cell {
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        const tableData = @Html.Raw(JsonSerializer.Serialize(Model));
+
+        var editIcon = function (cell, formatterParams) {
+            return "<i class='fa fa-edit course-action-icon course-action-edit'></i>";
+        };
+
+        var deleteIcon = function (cell, formatterParams) {
+            return "<i class='fa fa-times course-action-icon course-action-delete'></i>";
+        };
+
+        var table = new Tabulator("#coursesGrid", {
+            height: "calc(90vh - 280px)",
+            width: "100%",
+            data: tableData,
+            layout: "fitColumns",
+
+            pagination: "local",
+            paginationSize: 20,
+            paginationSizeSelector: [10, 20, 30, 40],
+
+            rowFormatter: function (row) {
+                var data = row.getData();
+                var element = row.getElement();
+
+                element.classList.remove(
+                    "course-status-planned",
+                    "course-status-continuing",
+                    "course-status-complated"
+                );
+
+                if (data.Status === "Planlanan") {
+                    element.classList.add("course-status-planned");
+                }
+                else if (data.Status === "Devam Eden") {
+                    element.classList.add("course-status-continuing");
+                }
+                else if (data.Status === "Tamamlandı") {
+                    element.classList.add("course-status-complated");
+                }
+            },
+
+            columns: [
+                {
+                    formatter: editIcon,
+                    title: "Güncelle",
+                    width: 95,
+                    widthGrow: 0,
+                    hozAlign: "center",
+                    headerHozAlign: "center",
+                    headerSort: false,
+                    cellClick: function (e, cell) {
+                        const selectedRowId = cell.getRow().getData().Id;
+                        openUpdatePopupPage(selectedRowId);
+                    },
+                    headerWordWrap: true
+                },
+                {
+                    formatter: deleteIcon,
+                    title: "Sil",
+                    width: 85,
+                    widthGrow: 0,
+                    hozAlign: "center",
+                    headerHozAlign: "center",
+                    headerSort: false,
+                    cellClick: function (e, cell) {
+                        const selectedRowId = cell.getRow().getData().Id;
+                        deleteCourse(selectedRowId);
+                    },
+                    headerWordWrap: true
+                },
+                {
+                    title: "Id",
+                    field: "Id",
+                    width: 70,
+                    widthGrow: 0,
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Kurs Adı",
+                    field: "Title",
+                    minWidth: 180,
+                    widthGrow: 2,
+                    headerFilter: "input",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Normalize Adı",
+                    field: "Slug",
+                    visible: false
+                },
+                {
+                    title: "ThumbnailUrl",
+                    field: "ThumbnailUrl",
+                    visible: false
+                },
+                {
+                    title: "Level",
+                    field: "Level",
+                    minWidth: 110,
+                    widthGrow: 1,
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Kategori",
+                    field: "Category",
+                    minWidth: 130,
+                    headerFilter: "input",
+                    widthGrow: 1,
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Fiyat",
+                    field: "Price",
+                    minWidth: 90,
+                    widthGrow: 1,
+                    hozAlign: "right",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Ücretsiz Mi?",
+                    field: "IsFree",
+                    minWidth: 110,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center",
+                    formatter: function (cell) {
+                        return cell.getValue() === true ? "Evet" : "Hayır";
+                    }
+                },
+                {
+                    title: "Süre",
+                    field: "DurationMinutes",
+                    minWidth: 110,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Dil",
+                    field: "Language",
+                    minWidth: 90,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Yayınlandı Mı?",
+                    field: "IsPublished",
+                    minWidth: 130,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center",
+                    formatter: function (cell) {
+                        return cell.getValue() === true ? "Evet" : "Hayır";
+                    }
+                },
+                {
+                    title: "Durum",
+                    field: "Status",
+                    minWidth: 120,
+                    widthGrow: 1,
+                    headerFilter: "input",
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Başlangıç",
+                    field: "StartDate",
+                    minWidth: 120,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Bitiş",
+                    field: "EndDate",
+                    minWidth: 120,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Kontenjan",
+                    field: "Quota",
+                    minWidth: 110,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Ortam",
+                    field: "Environment",
+                    minWidth: 120,
+                    widthGrow: 1,
+                    headerHozAlign: "center"
+                },
+                {
+                    title: "Kalan Kontenjan",
+                    field: "RemainingQuota",
+                    minWidth: 150,
+                    widthGrow: 1,
+                    hozAlign: "center",
+                    headerHozAlign: "center"
+                }
+            ]
+        });
+
+        function openUpdatePopupPage(selectedRowId) {
+            const popup = document.querySelector("#popup");
+            const baseUrl = '@Url.Action("UpdateCourse", "Dashboard", new { area = "Admin" })';
+            const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
+
+            fetch(url, { credentials: "same-origin" })
+                .then(response => response.text())
+                .then(html => {
+                    popup.innerHTML = html;
+
+                    const modalEl = popup.querySelector("#updateCourseModal");
+
+                    if (!modalEl) {
+                        console.error("Update modal bulunamadı.");
+                        return;
+                    }
+
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+                    if (typeof NamsitaKaurLMSNotify !== "undefined") {
+                        NamsitaKaurLMSNotify.success("Modal başarılı bir şekilde yüklendi.");
+                    }
+
+                    modal.show();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Modal yüklenirken bir hata oluştu.");
+                });
+        }
+
+        function openCreatePopupPage() {
             const popup = document.querySelector("#popup");
             const baseUrl = '@Url.Action("CreateCourse", "Dashboard", new { area = "Admin" })';
-            const url = baseUrl ;
-            fetch(url,{ credentials: "same-origin"})
-            .then(response => response.text())
-            .then(html => {
-            popup.innerHTML = html;
-            const modalEl = popup.querySelector("#createCourseModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-            NamsitaKaurLMSNotify.warning("TEST");
-            modal.show();
-            })
-            .catch(() => alert("Modal yüklenirken bir hata oluştu."));
-            };
-          
-          function deleteCourse(selectedRowId) {
-            
+            fetch(baseUrl, { credentials: "same-origin" })
+                .then(response => response.text())
+                .then(html => {
+                    popup.innerHTML = html;
 
-            console.log("deleteCourse fonksiyonuna geldi.");
-            console.log("selectedRowId:", selectedRowId);
+                    const modalEl = popup.querySelector("#createCourseModal");
 
-          
+                    if (!modalEl) {
+                        console.error("Create modal bulunamadı.");
+                        return;
+                    }
+
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Modal yüklenirken bir hata oluştu.");
+                });
+        }
+
+        function deleteCourse(selectedRowId) {
+            if (!confirm("Bu kursu silmek istediğine emin misin?")) {
+                return;
+            }
 
             const baseUrl = '@Url.Action("DeleteCourse", "Dashboard", new { area = "Admin" })';
-
-            console.log("baseUrl:", baseUrl);
-
-            const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
-            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-            console.log("fetch url:", url);
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
             $.ajax({
-            url: baseUrl,
-            method: "POST",
-            data: {
-            id: selectedRowId,
-            __RequestVerificationToken: token
-            },
-            success: function() {
-                alert("Kurs başarıyla silindi");
-            window.location.href = '@Url.Action("Courses", "Dashboard", new { area = "Admin" })';
-            },
-            error: function(xhr) {
-            console.error(xhr);
-            alert("Kurs silinirken hata oluştu.");
-            }
+                url: baseUrl,
+                method: "POST",
+                data: {
+                    id: selectedRowId,
+                    __RequestVerificationToken: token
+                },
+                success: function () {
+                    if (typeof NamsitaKaurLMSNotify !== "undefined") {
+                        NamsitaKaurLMSNotify.success("Kurs başarıyla silindi.");
+                    }
+
+                    window.location.href = '@Url.Action("Courses", "Dashboard", new { area = "Admin" })';
+                },
+                error: function (xhr) {
+                    console.error(xhr);
+
+                    if (typeof NamsitaKaurLMSNotify !== "undefined") {
+                        NamsitaKaurLMSNotify.danger("Kurs silinirken hata oluştu.");
+                    } else {
+                        alert("Kurs silinirken hata oluştu.");
+                    }
+                }
             });
-          }
-          
-          document.addEventListener("DOMContentLoaded", () => {
-          const btnCreateCourse = document.getElementById("btnCreateCourse");
-          if (!btnCreateCourse) return;
+        }
 
-          btnCreateCourse.addEventListener("click", async (e) => {
-            e.preventDefault();
-            try {
-             openCreatePopupPage();
-            } catch (err) {
-              console.error(err);
-              alert("Create modal açılırken hata oluştu.");
-            }
-          });
-         
+        document.addEventListener("DOMContentLoaded", function () {
+            const btnCreateCourse = document.getElementById("btnCreateCourse");
+
+            if (!btnCreateCourse) return;
+
+            btnCreateCourse.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                try {
+                    openCreatePopupPage();
+                } catch (err) {
+                    console.error(err);
+                    alert("Create modal açılırken hata oluştu.");
+                }
+            });
         });
- </script>
- }
-
+    </script>
+}

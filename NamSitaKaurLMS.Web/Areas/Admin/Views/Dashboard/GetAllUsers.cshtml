@@ -31,199 +31,426 @@
         </div>
 
     </div>
+
+    <style>
+        /* ================================
+               Users Tabulator Theme
+               ================================ */
+
+        #userTableContainer {
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #e4d8f4;
+            background: #fff;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+            #userTableContainer .tabulator-header {
+                background: linear-gradient(135deg, #e8d7ff, #d9f5e6) !important;
+                border-bottom: 1px solid #d7c7ee;
+                color: #3d2f4f;
+                font-weight: 700;
+            }
+
+            #userTableContainer .tabulator-col {
+                background: transparent !important;
+                border-right: 1px solid rgba(120, 90, 150, 0.18);
+            }
+
+            #userTableContainer .tabulator-col-title {
+                color: #3d2f4f;
+                font-size: 13px;
+                font-weight: 700;
+            }
+
+            #userTableContainer .tabulator-row {
+                border-bottom: 1px solid #f1edf7;
+                background-color: #ffffff;
+                transition: background-color 0.15s ease;
+            }
+
+                #userTableContainer .tabulator-row:nth-child(even) {
+                    background-color: #fbf8ff;
+                }
+
+                #userTableContainer .tabulator-row:hover {
+                    background-color: #f0e8ff !important;
+                    color: #2f243d !important;
+                }
+
+            #userTableContainer .tabulator-cell {
+                border-right: 1px solid #f0edf4;
+                padding: 10px 12px;
+                font-size: 13px;
+                vertical-align: middle;
+                white-space: normal !important;
+                word-break: break-word;
+                overflow-wrap: anywhere;
+            }
+
+            #userTableContainer .tabulator-footer {
+                background: #faf7ff;
+                border-top: 1px solid #e4d8f4;
+            }
+
+            #userTableContainer .tabulator-page {
+                border-radius: 8px;
+                border: 1px solid #d7c7ee;
+                background: #ffffff;
+                color: #5b3f7a;
+                margin: 0 2px;
+                padding: 4px 9px;
+            }
+
+                #userTableContainer .tabulator-page.active {
+                    background: #7e57c2 !important;
+                    color: #fff !important;
+                    border-color: #7e57c2 !important;
+                }
+
+                #userTableContainer .tabulator-page:hover {
+                    background: #eee3ff;
+                    color: #3d2f4f;
+                }
+
+            #userTableContainer .tabulator-header-filter input {
+                border-radius: 8px;
+                border: 1px solid #d7c7ee;
+                padding: 5px 8px;
+                outline: none;
+                font-size: 12px;
+            }
+
+                #userTableContainer .tabulator-header-filter input:focus {
+                    border-color: #7e57c2;
+                    box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.15);
+                }
+
+            /* Email durum renkleri */
+            #userTableContainer .tabulator-row.email-confirmed-row {
+                background-color: #d1e7dd !important;
+                color: #0f5132 !important;
+            }
+
+            #userTableContainer .tabulator-row.email-not-confirmed-row {
+                background-color: #f8d7da !important;
+                color: #842029 !important;
+            }
+
+            #userTableContainer .tabulator-row.email-confirmed-row:hover {
+                background-color: #badbcc !important;
+                color: #0f5132 !important;
+            }
+
+            #userTableContainer .tabulator-row.email-not-confirmed-row:hover {
+                background-color: #f1aeb5 !important;
+                color: #842029 !important;
+            }
+
+            /* İşlem iconları */
+            #userTableContainer .user-action-icon {
+                font-size: 16px;
+                cursor: pointer;
+                transition: transform 0.12s ease;
+            }
+
+            #userTableContainer .user-action-edit {
+                color: #5b6ee1;
+            }
+
+            #userTableContainer .user-action-delete {
+                color: #dc3545;
+            }
+
+            #userTableContainer .user-action-icon:hover {
+                transform: scale(1.15);
+            }
+
+            /* Badge görünümü */
+            #userTableContainer .grid-badge {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 999px;
+                padding: 4px 10px;
+                font-size: 12px;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
+            #userTableContainer .grid-badge-success {
+                background: #d1e7dd;
+                color: #0f5132;
+                border: 1px solid #badbcc;
+            }
+
+            #userTableContainer .grid-badge-danger {
+                background: #f8d7da;
+                color: #842029;
+                border: 1px solid #f1aeb5;
+            }
+
+            #userTableContainer .grid-role-badge {
+                display: inline-block;
+                margin: 2px;
+                border-radius: 999px;
+                background: #e8d7ff;
+                color: #3d2f4f;
+                padding: 4px 9px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+    </style>
+
     @section Scripts {
-
         <script>
-
             const tableData = @Html.Raw(JsonSerializer.Serialize(Model));
-            var printIcon = function(cell, formatterParams) {
-            return "<i class='fa fa-print'></i>";
-            };
-            var editIcon = function(cell, formatterParams) {
-            return "<i class='fa fa-edit  text-primary'></i>";
-            };
-            var deleteIcon = function(cell, formatterParams) {
-            return "<i class='fa fa-times text-danger'></i>";
+
+            var editIcon = function () {
+                return "<i class='fa fa-edit user-action-icon user-action-edit'></i>";
             };
 
+            var deleteIcon = function () {
+                return "<i class='fa fa-times user-action-icon user-action-delete'></i>";
+            };
 
             var table = new Tabulator("#userTableContainer", {
-            height: "calc(100vh - 230px)",
-            width: "100%",
-            data: tableData,
-            rowFormatter: function(row) {
-            var data = row.getData();
-            var element = row.getElement();
+                height: "calc(100vh - 230px)",
+                width: "100%",
+                data: tableData,
+                index: "Id",
 
-            element.classList.remove("email-confirmed-row", "email-not-confirmed-row");
+                layout: "fitColumns",
 
-            if (data.EmailConfirmed === true) {
-            element.classList.add("email-confirmed-row");
-            } else {
-            element.classList.add("email-not-confirmed-row");
-            }
-            },
+                pagination: "local",
+                paginationSize: 20,
+                paginationSizeSelector: [10, 20, 40],
 
-            renderHorizontal: "virtual",
-            layout: "fitColumn",
-            pagination: "local",
-            paginationSize: 20,
-            paginationSizeSelector: [20, 40],
-            popupContainer: "#popup",
-            columns: [{
-            title: "Kullanıcı Bilgileri",
-            columns: [{
-            formatter: editIcon,
-            title: "Kullanıcı Güncelle",
-            width: 100,
-            hozAlign: "center",
-            cellClick: function(e, cell) {
-            const selectedRowId = cell.getRow().getData().Id;
-            openUpdatePopupPage(selectedRowId);
-            },
-            headerWordWrap: true
-            },
-            {
-            formatter: deleteIcon,
-            title: "Kullanıcı Sil",
-            width: 100,
-            hozAlign: "center",
-            cellClick: function(e, cell) {
-            const selectedRowId = cell.getRow().getData().Id;
-            deleteUser(selectedRowId);
-            },
-            headerWordWrap: true
-            },
-            {
-            title: "Id",
-            field: "Id",
-            headerHozAlign: "center",
-            headerWordWrap: true,
-            width: "15%"
-            },
-            {
-            title: "Kullanıcı Adı",
-            field: "UserName",
-            width: "15%",
-            headerFilter: "input",
-            headerHozAlign: "center",
-            headerVerAlign: "center",
-            headerWordWrap: true
-            },
-            {
-            title: "e-Mail",
-            field: "Email",
-            width: "15%",
-            headerWordWrap: true
-            },
-            {
-            title: "Telefonu",
-            field: "PhoneNumber",
-            width: "15%",
-            headerWordWrap: true
-            },
-            ]
-            },
+                popupContainer: "#popup",
 
-            {
-            title: "Email Doğrulandı",
-            field: "EmailConfirmed",
-            wrap: true,
-            width: "15%",
-            headerHozAlign: "center",
-            headerWordWrap: true
-            },
-            {
-            title: "Roller",
-            field: "Roles",
-            width: "15%",
-            headerHozAlign: "center",
-            sorter: "string",
-            headerWordWrap: true
-            }
-            ]
+                rowFormatter: function (row) {
+                    var data = row.getData();
+                    var element = row.getElement();
+
+                    element.classList.remove("email-confirmed-row", "email-not-confirmed-row");
+
+                    if (data.EmailConfirmed === true) {
+                        element.classList.add("email-confirmed-row");
+                    } else {
+                        element.classList.add("email-not-confirmed-row");
+                    }
+                },
+
+                columns: [
+                    {
+                        title: "İşlemler",
+                        headerHozAlign: "center",
+                        columns: [
+                            {
+                                formatter: editIcon,
+                                title: "Güncelle",
+                                width: 95,
+                                widthGrow: 0,
+                                hozAlign: "center",
+                                headerHozAlign: "center",
+                                headerSort: false,
+                                cellClick: function (e, cell) {
+                                    const selectedRowId = cell.getRow().getData().Id;
+                                    openUpdatePopupPage(selectedRowId);
+                                },
+                                headerWordWrap: true
+                            },
+                            {
+                                formatter: deleteIcon,
+                                title: "Sil",
+                                width: 80,
+                                widthGrow: 0,
+                                hozAlign: "center",
+                                headerHozAlign: "center",
+                                headerSort: false,
+                                cellClick: function (e, cell) {
+                                    const selectedRowId = cell.getRow().getData().Id;
+                                    deleteUser(selectedRowId);
+                                },
+                                headerWordWrap: true
+                            }
+                        ]
+                    },
+                    {
+                        title: "Id",
+                        field: "Id",
+                        minWidth: 180,
+                        widthGrow: 1,
+                        headerHozAlign: "center",
+                        headerWordWrap: true
+                    },
+                    {
+                        title: "Kullanıcı Adı",
+                        field: "UserName",
+                        minWidth: 180,
+                        widthGrow: 1,
+                        headerFilter: "input",
+                        headerHozAlign: "center",
+                        headerVerAlign: "center",
+                        headerWordWrap: true
+                    },
+                    {
+                        title: "e-Mail",
+                        field: "Email",
+                        minWidth: 220,
+                        widthGrow: 2,
+                        headerFilter: "input",
+                        headerHozAlign: "center",
+                        headerWordWrap: true
+                    },
+                    {
+                        title: "Telefon",
+                        field: "PhoneNumber",
+                        minWidth: 140,
+                        widthGrow: 1,
+                        headerHozAlign: "center",
+                        headerWordWrap: true,
+                        formatter: function (cell) {
+                            return cell.getValue() || "-";
+                        }
+                    },
+                    {
+                        title: "Email Doğrulandı",
+                        field: "EmailConfirmed",
+                        minWidth: 150,
+                        widthGrow: 1,
+                        hozAlign: "center",
+                        headerHozAlign: "center",
+                        headerWordWrap: true,
+                        formatter: function (cell) {
+                            if (cell.getValue() === true) {
+                                return "<span class='grid-badge grid-badge-success'>Evet</span>";
+                            }
+
+                            return "<span class='grid-badge grid-badge-danger'>Hayır</span>";
+                        }
+                    },
+                    {
+                        title: "Roller",
+                        field: "Roles",
+                        minWidth: 180,
+                        widthGrow: 1,
+                        headerHozAlign: "center",
+                        sorter: "string",
+                        headerWordWrap: true,
+                        formatter: function (cell) {
+                            const value = cell.getValue();
+
+                            if (!value) {
+                                return "-";
+                            }
+
+                            if (Array.isArray(value)) {
+                                return value
+                                    .map(role => `<span class="grid-role-badge">${role}</span>`)
+                                    .join("");
+                            }
+
+                            return String(value)
+                                .split(",")
+                                .map(role => `<span class="grid-role-badge">${role.trim()}</span>`)
+                                .join("");
+                        }
+                    }
+                ]
             });
 
+            document.addEventListener("DOMContentLoaded", function () {
+                const createUserButtonNew = document.querySelector("#btnAddNewUserNew");
 
+                if (!createUserButtonNew) return;
 
+                createUserButtonNew.addEventListener("click", function (e) {
+                    e.preventDefault();
 
-            const createUserButtonNew = document.querySelector("#btnAddNewUserNew");
-            createUserButtonNew.addEventListener("click", function(e) {
-            e.preventDefault();
+                    $.ajax({
+                        url: '@Url.Action("CreateUserNew", "Dashboard", new { area = "Admin" })',
+                        method: "GET",
+                        success: function (html) {
+                            $("#popup").html(html);
 
-            $.ajax({
-            url: '@Url.Action("CreateUserNew", "Dashboard", new { area = "Admin" })',
-            method: "GET",
-            success: function(html) {
-            $("#popup").html(html);
-            const modalEl = document.querySelector("#createUserModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
-            },
-            error: function() {
-            alert("Modal yüklenirken bir hata oluştu.");
-            }
-            });
+                            const modalEl = document.querySelector("#createUserModal");
 
+                            if (!modalEl) {
+                                console.error("createUserModal bulunamadı.");
+                                return;
+                            }
 
-
+                            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                            modal.show();
+                        },
+                        error: function () {
+                            alert("Modal yüklenirken bir hata oluştu.");
+                        }
+                    });
+                });
             });
 
             function openUpdatePopupPage(selectedRowId) {
-            debugger;
-            const popup = document.querySelector("#popup");
-            const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
-            const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
-            fetch(url, {
-            credentials: "same-origin"
-            })
-            .then(response => response.text())
-            .then(html => {
-            popup.innerHTML = html;
-            const modalEl = popup.querySelector("#updateUserModal");
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
-            })
-            .catch(() => alert("Modal yüklenirken bir hata oluştu."));
-            };
+                const popup = document.querySelector("#popup");
+                const baseUrl = '@Url.Action("UpdateUser", "Dashboard", new { area = "Admin" })';
+                const url = baseUrl + "?id=" + encodeURIComponent(selectedRowId);
+
+                fetch(url, {
+                    credentials: "same-origin"
+                })
+                .then(response => response.text())
+                .then(html => {
+                    popup.innerHTML = html;
+
+                    const modalEl = popup.querySelector("#updateUserModal");
+
+                    if (!modalEl) {
+                        console.error("updateUserModal bulunamadı.");
+                        return;
+                    }
+
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Modal yüklenirken bir hata oluştu.");
+                });
+            }
 
             function deleteUser(selectedRowId) {
-            debugger;
+                if (!confirm("Bu kullanıcıyı silmek istediğine emin misin?")) {
+                    return;
+                }
 
-            console.log("deleteUser fonksiyonuna geldi.");
-            console.log("selectedRowId:", selectedRowId);
+                const baseUrl = '@Url.Action("DeleteUser", "Dashboard", new { area = "Admin" })';
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
-            const popup = document.querySelector("#popup");
+                $.ajax({
+                    url: baseUrl,
+                    method: "POST",
+                    data: {
+                        Id: selectedRowId,
+                        __RequestVerificationToken: token
+                    },
+                    success: function () {
+                        if (typeof NamsitaKaurLMSNotify !== "undefined") {
+                            NamsitaKaurLMSNotify.success("Kullanıcı başarıyla silindi.");
+                        }
 
-            if (!popup) {
-            alert("#popup elementi bulunamadı.");
-            return;
+                        table.deleteRow(selectedRowId);
+                    },
+                    error: function (xhr) {
+                        console.error(xhr);
+
+                        if (typeof NamsitaKaurLMSNotify !== "undefined") {
+                            NamsitaKaurLMSNotify.danger("Kullanıcı silinirken hata oluştu.");
+                        } else {
+                            alert("Kullanıcı silinirken hata oluştu.");
+                        }
+                    }
+                });
             }
-
-            const baseUrl = '@Url.Action("DeleteUser", "Dashboard", new { area = "Admin" })';
-
-            console.log("baseUrl:", baseUrl);
-
-            const url = baseUrl + "?Id=" + encodeURIComponent(selectedRowId);
-            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-            console.log("fetch url:", url);
-
-            $.ajax({
-            url: baseUrl,
-            method: "POST",
-            data: {
-            Id: selectedRowId,
-            __RequestVerificationToken: token
-            },
-            success: function() {
-            window.location.href = '@Url.Action("GetAllUsers", "Dashboard", new { area = "Admin" })';
-            },
-            error: function(xhr) {
-            console.error(xhr);
-            alert("Kullanıcı silinirken hata oluştu.");
-            }
-            });
-            } 
-            </script>
+        </script>
     }

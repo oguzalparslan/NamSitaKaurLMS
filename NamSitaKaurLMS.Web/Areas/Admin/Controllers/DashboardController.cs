@@ -370,17 +370,35 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
         public async Task<IActionResult> CreateCourseLesson(int id)
         {
             var course = await courseService.GetByIdAsync(id);
+
             if (course == null)
-                return View();
+                return NotFound();
 
             var lessonDtos = await lessonService.GetAllLessonsByIdAsync(course.Id);
-            var lessonContent = await lessonContentService.GetLessonContentByCourseId(lessonDtos.Select(l => l.CourseId).FirstOrDefault());
+
+            var lessonContents = await lessonContentService.GetLessonContentByCourseId(course.Id);
+
             LessonViewModel lessonViewModel = new()
             {
+                Course = new LessonCourseHeaderViewModel
+                {
+                    Id = course.Id,
+                    Title = course.Title
+                },
+
                 lessonDtoList = lessonDtos,
-                Course = course,
-                lessonContentList = lessonContent
+
+                lessonContentList = lessonContents.Select(x => new LessonContentListViewModel
+                {
+                    Id = x.Id,
+                    LessonId = x.LessonId,
+                    ContentType = x.ContentType,
+                    Url = x.Url,
+                    Text = x.Text,
+                    Order = x.Order
+                }).ToList()
             };
+
             return View(lessonViewModel);
         }
         [HttpGet]
