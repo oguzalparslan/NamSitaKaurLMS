@@ -144,149 +144,176 @@
 
     
     <script>
+        
+var printIcon = function (cell, formatterParams) {
+    return "<i class='fa fa-print'></i>";
+};
 
-        var printIcon = function (cell, formatterParams) {
-            return "<i class='fa fa-print'></i>";
-        };
+var editIcon = function (cell, formatterParams) {
+    return "<i class='fa fa-edit  text-primary'></i>";
+};
 
-        var editIcon = function (cell, formatterParams) {
-            return "<i class='fa fa-edit  text-primary'></i>";
-        };
+var deleteIcon = function (cell, formatterParams) {
+    return "<i class='fa fa-times text-danger'></i>";
+};
 
-        var deleteIcon = function (cell, formatterParams) {
-            return "<i class='fa fa-times text-danger'></i>";
-        };
+function actionButton(text, btnClass) {
+    return function (cell, formatterParams) {
+        return `
+                                    <button type="button" class="btn btn-sm ${btnClass}">
+                                        ${text}
+                                    </button>
+                                `;
+    };
+}
 
-        function actionButton(text, btnClass) {
-            return function (cell, formatterParams) {
-                return `
-                            <button type="button" class="btn btn-sm ${btnClass}">
-                                ${text}
-                            </button>
-                        `;
-            };
-        }
+const tableData = @Html.Raw(JsonSerializer.Serialize(lessonGridData));
 
-        const tableData = @Html.Raw(JsonSerializer.Serialize(lessonGridData));
+var table = new Tabulator("#courseLessonGrid", {
+    height: "calc(90vh - 280px)",
+    width: "100%",
+    data: tableData,
+    layout: "fitColumns",
+    pagination: "local",
+    paginationSize: 10,
+    paginationSizeSelector: [10, 20, 30, 40],
 
-        var table = new Tabulator("#courseLessonGrid", {
-            height: "calc(90vh - 280px)",
-            width: "100%",
-            data: tableData,
-            layout: "fitColumns",
-            pagination: "local",
-            paginationSize: 10,
-            paginationSizeSelector: [10, 20, 30, 40],
-
+    columns: [
+        {
+            title: "Id",
+            field: "Id",
+            minWidth: 70,
+            widthGrow: 0,
+            headerHozAlign: "center"
+        },
+        {
+            title: "Sıra",
+            field: "Order",
+            minWidth: 80,
+            widthGrow: 0,
+            headerHozAlign: "center"
+        },
+        {
+            title: "Ders Adı",
+            field: "Title",
+            minWidth: 180,
+            widthGrow: 2,
+            headerFilter: "input",
+            headerHozAlign: "center"
+        },
+        {
+            title: "Ders Tarihi",
+            field: "LessonDate",
+            minWidth: 120,
+            widthGrow: 1,
+            headerHozAlign: "center"
+        },
+        {
+            title: "Süre",
+            field: "DurationMinutes",
+            minWidth: 100,
+            widthGrow: 1,
+            headerHozAlign: "center"
+        },
+        {
+            title: "Önizleme Mi?",
+            field: "IsPreview",
+            minWidth: 120,
+            widthGrow: 1,
+            headerHozAlign: "center"
+        },
+        {
+            title: "Ders İçeriği",
+            field: "LessonContent",
+            minWidth: 220,
+            widthGrow: 2,
+            headerHozAlign: "center"
+        },
+        {
+            title: "İşlemler",
+            headerHozAlign: "center",
             columns: [
                 {
-                    title: "Id",
-                    field: "Id",
-                    minWidth: 70,
-                    widthGrow: 0,
-                    headerHozAlign: "center"
+                    formatter: actionButton("Ders İçeriği Gir", "btn-primary"),
+                    title: "İçerik Gir",
+                    hozAlign: "center",
+                    headerSort: false,
+                    minWidth: 140,
+                    cellClick: function (e, cell) {
+                        const rowData = cell.getRow().getData();
+
+                        const courseId = rowData.CourseId;
+                        const lessonId = rowData.Id;
+
+                        // const baseUrl = '@Url.Action("CreateLessonContentForm", "Dashboard", new { area = "Admin" })';
+                        // openLessonPopup(`${baseUrl}?courseId=${courseId}&lessonId=${lessonId}`);
+                        openLessonContentPopup(courseId, lessonId);
+                    }
                 },
                 {
-                    title: "Sıra",
-                    field: "Order",
-                    minWidth: 80,
-                    widthGrow: 0,
-                    headerHozAlign: "center"
-                },
-                {
-                    title: "Ders Adı",
-                    field: "Title",
-                    minWidth: 180,
-                    widthGrow: 2,
-                    headerFilter: "input",
-                    headerHozAlign: "center"
-                },
-                {
-                    title: "Ders Tarihi",
-                    field: "LessonDate",
-                    minWidth: 120,
-                    widthGrow: 1,
-                    headerHozAlign: "center"
-                },
-                {
-                    title: "Süre",
-                    field: "DurationMinutes",
-                    minWidth: 100,
-                    widthGrow: 1,
-                    headerHozAlign: "center"
-                },
-                {
-                    title: "Önizleme Mi?",
-                    field: "IsPreview",
-                    minWidth: 120,
-                    widthGrow: 1,
-                    headerHozAlign: "center"
-                },
-                        {
-                    title: "Ders İçeriği",
-                    field: "LessonContent",
-                    minWidth: 220,
-                    widthGrow: 2,
-                    headerHozAlign: "center"
-                },
-                {
-                    title: "İşlemler",
-                    headerHozAlign: "center",
-                    columns: [
-                        {
-                            formatter: actionButton("Ders İçeriği Gir", "btn-primary"),
-                            title: "İçerik Gir",
-                            hozAlign: "center",
-                            headerSort: false,
-                            minWidth: 140,
-                            cellClick: function (e, cell) {
-                                const rowData = cell.getRow().getData();
+                    // formatter: actionButton("Ders İçeriği Sil", "btn-warning"),
+                    formatter: function (cell) {
+                        const data = cell.getRow().getData();
 
-                                const courseId = rowData.CourseId;
-                                const lessonId = rowData.Id;
+                        const hasContent = data.LessonContent && data.LessonContent !== "İçerik Bulunamadı !";
 
-                                const baseUrl = '@Url.Action("CreateLessonContentForm", "Dashboard", new { area = "Admin" })';
-                                openLessonPopup(`${baseUrl}?courseId=${courseId}&lessonId=${lessonId}`);
-                            }
-                        },
-                        {
-                            formatter: actionButton("Ders İçeriği Sil", "btn-warning"),
-                            title: "İçerik Sil",
-                            hozAlign: "center",
-                            headerSort: false,
-                            minWidth: 140,
-                            cellClick: async function (e, cell) {
-                                const rowData = cell.getRow().getData();
-
-                                const lessonId = rowData.Id;
-                                const courseId = rowData.CourseId;
-
-                                await deleteLessonContent(lessonId, courseId, cell);
-                            }
-                        },
-                        {
-                            formatter: actionButton("Dersi Sil", "btn-danger"),
-                            title: "Dersi Sil",
-                            hozAlign: "center",
-                            headerSort: false,
-                            minWidth: 120,
-                            cellClick: async function (e, cell) {
-                                const rowData = cell.getRow().getData();
-
-                                const lessonId = rowData.Id;
-                                const courseId = rowData.CourseId;
-
-                                await deleteLesson(lessonId, courseId, cell);
-                            }
+                        if (!hasContent) {
+                            return ` 
+                                                            <button class="btn btn-warning btn-sm disabled" disabled>
+                                                            Ders İçeriği Sil
+                                                            </button>`;
                         }
-                    ]
+
+                        return `
+                                                        <button class="btn btn-warning btn-sm">
+                                                            Ders İçeriği Sil
+                                                        </button>`;
+                    },
+                    title: "İçerik Sil",
+                    hozAlign: "center",
+                    headerSort: false,
+                    minWidth: 140,
+                    cellClick: async function (e, cell) {
+
+                        const btn = e.target.closest("button");
+
+                        if (!btn) return;
+
+                        if (btn.dataset.disabled === "1") {
+                            e.stopPropagation();
+                            return;
+                        }
+                        const rowData = cell.getRow().getData();
+
+                        const lessonId = rowData.Id;
+                        const courseId = rowData.CourseId;
+
+                        await deleteLessonContent(lessonId, courseId, cell);
+                    }
+                },
+                {
+                    formatter: actionButton("Dersi Sil", "btn-danger"),
+                    title: "Dersi Sil",
+                    hozAlign: "center",
+                    headerSort: false,
+                    minWidth: 120,
+                    cellClick: async function (e, cell) {
+                        const rowData = cell.getRow().getData();
+
+                        const lessonId = rowData.Id;
+                        const courseId = rowData.CourseId;
+
+                        deleteLesson(lessonId, courseId);
+                    }
                 }
             ]
-        });
-    
-                            
-                            
-   document.addEventListener("click", async function (e) {
+        }
+    ]
+});
+
+
+
+document.addEventListener("click", async function (e) {
 
     const createLessonBtn = e.target.closest("#btnCreateLesson");
 
@@ -342,6 +369,126 @@
         alert("Modal açılırken beklenmeyen hata oluştu.");
     }
 });
-                                </script>
+
+
+async function openLessonContentPopup(courseId, lessonId) {
+    const modalId = "createLessonModal";
+    // CreateLessonContentForm
+
+    const baseUrl = '@Url.Action("CreateLessonContentForm", "Dashboard", new { area = "Admin" })';
+    const url = `${baseUrl}?courseId=${encodeURIComponent(courseId)}&lessonId=${encodeURIComponent(lessonId)}`;
+
+    // NamsitaKaurLMSNotify.success(url);
+
+    const res = await fetch(url, { credentials: "same-origin" });
+    if (!res.ok) {
+        alert("Popup yüklenirken hata oluştu. HTTP: " + res.status);
+        return;
+    }
+
+    const html = await res.text();
+
+    const popupContainer = document.getElementById("lessonPopup");
+
+    if (!popupContainer) {
+        alert("#lessonPopup elementi bulunamadı.");
+        return;
+    }
+
+    popupContainer.innerHTML = html;
+
+    const modalElement = popupContainer.querySelector("#createLessonModal");
+
+    if (!modalElement) {
+        console.error("Gelen HTML:", html);
+        alert("#createLessonModal partial içinde bulunamadı.");
+        return;
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+    modal.show();
+
+}
+
+
+function deleteLessonContent(lessonId, courseId, cell) {
+
+
+
+    NamsitaKaurLMSNotify.success("lessonId" + lessonId);
+    NamsitaKaurLMSNotify.success("courseId" + courseId);
+
+    const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+    if (lessonId !== 0 && courseId !== 0) {
+
+        const baseUrl = '@Url.Action("DeleteCourseContent", "Dashboard", new { area = "Admin" })';
+        const url = `${baseUrl}?lessonId=${encodeURIComponent(lessonId)}&courseId=${encodeURIComponent(courseId)}`;
+        NamsitaKaurLMSNotify.success("sileceyik" + url);
+
+
+
+        try {
+            const res = fetch(url, {
+                credentials: "same-origin",
+                method: "POST", headers: {
+                    "Content-Type": "application/json",
+                    "RequestVerificationToken": token
+                },
+            });
+
+            if (!res.success) {
+                NamsitaKaurLMSNotify.error(res.message);
+            }
+
+            NamsitaKaurLMSNotify.success(res.message);
+        }
+        catch (ex) {
+
+            console.error("Hata : " + ex + " !!!");
+        }
+
+
+    }
+}
+
+
+
+            function deleteLesson(lessonId, courseId) {
+                        if (lessonId !== 0 && courseId !== 0) {
+
+                        const baseUrl = '@Url.Action("DeleteLesson", "Dashboard", new { area = "Admin" })';
+                const url = `${baseUrl}?id=${encodeURIComponent(lessonId)}&courseId=${encodeURIComponent(courseId)}`;
+                NamsitaKaurLMSNotify.success("sileceyik" + url);
+
+                            const token = document.querySelector('#antiForgeryForm input[name="__RequestVerificationToken"]').value;
+
+
+                try {
+                    const res = fetch(url, {
+                        credentials: "same-origin",
+                        method: "POST", headers: {
+                            "Content-Type": "application/json",
+                            "RequestVerificationToken": token
+                        },
+                    });
+
+                    if (!res.success) {
+                        NamsitaKaurLMSNotify.error(res.message);
+                    }
+
+                    NamsitaKaurLMSNotify.success(res.message);
+                }
+                catch (ex) {
+
+                    console.error("Hata : " + ex + " !!!");
+                }
+
+
+            }
+            }
+          
+    </script>
 
 }

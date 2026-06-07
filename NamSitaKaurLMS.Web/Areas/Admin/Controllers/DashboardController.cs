@@ -444,6 +444,7 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                 redirected = true
             });
         }
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteLesson(int id, int courseId)
@@ -494,6 +495,15 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                 return PartialView("~/Areas/Admin/PartialViews/_CreateLessonContentPopup.cshtml", model);
             }
 
+            var hasLessonContent = await lessonContentService.GetLessonContentByLessonId(model.LessonId);
+
+            if (hasLessonContent != null)
+            {
+                return RedirectToAction(nameof(DashboardController.CreateCourseLesson), new { id = model.CourseId });
+
+            }
+
+
             var lessonContent = new LessonContent()
             {
                 ContentType = model.ContentType,
@@ -504,13 +514,16 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
             };
             await lessonContentService.AddLessonContentAsync(lessonContent);
 
-            return Json(new
-            {
-                success = true,
-                courseId = model.CourseId,
-                redirectUrl = Url.Action("CreateCourseLesson", "Dashboard", new { area = "Admin", id = model.CourseId })
 
-            });
+            return RedirectToAction(nameof(DashboardController.CreateCourseLesson), new { id = model.CourseId });
+
+            //return Json(new
+            //{
+            //    success = true,
+            //    courseId = model.CourseId,
+            //    redirectUrl = Url.Action("CreateCourseLesson", "Dashboard", new { area = "Admin", id = model.CourseId })
+
+            //});
 
         }
 
@@ -575,9 +588,11 @@ namespace NamSitaKaurLMS.Web.Areas.Admin.Controllers
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
                     EmailConfirmed = user.EmailConfirmed,
-                    Roles = roles.ToList()
+                    Roles = roles.ToList(),
+                    SortOrder= roles.Contains("Admin") == true ? (int)1 : roles.Contains("Instructor") == true ? (int)2 : 3  
                 });
             }
+            userListViewModel.OrderBy(x=> x.SortOrder);
             return View(userListViewModel);
         }
         [HttpGet]

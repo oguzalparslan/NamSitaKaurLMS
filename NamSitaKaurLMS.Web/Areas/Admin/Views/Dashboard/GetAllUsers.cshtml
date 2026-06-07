@@ -6,11 +6,11 @@
 }
 
 <style>
-    #userTableContainer .tabulator-row.email-confirmed-row {
+    #userTableContainer .tabulator-row.userTypeStudent {
         background-color: #d1e7dd !important;
     }
 
-    #userTableContainer .tabulator-row.email-not-confirmed-row {
+    #userTableContainer .tabulator-row.userTypeAdmin {
         background-color: #f8d7da !important;
     }</style>
     <form id="antiForgeryForm" style="display:none;">
@@ -126,26 +126,40 @@
                     box-shadow: 0 0 0 2px rgba(126, 87, 194, 0.15);
                 }
 
-            /* Email durum renkleri */
-            #userTableContainer .tabulator-row.email-confirmed-row {
-                background-color: #d1e7dd !important;
-                color: #0f5132 !important;
+            /* Student - soft mint */
+            #userTableContainer .tabulator-row.userTypeStudent {
+                background-color: #e8f5ef !important;
+                color: #2f5d50 !important;
             }
 
-            #userTableContainer .tabulator-row.email-not-confirmed-row {
-                background-color: #f8d7da !important;
-                color: #842029 !important;
+                #userTableContainer .tabulator-row.userTypeStudent:hover {
+                    background-color: #d6eee2 !important;
+                    color: #2f5d50 !important;
+                }
+
+
+            /* Admin - soft lavender */
+            #userTableContainer .tabulator-row.userTypeAdmin {
+                background-color: #f2eefb !important;
+                color: #5a3f7a !important;
             }
 
-            #userTableContainer .tabulator-row.email-confirmed-row:hover {
-                background-color: #badbcc !important;
-                color: #0f5132 !important;
+                #userTableContainer .tabulator-row.userTypeAdmin:hover {
+                    background-color: #e6def7 !important;
+                    color: #5a3f7a !important;
+                }
+
+
+            /* Instructor - soft amber/cream */
+            #userTableContainer .tabulator-row.userTypeInstructor {
+                background-color: #fff6db !important;
+                color: #7a6500 !important;
             }
 
-            #userTableContainer .tabulator-row.email-not-confirmed-row:hover {
-                background-color: #f1aeb5 !important;
-                color: #842029 !important;
-            }
+                #userTableContainer .tabulator-row.userTypeInstructor:hover {
+                    background-color: #ffefc2 !important;
+                    color: #7a6500 !important;
+                }
 
             /* İşlem iconları */
             #userTableContainer .user-action-icon {
@@ -157,14 +171,28 @@
             #userTableContainer .user-action-edit {
                 color: #5b6ee1;
             }
-
+            
+            #userTableContainer .user-action-icon:hover {
+                transform: scale(1.6);
+            }
+            
             #userTableContainer .user-action-delete {
                 color: #dc3545;
             }
 
-            #userTableContainer .user-action-icon:hover {
-                transform: scale(1.15);
+            #userTableContainer .user-action-delete:hover {
+                transform: scale(1.6);
             }
+            
+            #userTableContainer .user-action-update-role {
+                color: saddlebrown;
+            }
+
+                #userTableContainer .user-action-update-role:hover {
+                transform: scale(1.6);
+            }
+
+            
 
             /* Badge görünümü */
             #userTableContainer .grid-badge {
@@ -209,6 +237,9 @@
             var editIcon = function () {
                 return "<i class='fa fa-edit user-action-icon user-action-edit'></i>";
             };
+            var roleIcon = function () {
+                return "<i class='fa fa-regular fa-user user-action-update-role'></i>";
+            };
 
             var deleteIcon = function () {
                 return "<i class='fa fa-times user-action-icon user-action-delete'></i>";
@@ -219,7 +250,7 @@
                 width: "100%",
                 data: tableData,
                 index: "Id",
-
+                
                 layout: "fitColumns",
 
                 pagination: "local",
@@ -228,16 +259,29 @@
 
                 popupContainer: "#popup",
 
+
+                initialSort: [
+                    { column: "SortOrder", dir: "asc" },{ column: "PhoneNumber", dir: "asc" }
+                 ],
+
+
+
                 rowFormatter: function (row) {
                     var data = row.getData();
                     var element = row.getElement();
 
-                    element.classList.remove("email-confirmed-row", "email-not-confirmed-row");
+                    element.classList.remove("userTypeStudent", "userTypeAdmin", "userTypeInstructor");
 
-                    if (data.EmailConfirmed === true) {
-                        element.classList.add("email-confirmed-row");
-                    } else {
-                        element.classList.add("email-not-confirmed-row");
+                    if (Array.isArray(data.Roles) && data.Roles.includes("Admin")) {
+                        element.classList.add("userTypeAdmin");
+                    } 
+                    else if (Array.isArray(data.Roles) && data.Roles.includes("Student"))    {
+                        element.classList.add("userTypeStudent");
+
+                    }
+                    else if (Array.isArray(data.Roles) && data.Roles.includes("Instructor"))    {
+                        element.classList.add("userTypeInstructor");
+
                     }
                 },
 
@@ -257,6 +301,20 @@
                                 cellClick: function (e, cell) {
                                     const selectedRowId = cell.getRow().getData().Id;
                                     openUpdatePopupPage(selectedRowId);
+                                },
+                                headerWordWrap: true
+                            },
+                            {
+                                formatter: roleIcon,
+                                title: "Rol Güncelle",
+                                width: 95,
+                                widthGrow: 0,
+                                hozAlign: "center",
+                                headerHozAlign: "center",
+                                headerSort: false,
+                                cellClick: function (e, cell) {
+                                    const selectedRowId = cell.getRow().getData().Id;
+                                    openUserRoleUpdatePopupPage(selectedRowId);
                                 },
                                 headerWordWrap: true
                             },
@@ -356,7 +414,17 @@
                                 .map(role => `<span class="grid-role-badge">${role.trim()}</span>`)
                                 .join("");
                         }
-                    }
+                    },
+                    {
+                        title: "SortOrder",
+                        field: "SortOrder",
+                        headerFilter: "input",
+                        headerHozAlign: "center",
+                        headerWordWrap: true,
+                        sorter:"number",
+                        visible:false
+                    
+                    },
                 ]
             });
 
@@ -407,6 +475,34 @@
 
                     if (!modalEl) {
                         console.error("updateUserModal bulunamadı.");
+                        return;
+                    }
+
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Modal yüklenirken bir hata oluştu.");
+                });
+            }
+
+            function openUserRoleUpdatePopupPage(selectedRowId) {
+                const popup = document.querySelector("#popup");
+                const baseUrl = '@Url.Action("UpdateUserRole", "Dashboard", new { area = "Admin" })';
+                const url = baseUrl + "?userId=" + encodeURIComponent(selectedRowId);
+
+                fetch(url, {
+                    credentials: "same-origin"
+                })
+                .then(response => response.text())
+                .then(html => {
+                    popup.innerHTML = html;
+
+                    const modalEl = popup.querySelector("#updateUserRolePopup");
+
+                    if (!modalEl) {
+                        console.error("updateUserRolePopup bulunamadı.");
                         return;
                     }
 

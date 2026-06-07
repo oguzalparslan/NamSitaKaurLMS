@@ -8,5 +8,6 @@
         public string PhoneNumber { get; set; }
         public bool EmailConfirmed { get; set; }
         public List<string> Roles { get; set; }
+        public int SortOrder { get; set; } = 0;
     }
 }
